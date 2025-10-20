@@ -1,4 +1,4 @@
-package com.hariku.ui.theme
+package com.hariku.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
