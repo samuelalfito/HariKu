@@ -38,6 +38,8 @@ fun LoginScreen() {
     var passwordVisible by remember { mutableStateOf(false) }
 
     val orangeColor = Color(0xFFCD8C63)
+    val lightOrangeColor = Color(0xFFFFF5EE)
+    val darkOrangeColor = Color(0xFFB97A52)
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -96,7 +98,24 @@ fun LoginScreen() {
 
         Spacer(modifier = Modifier.height(32.dp))
 
-
+        Button(
+            onClick = {  },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp)
+                .height(56.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.White
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ){
+            Text(
+                text = "Masuk Dengan Google",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color.Black
+            )
+        }
     }
 }
 
