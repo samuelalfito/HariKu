@@ -33,19 +33,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hariku.R // <-- Path R package Anda
+import com.hariku.R
 
-/**
- * File baru untuk layar "Konfirmasi Pin"
- * Berdasarkan PinScreenFull.kt
- */
 @Composable
 fun ConfirmPinScreen() {
-    // State untuk menyimpan PIN yang dimasukkan
     var pinValue by remember { mutableStateOf("") }
     val maxPinLength = 4
 
-    // 'canvas' root
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -55,20 +49,15 @@ fun ConfirmPinScreen() {
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // --- Status Bar ---
-            // Menggunakan kembali Composable yang sama dari file sebelumnya
             StatusBarComposableConfirm()
 
-            // Spacer besar di atas untuk menggantikan tombol "Lewati"
             Spacer(modifier = Modifier.height(80.dp))
 
-            // --- Content (Title) ---
             Text(
-                text = "Konfirmasi Pin", // <-- Teks judul diubah
+                text = "Konfirmasi Pin",
                 style = TextStyle(
                     fontSize = 24.sp,
-                    // fontFamily = FontFamily(Font(R.font.rubik)), // Memerlukan file font
-                    fontFamily = FontFamily.Default, // Placeholder
+                    fontFamily = FontFamily.Default,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF242424),
                     textAlign = TextAlign.Center,
@@ -76,12 +65,9 @@ fun ConfirmPinScreen() {
                 modifier = Modifier.padding(horizontal = 40.dp)
             )
 
-            // --- Subtitle DIHAPUS ---
 
-            // Spacer disesuaikan
             Spacer(modifier = Modifier.height(48.dp))
 
-            // --- PIN Dots ---
             PinDotsComposableConfirm(
                 count = maxPinLength,
                 filled = pinValue.length
@@ -89,8 +75,6 @@ fun ConfirmPinScreen() {
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            // --- Numpad ---
-            // Menggunakan kembali Composable yang sama
             NumpadComposableConfirm(
                 onNumberClick = { number ->
                     if (pinValue.length < maxPinLength) {
@@ -104,11 +88,9 @@ fun ConfirmPinScreen() {
                 }
             )
 
-            // Spacer untuk mendorong konten ke atas
             Spacer(modifier = Modifier.weight(1f))
         }
 
-        // --- Bottom Illustration Placeholder ---
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -116,13 +98,12 @@ fun ConfirmPinScreen() {
                 .align(Alignment.BottomCenter)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.kocheng), // Tetap menggunakan 'kocheng'
+                painter = painterResource(id = R.drawable.kocheng),
                 contentDescription = "Ilustrasi Bawah",
                 modifier = Modifier.fillMaxSize()
             )
         }
 
-        // --- Home Indicator ---
         Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -134,10 +115,6 @@ fun ConfirmPinScreen() {
     }
 }
 
-/**
- * Composable untuk Status Bar di bagian atas.
- * (Diberi nama baru agar tidak konflik jika file ini ada di package yang sama)
- */
 @Composable
 fun StatusBarComposableConfirm() {
     Row(
@@ -148,7 +125,6 @@ fun StatusBarComposableConfirm() {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // --- leftside (Waktu) ---
         Text(
             text = "9:41",
             style = TextStyle(
@@ -157,7 +133,6 @@ fun StatusBarComposableConfirm() {
                 color = Color.Black,
             )
         )
-        // --- rightside (Ikon) ---
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -181,10 +156,6 @@ fun StatusBarComposableConfirm() {
     }
 }
 
-/**
- * Composable untuk titik-titik indikator PIN.
- * (Diberi nama baru agar tidak konflik)
- */
 @Composable
 fun PinDotsComposableConfirm(count: Int, filled: Int) {
     Row(
@@ -201,10 +172,6 @@ fun PinDotsComposableConfirm(count: Int, filled: Int) {
     }
 }
 
-/**
- * Composable untuk Numpad lengkap.
- * (Diberi nama baru agar tidak konflik)
- */
 @Composable
 fun NumpadComposableConfirm(
     onNumberClick: (String) -> Unit,
@@ -255,10 +222,7 @@ fun NumpadComposableConfirm(
     }
 }
 
-/**
- * Composable untuk satu tombol angka (1, 2, 3, ...).
- * (Diberi nama baru agar tidak konflik)
- */
+
 @Composable
 fun NumberButtonConfirm(
     number: String,
@@ -288,5 +252,5 @@ fun NumberButtonConfirm(
 @Preview(showBackground = true, widthDp = 430, heightDp = 932)
 @Composable
 fun ConfirmPinScreenPreview() {
-    ConfirmPinScreen() // <-- Preview diubah
+    ConfirmPinScreen()
 }
