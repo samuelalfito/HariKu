@@ -18,6 +18,7 @@ object Routes {
     const val MAIN_APP_GRAPH = "main_app_graph"
     const val HOME = "home"
     const val CHATBOT = "chatbot"
+    const val DETAIL_CHATBOT_PLACEHOLDER = "detail_chatbot_PLACEHOLDER"
     const val JOURNAL = "journal"
     const val STATISTIC = "statistic"
     const val PROFILE = "profile"

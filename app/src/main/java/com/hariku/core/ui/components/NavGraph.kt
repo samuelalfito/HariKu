@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.hariku.feature_auth.presentation.login.LoginScreen
 import com.hariku.feature_auth.presentation.register.RegisterScreen
+import com.hariku.feature_chatbot.presentation.detail.ChatDetailScreen
 import com.hariku.feature_onboarding.presentation.Onboarding1Screen
 import com.hariku.feature_onboarding.presentation.Onboarding2Screen
 import com.hariku.feature_onboarding.presentation.Onboarding3Screen
@@ -66,6 +67,10 @@ fun NavGraph(navController: NavHostController) {
         
         composable(Routes.PROFILE) {
             ProfileScreen(navController = navController)
+        }
+
+        composable(Routes.DETAIL_CHATBOT_PLACEHOLDER){
+            ChatDetailScreen(navController = navController)
         }
     }
 }
