@@ -200,10 +200,9 @@ fun NumpadComposableConfirm(
             NumberButtonConfirm(number = "9", size = buttonSize, onClick = { onNumberClick("9") })
         }
         Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-            Spacer(modifier = Modifier.size(buttonSize)) // Placeholder untuk tata letak
+            Spacer(modifier = Modifier.size(buttonSize))
             NumberButtonConfirm(number = "0", size = buttonSize, onClick = { onNumberClick("0") })
 
-            // --- Tombol Backspace ---
             Box(
                 modifier = Modifier
                     .size(buttonSize)
