@@ -110,7 +110,8 @@ fun LoginScreen(navController: NavController) {
 
                 Button(
                     onClick = {
-                        /*TODO LOGIN FEATURE*/
+                        /*TODO: LOGIN FEATURE
+                                PIN Verification, if have PIN go to Routes.MASUKKAN_PIN*/
                         Log.d("DEBUG", "Login")
                         navController.navigate(Routes.PIN_GRAPH)
                     },

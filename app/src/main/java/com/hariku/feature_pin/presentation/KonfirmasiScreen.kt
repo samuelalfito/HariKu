@@ -36,9 +36,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hariku.R
+import com.hariku.core.ui.components.Routes
 
 @Composable
-fun ConfirmPinScreen(navController: NavController) {
+fun ConfirmPinScreen(navController: NavController) { /*TODO: PIN confirmation function*/
     var pinValue by remember { mutableStateOf("") }
     val maxPinLength = 4
 
@@ -80,6 +81,9 @@ fun ConfirmPinScreen(navController: NavController) {
                     if (pinValue.length < maxPinLength) {
                         pinValue += number
                     }
+                    if (pinValue.length == maxPinLength) {
+                        navController.navigate(Routes.MAIN_APP_GRAPH)
+                    } /*TODO: PIN confirmation function*/
                 },
                 onBackspaceClick = {
                     if (pinValue.isNotEmpty()) {

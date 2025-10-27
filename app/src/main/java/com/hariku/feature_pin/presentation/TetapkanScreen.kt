@@ -121,6 +121,9 @@ fun PinScreenFull(navController: NavController) { /*TODO: PIN creation function*
                     if (pinValue.length < maxPinLength) {
                         pinValue += number
                     }
+                    if (pinValue.length == maxPinLength) {
+                        navController.navigate(Routes.KONFIRMASI_PIN)
+                    } /*TODO: PIN creation function*/
                 },
                 onBackspaceClick = {
                     if (pinValue.isNotEmpty()) {

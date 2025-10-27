@@ -110,6 +110,9 @@ fun FillPinScreen(navController: NavController) { /*TODO: PIN Input and validati
                     if (pinValue.length < maxPinLength) {
                         pinValue += number
                     }
+                    if (pinValue.length == maxPinLength) {
+                        navController.navigate(Routes.MAIN_APP_GRAPH)
+                    } /*TODO: PIN Input and validating function */
                 },
                 onBackspaceClick = {
                     if (pinValue.isNotEmpty()) {
