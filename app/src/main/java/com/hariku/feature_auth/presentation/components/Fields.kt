@@ -29,6 +29,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hariku.R
 
 @Composable
 fun RegularTextField(text: String, onValueChange: (String) -> Unit, isPassword: Boolean = false, placeholder: String) {
@@ -72,7 +73,7 @@ fun RegularTextField(text: String, onValueChange: (String) -> Unit, isPassword: 
                         Text(text = "Sembunyikan", style = TextStyle(fontSize = 14.sp, color = Color(0xFF333333)))
                     } else {
                         Image(
-                            painter = painterResource(id = com.hariku.R.drawable.show_password),
+                            painter = painterResource(id = R.drawable.show_password),
                             contentDescription = "Tampilkan kata sandi",
                             modifier = Modifier.size(33.dp)
                         )

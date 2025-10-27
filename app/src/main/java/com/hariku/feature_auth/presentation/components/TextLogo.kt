@@ -27,6 +27,7 @@ fun TextLogo(borderPreview: Boolean = false) {
         fontSize = 78.sp,
         textAlign = TextAlign.Center,
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        color = Color(0xFFC97D50)
     )
 }
