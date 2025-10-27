@@ -33,8 +33,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.hariku.R // <-- Path R package Anda sudah benar
+import androidx.compose.ui.unit.sp~
+import com.hariku.R
 
 @Composable
 fun PinScreenFull() {
@@ -63,8 +63,7 @@ fun PinScreenFull() {
                     text = "Lewati",
                     style = TextStyle(
                         fontSize = 16.sp,
-                        // fontFamily = FontFamily(Font(R.font.rubik)), // Memerlukan file font
-                        fontFamily = FontFamily.Default, // Placeholder
+                        fontFamily = FontFamily.Default,
                         fontWeight = FontWeight(600),
                         color = Color(0xFF242424),
                         textDecoration = TextDecoration.Underline,
@@ -75,13 +74,11 @@ fun PinScreenFull() {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // --- Content (Title, Subtitle) ---
             Text(
                 text = "Tetapkan Pin Keamanan",
                 style = TextStyle(
                     fontSize = 24.sp,
-                    // fontFamily = FontFamily(Font(R.font.rubik)), // Memerlukan file font
-                    fontFamily = FontFamily.Default, // Placeholder
+                    fontFamily = FontFamily.Default,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF242424),
                     textAlign = TextAlign.Center,
@@ -96,8 +93,7 @@ fun PinScreenFull() {
                 style = TextStyle(
                     fontSize = 14.sp,
                     lineHeight = 20.sp,
-                    // fontFamily = FontFamily(Font(R.font.rubik)), // Memerlukan file font
-                    fontFamily = FontFamily.Default, // Placeholder
+                    fontFamily = FontFamily.Default,
                     fontWeight = FontWeight.Normal,
                     color = Color(0xFF242424),
                     textAlign = TextAlign.Center,
@@ -107,7 +103,6 @@ fun PinScreenFull() {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // --- PIN Dots ---
             PinDotsComposable(
                 count = maxPinLength,
                 filled = pinValue.length
@@ -115,8 +110,6 @@ fun PinScreenFull() {
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            // --- Numpad ---
-            // NumpadComposable sekarang memiliki latar belakang untuk backspace
             NumpadComposable(
                 onNumberClick = { number ->
                     if (pinValue.length < maxPinLength) {
@@ -130,34 +123,24 @@ fun PinScreenFull() {
                 }
             )
 
-            // Spacer untuk mendorong konten ke atas
             Spacer(modifier = Modifier.weight(1f))
         }
 
-        // --- Bottom Illustration Placeholder ---
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp)
-                // .background(Color.Gray.copy(alpha = 0.1f)) // Hapus background placeholder
                 .align(Alignment.BottomCenter)
         ) {
-            // Ganti dengan Image Composable untuk ilustrasi Anda
             Image(
                 painter = painterResource(id = R.drawable.kocheng),
                 contentDescription = "Ilustrasi Bawah",
                 modifier = Modifier.fillMaxSize()
             )
         }
-
-        // --- Home Indicator ---
     }
 }
 
-
-/**
- * Composable untuk titik-titik indikator PIN.
- */
 @Composable
 fun PinDotsComposable(count: Int, filled: Int) {
     Row(
@@ -174,9 +157,6 @@ fun PinDotsComposable(count: Int, filled: Int) {
     }
 }
 
-/**
- * Composable untuk Numpad lengkap.
- */
 @Composable
 fun NumpadComposable(
     onNumberClick: (String) -> Unit,
@@ -205,15 +185,13 @@ fun NumpadComposable(
             NumberButton(number = "9", size = buttonSize, onClick = { onNumberClick("9") })
         }
         Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-            Spacer(modifier = Modifier.size(buttonSize)) // Placeholder untuk tata letak
+            Spacer(modifier = Modifier.size(buttonSize))
             NumberButton(number = "0", size = buttonSize, onClick = { onNumberClick("0") })
 
-            // --- Tombol Backspace ---
-            // PERUBAHAN DI SINI: Ditambahkan .background(Color.White, CircleShape)
             Box(
                 modifier = Modifier
                     .size(buttonSize)
-                    .background(Color.White, CircleShape) // <-- Latar belakang ditambahkan
+                    .background(Color.White, CircleShape)
                     .clip(CircleShape)
                     .clickable { onBackspaceClick() },
                 contentAlignment = Alignment.Center
@@ -228,9 +206,6 @@ fun NumpadComposable(
     }
 }
 
-/**
- * Composable untuk satu tombol angka (1, 2, 3, ...).
- */
 @Composable
 fun NumberButton(
     number: String,
