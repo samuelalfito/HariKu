@@ -1,26 +1,77 @@
 package com.hariku.core.ui.components
 
+import ConfirmPinScreen
+import PinScreenFull
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
+import androidx.navigation.navigation
 import com.hariku.feature_auth.presentation.login.LoginScreen
 import com.hariku.feature_auth.presentation.register.RegisterScreen
-
-object Destinations {
-    const val LOGIN = "login"
-    const val REGISTER = "register"
-    const val PROFILE = "profile"
-}
+import com.hariku.feature_home.presentation.HomeScreen
+import com.hariku.feature_onboarding.presentation.Onboarding1Screen
+import com.hariku.feature_onboarding.presentation.Onboarding2Screen
+import com.hariku.feature_onboarding.presentation.Onboarding3Screen
+import com.hariku.feature_onboarding.presentation.SplashScreen
+import com.hariku.feature_pin.presentation.FillPinScreen
+import com.hariku.feature_profile.presentation.ProfileScreen
 
 @Composable
 fun NavGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Destinations.LOGIN){
-        composable(Destinations.LOGIN){
-            LoginScreen()
+    NavHost(navController = navController, startDestination = Routes.ONBOARDING1){
+
+        composable(Routes.SPLASH){
+            SplashScreen()
         }
-        composable(Destinations.REGISTER){
-            RegisterScreen()
+        composable(Routes.ONBOARDING1){
+            Onboarding1Screen(navController = navController)
+        }
+        composable(Routes.ONBOARDING2){
+            Onboarding2Screen(navController = navController)
+        }
+        composable(Routes.ONBOARDING3){
+            Onboarding3Screen(navController = navController)
+        }
+
+        navigation(
+            startDestination = Routes.LOGIN,
+            route = Routes.AUTH_GRAPH
+        ){
+            composable(Routes.LOGIN){
+                LoginScreen(navController = navController)
+            }
+            composable(Routes.REGISTER){
+                RegisterScreen(navController = navController)
+            }
+        }
+
+        navigation(
+            startDestination = Routes.TETAPKAN_PIN,
+            route = Routes.PIN_GRAPH
+        ){
+            composable(Routes.TETAPKAN_PIN){
+                PinScreenFull(navController = navController)
+            }
+            composable(Routes.KONFIRMASI_PIN){
+                ConfirmPinScreen(navController = navController)
+            }
+            composable(Routes.MASUKKAN_PIN){
+                FillPinScreen(navController = navController)
+            }
+        }
+
+        navigation(
+            startDestination = Routes.HOME,
+            route = Routes.MAIN_APP_GRAPH
+        ){
+            composable(Routes.HOME) {
+                HomeScreen(navController = navController)
+            }
+            composable(Routes.PROFILE) {
+                ProfileScreen(navController = navController)
+            }
         }
     }
 }

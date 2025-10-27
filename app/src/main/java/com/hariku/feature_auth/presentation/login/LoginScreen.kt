@@ -37,14 +37,17 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.hariku.R
+import com.hariku.core.ui.components.Routes
 import com.hariku.feature_auth.presentation.components.AuthDivider
 import com.hariku.feature_auth.presentation.components.RegularTextField
 import com.hariku.feature_auth.presentation.components.TextLogo
 
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -106,7 +109,11 @@ fun LoginScreen() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = { /* Handle login */ },
+                    onClick = {
+                        /*TODO LOGIN FEATURE*/
+                        Log.d("DEBUG", "Login")
+                        navController.navigate(Routes.PIN_GRAPH)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
@@ -174,12 +181,13 @@ fun LoginScreen() {
                     text = "Daftar di sini",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black,
+                    color = Color(0xFFE0A071),
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier
                         .padding(0.dp)
                         .clickable {
                             Log.d("DEBUG", "Daftar")
+                            navController.navigate(Routes.REGISTER)
                         }
                 )
             }
@@ -211,5 +219,5 @@ fun LoginScreen() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun LoginScreenPreview() {
-    LoginScreen()
+    LoginScreen(rememberNavController())
 }

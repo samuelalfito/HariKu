@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Text
+import androidx.compose.ui.tooling.preview.Preview
 import com.hariku.R
 
 @Composable
@@ -44,4 +45,10 @@ fun SplashScreen() {
             contentScale = ContentScale.FillWidth
         )
     }
+}
+
+@Preview
+@Composable
+private fun SplashScreenPreview() {
+    SplashScreen()
 }

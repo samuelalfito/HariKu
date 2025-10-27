@@ -39,14 +39,17 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.hariku.feature_auth.presentation.components.AuthDivider
 import com.hariku.feature_auth.presentation.components.RegularTextField
 import com.hariku.feature_auth.presentation.components.TextLogo
 import com.hariku.R
+import com.hariku.core.ui.components.Routes
 import com.hariku.core.ui.theme.HariKuTheme
 
 @Composable
-fun RegisterScreen() {
+fun RegisterScreen(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -125,7 +128,10 @@ fun RegisterScreen() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = { },
+                    onClick = {
+                        /*TODO REGISTER FEATURE*/
+                        navController.navigate(Routes.PIN_GRAPH)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
@@ -184,7 +190,9 @@ fun RegisterScreen() {
             Spacer(modifier = Modifier.height(16.dp))
 
             AlreadyHaveAccount(
-                onLoginClick = { }
+                onLoginClick = {
+                    navController.popBackStack(route = Routes.LOGIN, inclusive = false)
+                }
             )
         }
     }
@@ -281,6 +289,6 @@ fun AlreadyHaveAccount(
 @Composable
 private fun RegisterScreenPreview() {
     HariKuTheme {
-        RegisterScreen()
+        RegisterScreen(rememberNavController())
     }
 }

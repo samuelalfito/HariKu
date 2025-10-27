@@ -36,10 +36,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hariku.R 
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.hariku.R
+import com.hariku.core.ui.components.Routes
 
 @Composable
-fun FillPinScreen() {
+fun FillPinScreen(navController: NavController) { /*TODO: PIN Input and validating function*/
     var pinValue by remember { mutableStateOf("") }
     val maxPinLength = 4
 
@@ -69,7 +72,10 @@ fun FillPinScreen() {
                         color = Color(0xFF242424),
                         textDecoration = TextDecoration.Underline,
                     ),
-                    modifier = Modifier.clickable {}
+                    modifier = Modifier
+                        .clickable {
+                            navController.navigate(Routes.MAIN_APP_GRAPH)
+                        }
                 )
             }
 
@@ -225,6 +231,6 @@ fun NumberButton(
 @Preview(showBackground = true, widthDp = 430, heightDp = 932)
 @Composable
 fun FIllPinScreenPreview() {
-    FillPinScreen()
+    FillPinScreen(rememberNavController())
 }
 
