@@ -1,5 +1,8 @@
 package com.hariku.feature_auth.presentation.login
 
+import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,10 +10,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,10 +24,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hariku.R
 import com.hariku.feature_auth.presentation.components.AuthDivider
 import com.hariku.feature_auth.presentation.components.RegularTextField
 import com.hariku.feature_auth.presentation.components.TextLogo
@@ -46,9 +55,11 @@ fun LoginScreen() {
         modifier = Modifier
             .padding(20.dp)
     ){
-        Spacer(modifier = Modifier.height(128.dp))
+        Spacer(modifier = Modifier.height(84.dp))
+
         TextLogo(borderPreview = true)
-        Spacer(modifier = Modifier.height(64.dp))
+
+        Spacer(modifier = Modifier.height(32.dp))
 
         // Form
         Column(
@@ -99,6 +110,62 @@ fun LoginScreen() {
         Spacer(modifier = Modifier.height(32.dp))
 
         Button(
+            onClick = { },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp)
+                .height(56.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.White
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.google),
+                contentDescription = "Google Icon",
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Masuk Dengan Google",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color.Black
+            )
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = "Pengguna baru? ",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color.Black,
+                modifier = Modifier
+                    .padding(0.dp)
+            )
+            Text(
+                text = "Daftar di sini",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                textDecoration = TextDecoration.Underline,
+                modifier = Modifier
+                    .padding(0.dp)
+                    .clickable {
+                        Log.d("DEBUG", "Daftar")
+                    }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Button(
             onClick = {  },
             modifier = Modifier
                 .fillMaxWidth()
@@ -110,13 +177,55 @@ fun LoginScreen() {
             shape = RoundedCornerShape(12.dp)
         ){
             Text(
-                text = "Masuk Dengan Google",
+                text = "Masuk Sebagai Tamu",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.Black
             )
         }
     }
+}
+
+@Composable
+private fun RegisterText(){
+    val annotatedString = buildAnnotatedString {
+        val str = "Pengguna baru? Daftar di sini"
+        val startIndex = str.indexOf("Daftar")
+        val endIndex = startIndex + "Daftar di sini".length
+        append(str)
+        addStyle(
+            style = SpanStyle(
+                color = Color.Black,
+                textDecoration = TextDecoration.Underline,
+                fontWeight = FontWeight.Bold
+            ),
+            start = startIndex,
+            end = endIndex
+        )
+        addStringAnnotation(
+            tag = "daftar",
+            annotation = "Daftar",
+            start = startIndex,
+            end = endIndex
+        )
+    }
+
+    Text(
+        text = annotatedString,
+        modifier = Modifier
+            .clickable(
+                onClick = {
+                    annotatedString
+                        .getStringAnnotations("daftar", 0, 0)
+                        .firstOrNull()?.let { annotation ->
+                            // Handle click
+                            Log.d("DEBUG", annotation.item)
+                        }
+                }
+            ),
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Medium,
+    )
 }
 
 @Preview(showBackground = true, showSystemUi = true)
