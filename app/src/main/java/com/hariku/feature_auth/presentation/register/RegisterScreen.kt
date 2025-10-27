@@ -50,7 +50,9 @@ fun RegisterScreen() {
     var email by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
     var confirmPassword by remember { mutableStateOf("") }
+    var confirmPasswordVisible by remember { mutableStateOf(false) }
 
     val orangeColor = Color(0xFFCD8C63)
 
@@ -70,7 +72,9 @@ fun RegisterScreen() {
         Image(
             painter = painterResource(id = R.drawable.auth_cat),
             contentDescription = "Google Icon",
-            modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter)
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
         )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
