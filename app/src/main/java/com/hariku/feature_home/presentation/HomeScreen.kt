@@ -2,6 +2,7 @@ package com.hariku.feature_home.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,13 +31,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.hariku.R
+import com.hariku.core.ui.components.Routes
 import com.hariku.feature_home.presentation.components.ActivityCard
 import com.hariku.feature_home.presentation.components.ChatCard
 import com.hariku.feature_home.presentation.components.MoodCard
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier.fillMaxSize()
     ) {
@@ -64,7 +69,13 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_emote_biasa),
                         contentDescription = null,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clickable(
+                                onClick = {
+                                    navController.navigate(Routes.PROFILE)
+                                }
+                            )
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
@@ -171,4 +182,10 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             }
         }
     }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun HomeScreenPreview() {
+    HomeScreen(rememberNavController())
 }

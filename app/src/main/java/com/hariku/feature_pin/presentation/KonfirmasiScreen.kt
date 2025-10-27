@@ -11,9 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,10 +31,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.hariku.R
+import com.hariku.core.ui.components.Routes
 
 @Composable
-fun ConfirmPinScreen() {
+fun ConfirmPinScreen(navController: NavController) {
     var pinValue by remember { mutableStateOf("") }
     val maxPinLength = 4
 
@@ -77,6 +78,11 @@ fun ConfirmPinScreen() {
                 onNumberClick = { number ->
                     if (pinValue.length < maxPinLength) {
                         pinValue += number
+                    }
+                    if (pinValue.length == maxPinLength) {
+                        navController.navigate(Routes.HOME) {
+                            popUpTo(0) { inclusive = true }
+                        }
                     }
                 },
                 onBackspaceClick = {
@@ -200,5 +206,5 @@ fun NumberButtonConfirm(
 @Preview(showBackground = true, widthDp = 430, heightDp = 932)
 @Composable
 fun ConfirmPinScreenPreview() {
-    ConfirmPinScreen()
+    ConfirmPinScreen(rememberNavController())
 }

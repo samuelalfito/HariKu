@@ -20,10 +20,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.hariku.R
+import com.hariku.core.ui.components.Routes
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(navController: NavController) {
     Scaffold(
         topBar = {
             Box(
@@ -40,7 +43,9 @@ fun ProfileScreen() {
                         .align(Alignment.CenterStart)
                         .padding(start = 16.dp)
                         .size(28.dp)
-                        .clickable { }
+                        .clickable {
+                            navController.popBackStack(route = Routes.HOME, inclusive = false)
+                        }
                 )
                 Text(
                     text = "Profile",
@@ -202,5 +207,5 @@ fun ProfileMenuItem(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewProfileScreen() {
-    ProfileScreen()
+    ProfileScreen(rememberNavController())
 }
