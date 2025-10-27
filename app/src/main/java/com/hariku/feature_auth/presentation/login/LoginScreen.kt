@@ -2,16 +2,21 @@ package com.hariku.feature_auth.presentation.login
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -38,194 +43,169 @@ import com.hariku.feature_auth.presentation.components.RegularTextField
 import com.hariku.feature_auth.presentation.components.TextLogo
 
 
-
 @Composable
 fun LoginScreen() {
-
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
     val orangeColor = Color(0xFFCD8C63)
-    val lightOrangeColor = Color(0xFFFFF5EE)
-    val darkOrangeColor = Color(0xFFB97A52)
 
-    Column (
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .padding(20.dp)
-    ){
-        Spacer(modifier = Modifier.height(84.dp))
-
-        TextLogo(borderPreview = true)
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Form
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Box(
+            modifier = Modifier
+                .size(470.dp)
+                .offset(y = 77.41.dp)
+                .background(
+                    color = Color(0xFFFAF2ED),
+                    shape = CircleShape
+                )
+                .align(Alignment.BottomCenter)
+        )
+        Image(
+            painter = painterResource(id = R.drawable.auth_cat),
+            contentDescription = "Google Icon",
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+        )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .fillMaxWidth()
+                .padding(20.dp)
         ) {
-            RegularTextField(
-                text = email,
-                onValueChange = {email = it},
-                placeholder = "Email "
-            )
+            Spacer(modifier = Modifier.height(84.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
+            TextLogo(borderPreview = true)
 
-            RegularTextField(
-                text = password,
-                onValueChange = {password = it},
-                isPassword = true,
-                placeholder = "Password"
-            )
+            Spacer(modifier = Modifier.height(32.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = { /* Handle login */ },
+            // Form
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
+            ) {
+                RegularTextField(
+                    text = email,
+                    onValueChange = { email = it },
+                    placeholder = "Email "
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                RegularTextField(
+                    text = password,
+                    onValueChange = { password = it },
+                    isPassword = true,
+                    placeholder = "Password"
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = { /* Handle login */ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = orangeColor
+                    ),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = "Login",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color.White
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            AuthDivider()
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Button(
+                onClick = { },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 32.dp)
                     .height(56.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = orangeColor
+                    containerColor = Color.White
+                ),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.google),
+                    contentDescription = "Google Icon",
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Masuk Dengan Google",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Black
+                )
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = "Pengguna baru? ",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Black,
+                    modifier = Modifier
+                        .padding(0.dp)
+                )
+                Text(
+                    text = "Daftar di sini",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    textDecoration = TextDecoration.Underline,
+                    modifier = Modifier
+                        .padding(0.dp)
+                        .clickable {
+                            Log.d("DEBUG", "Daftar")
+                        }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Button(
+                onClick = { },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 32.dp)
+                    .height(56.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White
                 ),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text(
-                    text = "Login",
+                    text = "Masuk Sebagai Tamu",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Color.White
+                    color = Color.Black
                 )
             }
         }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        AuthDivider()
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Button(
-            onClick = { },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 32.dp)
-                .height(56.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White
-            ),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.google),
-                contentDescription = "Google Icon",
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Masuk Dengan Google",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color.Black
-            )
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = "Pengguna baru? ",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color.Black,
-                modifier = Modifier
-                    .padding(0.dp)
-            )
-            Text(
-                text = "Daftar di sini",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                textDecoration = TextDecoration.Underline,
-                modifier = Modifier
-                    .padding(0.dp)
-                    .clickable {
-                        Log.d("DEBUG", "Daftar")
-                    }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Button(
-            onClick = {  },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 32.dp)
-                .height(56.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White
-            ),
-            shape = RoundedCornerShape(12.dp)
-        ){
-            Text(
-                text = "Masuk Sebagai Tamu",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color.Black
-            )
-        }
     }
-}
-
-@Composable
-private fun RegisterText(){
-    val annotatedString = buildAnnotatedString {
-        val str = "Pengguna baru? Daftar di sini"
-        val startIndex = str.indexOf("Daftar")
-        val endIndex = startIndex + "Daftar di sini".length
-        append(str)
-        addStyle(
-            style = SpanStyle(
-                color = Color.Black,
-                textDecoration = TextDecoration.Underline,
-                fontWeight = FontWeight.Bold
-            ),
-            start = startIndex,
-            end = endIndex
-        )
-        addStringAnnotation(
-            tag = "daftar",
-            annotation = "Daftar",
-            start = startIndex,
-            end = endIndex
-        )
-    }
-
-    Text(
-        text = annotatedString,
-        modifier = Modifier
-            .clickable(
-                onClick = {
-                    annotatedString
-                        .getStringAnnotations("daftar", 0, 0)
-                        .firstOrNull()?.let { annotation ->
-                            // Handle click
-                            Log.d("DEBUG", annotation.item)
-                        }
-                }
-            ),
-        fontSize = 16.sp,
-        fontWeight = FontWeight.Medium,
-    )
 }
 
 @Preview(showBackground = true, showSystemUi = true)
