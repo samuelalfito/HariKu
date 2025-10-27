@@ -38,11 +38,10 @@ import com.hariku.R // <-- Path R package Anda sudah benar
 
 @Composable
 fun PinScreenFull() {
-    // State untuk menyimpan PIN yang dimasukkan
     var pinValue by remember { mutableStateOf("") }
     val maxPinLength = 4
 
-    // 'canvas' root
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -52,10 +51,8 @@ fun PinScreenFull() {
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // --- Status Bar ---
-            StatusBarComposable()
+            Spacer(modifier = Modifier.height(50.dp))
 
-            // --- "Lewati" Button ---
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -154,62 +151,9 @@ fun PinScreenFull() {
         }
 
         // --- Home Indicator ---
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 16.dp)
-                .width(134.dp)
-                .height(5.dp)
-                .background(Color.Black, RoundedCornerShape(100))
-        )
     }
 }
 
-/**
- * Composable untuk Status Bar di bagian atas.
- */
-@Composable
-fun StatusBarComposable() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(52.dp)
-            .padding(horizontal = 30.dp, vertical = 15.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // --- leftside (Waktu) ---
-        Text(
-            text = "9:41",
-            style = TextStyle(
-                fontSize = 18.sp,
-                fontWeight = FontWeight(600),
-                color = Color.Black,
-            )
-        )
-        // --- rightside (Ikon) ---
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_signal),
-                contentDescription = "Sinyal",
-                modifier = Modifier.size(20.dp)
-            )
-            Image(
-                painter = painterResource(id = R.drawable.ic_wifi),
-                contentDescription = "Wifi",
-                modifier = Modifier.size(20.dp)
-            )
-            Image(
-                painter = painterResource(id = R.drawable.ic_battery),
-                contentDescription = "Baterai",
-                modifier = Modifier.size(20.dp)
-            )
-        }
-    }
-} // <-- PERBAIKAN: Kurung '}' yang hilang ditambahkan di sini
 
 /**
  * Composable untuk titik-titik indikator PIN.
