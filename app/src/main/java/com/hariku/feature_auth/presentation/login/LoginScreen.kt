@@ -1,6 +1,8 @@
 package com.hariku.feature_auth.presentation.login
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hariku.feature_auth.presentation.components.AuthDivider
 import com.hariku.feature_auth.presentation.components.RegularTextField
 import com.hariku.feature_auth.presentation.components.TextLogo
 
@@ -85,6 +89,14 @@ fun LoginScreen() {
                 )
             }
         }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        AuthDivider()
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+
     }
 }
 
