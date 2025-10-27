@@ -13,9 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,7 +43,7 @@ import com.hariku.core.ui.components.Routes
 fun FillPinScreen(navController: NavController) { /*TODO: PIN Input and validating function*/
     var pinValue by remember { mutableStateOf("") }
     val maxPinLength = 4
-
+    
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -56,7 +54,7 @@ fun FillPinScreen(navController: NavController) { /*TODO: PIN Input and validati
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(50.dp))
-
+            
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -74,44 +72,48 @@ fun FillPinScreen(navController: NavController) { /*TODO: PIN Input and validati
                     ),
                     modifier = Modifier
                         .clickable {
-                            navController.navigate(Routes.MAIN_APP_GRAPH)
+                            navController.navigate(Routes.HOME) {
+                                popUpTo(0) { inclusive = true }
+                            }
                         }
                 )
             }
-
+            
             Spacer(modifier = Modifier.height(32.dp))
-
+            
             Text(
                 text = "Masukkan Pin",
                 style = TextStyle(
                     fontSize = 24.sp,
-                    fontFamily = FontFamily.Default, 
+                    fontFamily = FontFamily.Default,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF242424),
                     textAlign = TextAlign.Center,
                 ),
                 modifier = Modifier.padding(horizontal = 40.dp)
             )
-
+            
             Spacer(modifier = Modifier.height(16.dp))
-
-
+            
+            
             Spacer(modifier = Modifier.height(32.dp))
-
+            
             PinDotsComposable(
                 count = maxPinLength,
                 filled = pinValue.length
             )
-
+            
             Spacer(modifier = Modifier.height(48.dp))
-
+            
             NumpadComposable(
                 onNumberClick = { number ->
                     if (pinValue.length < maxPinLength) {
                         pinValue += number
                     }
                     if (pinValue.length == maxPinLength) {
-                        navController.navigate(Routes.MAIN_APP_GRAPH)
+                        navController.navigate(Routes.HOME) {
+                            popUpTo(0) { inclusive = true }
+                        }
                     } /*TODO: PIN Input and validating function */
                 },
                 onBackspaceClick = {
@@ -120,10 +122,10 @@ fun FillPinScreen(navController: NavController) { /*TODO: PIN Input and validati
                     }
                 }
             )
-
+            
             Spacer(modifier = Modifier.weight(1f))
         }
-
+        
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -159,11 +161,11 @@ fun PinDotsComposable(count: Int, filled: Int) {
 @Composable
 fun NumpadComposable(
     onNumberClick: (String) -> Unit,
-    onBackspaceClick: () -> Unit
+    onBackspaceClick: () -> Unit,
 ) {
     val buttonSize = 72.dp
     val spacing = 24.dp
-
+    
     Column(
         verticalArrangement = Arrangement.spacedBy(spacing),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -184,13 +186,13 @@ fun NumpadComposable(
             NumberButton(number = "9", size = buttonSize, onClick = { onNumberClick("9") })
         }
         Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-            Spacer(modifier = Modifier.size(buttonSize)) 
+            Spacer(modifier = Modifier.size(buttonSize))
             NumberButton(number = "0", size = buttonSize, onClick = { onNumberClick("0") })
-
+            
             Box(
                 modifier = Modifier
                     .size(buttonSize)
-                    .background(Color.White, CircleShape) 
+                    .background(Color.White, CircleShape)
                     .clip(CircleShape)
                     .clickable { onBackspaceClick() },
                 contentAlignment = Alignment.Center
@@ -209,7 +211,7 @@ fun NumpadComposable(
 fun NumberButton(
     number: String,
     size: Dp,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Box(
         modifier = Modifier

@@ -6,7 +6,6 @@ object Routes {
     const val REGISTER = "register"
 
     const val SPLASH = "splash"
-    const val ONBOARDING = "onboarding"
     const val ONBOARDING1 = "onboarding1"
     const val ONBOARDING2 = "onboarding2"
     const val ONBOARDING3 = "onboarding3"
@@ -18,5 +17,8 @@ object Routes {
 
     const val MAIN_APP_GRAPH = "main_app_graph"
     const val HOME = "home"
+    const val CHATBOT = "chatbot"
+    const val JOURNAL = "journal"
+    const val STATISTIC = "statistic"
     const val PROFILE = "profile"
 }

@@ -11,9 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,10 +39,10 @@ import com.hariku.core.ui.components.Routes
 
 @Composable
 fun PinScreenFull(navController: NavController) { /*TODO: PIN creation function*/
-
+    
     var pinValue by remember { mutableStateOf("") }
     val maxPinLength = 4
-
+    
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -55,7 +53,7 @@ fun PinScreenFull(navController: NavController) { /*TODO: PIN creation function*
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(50.dp))
-
+            
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -73,13 +71,15 @@ fun PinScreenFull(navController: NavController) { /*TODO: PIN creation function*
                     ),
                     modifier = Modifier
                         .clickable {
-                            navController.navigate(Routes.MAIN_APP_GRAPH)
+                            navController.navigate(Routes.HOME) {
+                                popUpTo(0) { inclusive = true }
+                            }
                         }
                 )
             }
-
+            
             Spacer(modifier = Modifier.height(32.dp))
-
+            
             Text(
                 text = "Tetapkan Pin Keamanan",
                 style = TextStyle(
@@ -91,9 +91,9 @@ fun PinScreenFull(navController: NavController) { /*TODO: PIN creation function*
                 ),
                 modifier = Modifier.padding(horizontal = 40.dp)
             )
-
+            
             Spacer(modifier = Modifier.height(16.dp))
-
+            
             Text(
                 text = "Setiap membuka aplikasi, Urai akan meminta pin keamanan",
                 style = TextStyle(
@@ -106,16 +106,16 @@ fun PinScreenFull(navController: NavController) { /*TODO: PIN creation function*
                 ),
                 modifier = Modifier.padding(horizontal = 60.dp)
             )
-
+            
             Spacer(modifier = Modifier.height(32.dp))
-
+            
             PinDotsComposable(
                 count = maxPinLength,
                 filled = pinValue.length
             )
-
+            
             Spacer(modifier = Modifier.height(48.dp))
-
+            
             NumpadComposable(
                 onNumberClick = { number ->
                     if (pinValue.length < maxPinLength) {
@@ -131,10 +131,10 @@ fun PinScreenFull(navController: NavController) { /*TODO: PIN creation function*
                     }
                 }
             )
-
+            
             Spacer(modifier = Modifier.weight(1f))
         }
-
+        
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -149,8 +149,6 @@ fun PinScreenFull(navController: NavController) { /*TODO: PIN creation function*
         }
     }
 }
-
-
 
 
 @Composable
@@ -173,11 +171,11 @@ fun PinDotsComposable(count: Int, filled: Int) {
 @Composable
 fun NumpadComposable(
     onNumberClick: (String) -> Unit,
-    onBackspaceClick: () -> Unit
+    onBackspaceClick: () -> Unit,
 ) {
     val buttonSize = 72.dp
     val spacing = 24.dp
-
+    
     Column(
         verticalArrangement = Arrangement.spacedBy(spacing),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -200,7 +198,7 @@ fun NumpadComposable(
         Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
             Spacer(modifier = Modifier.size(buttonSize))
             NumberButton(number = "0", size = buttonSize, onClick = { onNumberClick("0") })
-
+            
             Box(
                 modifier = Modifier
                     .size(buttonSize)
@@ -223,7 +221,7 @@ fun NumpadComposable(
 fun NumberButton(
     number: String,
     size: Dp,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -247,6 +245,6 @@ fun NumberButton(
 
 @Preview(showBackground = true, widthDp = 430, heightDp = 932)
 @Composable
-fun PinScreenFullPreview(){
+fun PinScreenFullPreview() {
     PinScreenFull(rememberNavController())
 }

@@ -6,11 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import androidx.navigation.navigation
 import com.hariku.feature_auth.presentation.login.LoginScreen
 import com.hariku.feature_auth.presentation.register.RegisterScreen
-import com.hariku.feature_home.presentation.HomeScreen
 import com.hariku.feature_onboarding.presentation.Onboarding1Screen
 import com.hariku.feature_onboarding.presentation.Onboarding2Screen
 import com.hariku.feature_onboarding.presentation.Onboarding3Screen
@@ -62,16 +60,12 @@ fun NavGraph(navController: NavHostController) {
             }
         }
 
-        navigation(
-            startDestination = Routes.HOME,
-            route = Routes.MAIN_APP_GRAPH
-        ){
-            composable(Routes.HOME) {
-                HomeScreen(navController = navController)
-            }
-            composable(Routes.PROFILE) {
-                ProfileScreen(navController = navController)
-            }
+        composable(Routes.HOME) {
+            MainScaffold(parentNavController = navController)
+        }
+        
+        composable(Routes.PROFILE) {
+            ProfileScreen(navController = navController)
         }
     }
 }

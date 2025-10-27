@@ -11,9 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,7 +37,7 @@ import com.hariku.R
 import com.hariku.core.ui.components.Routes
 
 @Composable
-fun ConfirmPinScreen(navController: NavController) { /*TODO: PIN confirmation function*/
+fun ConfirmPinScreen(navController: NavController) {
     var pinValue by remember { mutableStateOf("") }
     val maxPinLength = 4
 
@@ -82,8 +80,10 @@ fun ConfirmPinScreen(navController: NavController) { /*TODO: PIN confirmation fu
                         pinValue += number
                     }
                     if (pinValue.length == maxPinLength) {
-                        navController.navigate(Routes.MAIN_APP_GRAPH)
-                    } /*TODO: PIN confirmation function*/
+                        navController.navigate(Routes.HOME) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
                 },
                 onBackspaceClick = {
                     if (pinValue.isNotEmpty()) {
