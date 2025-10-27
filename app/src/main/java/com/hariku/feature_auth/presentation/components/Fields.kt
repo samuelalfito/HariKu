@@ -1,19 +1,28 @@
 package com.hariku.feature_auth.presentation.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -22,11 +31,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun RegularTextField(text: String, onValueChange: (String) -> Unit, isPassword: Boolean = false) {
+fun RegularTextField(text: String, onValueChange: (String) -> Unit, isPassword: Boolean = false, placeholder: String) {
+    var passwordVisible by remember { mutableStateOf(false) }
 
-    val orangeColor = Color(0xFFCD8C63)
-    val lightOrangeColor = Color(0xFFFFF5EE)
-    val darkOrangeColor = Color(0xFFB97A52)
+    val orangeColor = Color(0xFFE0A071)
+    val lightOrangeColor = Color(0xFFE0A071)
+
+    val keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Email
+    val visualTransformation = if (isPassword && !passwordVisible) {
+        PasswordVisualTransformation()
+    } else {
+        VisualTransformation.None
+    }
 
     OutlinedTextField(
         value = text,
@@ -34,24 +50,36 @@ fun RegularTextField(text: String, onValueChange: (String) -> Unit, isPassword: 
         modifier = Modifier.fillMaxWidth(),
         placeholder = {
             Text(
-                "example@mail.com",
-                color = Color.Gray.copy(alpha = 0.6f)
+                text = placeholder,
+                style = TextStyle(fontSize = 16.sp, color = Color(0xFF9F9F9F))
             )
         },
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = orangeColor,
             unfocusedBorderColor = orangeColor.copy(alpha = 0.5f),
-            focusedContainerColor = lightOrangeColor.copy(alpha = 0.3f),
-            unfocusedContainerColor = lightOrangeColor.copy(alpha = 0.3f)
+            focusedContainerColor = lightOrangeColor.copy(alpha = 0.1f),
+            unfocusedContainerColor = lightOrangeColor.copy(alpha = 0.1f)
         ),
         shape = RoundedCornerShape(12.dp),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         singleLine = true,
-        visualTransformation = if (isPassword) {
-            PasswordVisualTransformation()
-        } else {
-            VisualTransformation.None
-        }
+        visualTransformation = visualTransformation,
+        textStyle = TextStyle(fontSize = 18.sp, color = Color(0xFF333333)),
+        trailingIcon = if (isPassword) {
+            {
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    if (passwordVisible) {
+                        Text(text = "Sembunyikan", style = TextStyle(fontSize = 14.sp, color = Color(0xFF333333)))
+                    } else {
+                        Image(
+                            painter = painterResource(id = com.hariku.R.drawable.show_password),
+                            contentDescription = "Tampilkan kata sandi",
+                            modifier = Modifier.size(33.dp)
+                        )
+                    }
+                }
+            }
+        } else null
     )
 }
 
