@@ -38,8 +38,6 @@ fun LoginScreen() {
     var passwordVisible by remember { mutableStateOf(false) }
 
     val orangeColor = Color(0xFFCD8C63)
-    val lightOrangeColor = Color(0xFFFFF5EE)
-    val darkOrangeColor = Color(0xFFB97A52)
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -58,7 +56,8 @@ fun LoginScreen() {
         ) {
             RegularTextField(
                 text = email,
-                onValueChange = {email = it}
+                onValueChange = {email = it},
+                placeholder = "Email "
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -66,7 +65,8 @@ fun LoginScreen() {
             RegularTextField(
                 text = password,
                 onValueChange = {password = it},
-                isPassword = true
+                isPassword = true,
+                placeholder = "Password"
             )
 
             Spacer(modifier = Modifier.height(16.dp))
