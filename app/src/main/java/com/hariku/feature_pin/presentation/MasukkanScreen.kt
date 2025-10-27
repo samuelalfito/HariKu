@@ -69,7 +69,7 @@ fun FillPinScreen() {
                         color = Color(0xFF242424),
                         textDecoration = TextDecoration.Underline,
                     ),
-                    modifier = Modifier.clickable { /* TODO: Handle Skip */ }
+                    modifier = Modifier.clickable {}
                 )
             }
 
