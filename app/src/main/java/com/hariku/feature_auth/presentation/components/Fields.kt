@@ -53,10 +53,6 @@ fun RegularTextField(text: String, onValueChange: (String) -> Unit, isPassword: 
                 text = placeholder,
                 style = TextStyle(fontSize = 16.sp, color = Color(0xFF9F9F9F))
             )
-            Text(
-                text = placeholder,
-                style = TextStyle(fontSize = 16.sp, color = Color(0xFF9F9F9F))
-            )
         },
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = orangeColor,
