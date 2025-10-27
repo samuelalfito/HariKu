@@ -36,13 +36,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hariku.R // <-- Path R package Anda sudah benar
+import com.hariku.R 
 
 @Composable
 fun FillPinScreen() {
     var pinValue by remember { mutableStateOf("") }
     val maxPinLength = 4
-
 
     Box(
         modifier = Modifier
@@ -70,7 +69,7 @@ fun FillPinScreen() {
                         color = Color(0xFF242424),
                         textDecoration = TextDecoration.Underline,
                     ),
-                    modifier = Modifier.clickable { }
+                    modifier = Modifier.clickable {}
                 )
             }
 
@@ -80,7 +79,7 @@ fun FillPinScreen() {
                 text = "Masukkan Pin",
                 style = TextStyle(
                     fontSize = 24.sp,
-                    fontFamily = FontFamily.Default,
+                    fontFamily = FontFamily.Default, 
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF242424),
                     textAlign = TextAlign.Center,
@@ -131,47 +130,6 @@ fun FillPinScreen() {
     }
 }
 
-@Composable
-fun StatusBarComposable() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(52.dp)
-            .padding(horizontal = 30.dp, vertical = 15.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = "9:41",
-            style = TextStyle(
-                fontSize = 18.sp,
-                fontWeight = FontWeight(600),
-                color = Color.Black,
-            )
-        )
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_signal),
-                contentDescription = "Sinyal",
-                modifier = Modifier.size(20.dp)
-            )
-            Image(
-                painter = painterResource(id = R.drawable.ic_wifi),
-                contentDescription = "Wifi",
-                modifier = Modifier.size(20.dp)
-            )
-            Image(
-                painter = painterResource(id = R.drawable.ic_battery),
-                contentDescription = "Baterai",
-                modifier = Modifier.size(20.dp)
-            )
-        }
-    }
-}
-
 
 @Composable
 fun PinDotsComposable(count: Int, filled: Int) {
@@ -217,13 +175,13 @@ fun NumpadComposable(
             NumberButton(number = "9", size = buttonSize, onClick = { onNumberClick("9") })
         }
         Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-            Spacer(modifier = Modifier.size(buttonSize)) // Placeholder untuk tata letak
+            Spacer(modifier = Modifier.size(buttonSize)) 
             NumberButton(number = "0", size = buttonSize, onClick = { onNumberClick("0") })
 
             Box(
                 modifier = Modifier
                     .size(buttonSize)
-                    .background(Color.White, CircleShape) // <-- Latar belakang ditambahkan
+                    .background(Color.White, CircleShape) 
                     .clip(CircleShape)
                     .clickable { onBackspaceClick() },
                 contentAlignment = Alignment.Center

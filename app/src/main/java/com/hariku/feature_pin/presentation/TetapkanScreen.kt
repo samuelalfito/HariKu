@@ -41,7 +41,6 @@ fun PinScreenFull() {
     var pinValue by remember { mutableStateOf("") }
     val maxPinLength = 4
 
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -68,7 +67,7 @@ fun PinScreenFull() {
                         color = Color(0xFF242424),
                         textDecoration = TextDecoration.Underline,
                     ),
-                    modifier = Modifier.clickable { /* TODO: Handle Skip */ }
+                    modifier = Modifier.clickable {}
                 )
             }
 
@@ -141,6 +140,9 @@ fun PinScreenFull() {
     }
 }
 
+
+
+
 @Composable
 fun PinDotsComposable(count: Int, filled: Int) {
     Row(
@@ -156,6 +158,7 @@ fun PinDotsComposable(count: Int, filled: Int) {
         }
     }
 }
+
 
 @Composable
 fun NumpadComposable(

@@ -63,6 +63,7 @@ fun ConfirmPinScreen() {
                 modifier = Modifier.padding(horizontal = 40.dp)
             )
 
+
             Spacer(modifier = Modifier.height(48.dp))
 
             PinDotsComposableConfirm(
@@ -102,6 +103,7 @@ fun ConfirmPinScreen() {
         }
     }
 }
+
 
 @Composable
 fun PinDotsComposableConfirm(count: Int, filled: Int) {
@@ -167,6 +169,7 @@ fun NumpadComposableConfirm(
         }
     }
 }
+
 
 @Composable
 fun NumberButtonConfirm(
