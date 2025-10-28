@@ -19,10 +19,16 @@ import com.hariku.feature_profile.presentation.ProfileScreen
 
 @Composable
 fun NavGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Routes.ONBOARDING1){
+    NavHost(navController = navController, startDestination = Routes.SPLASH){
 
         composable(Routes.SPLASH){
-            SplashScreen()
+            SplashScreen() {
+                navController.navigate(Routes.ONBOARDING1){
+                    popUpTo(Routes.SPLASH){
+                        inclusive = true
+                    }
+                }
+            }
         }
         composable(Routes.ONBOARDING1){
             Onboarding1Screen(navController = navController)
