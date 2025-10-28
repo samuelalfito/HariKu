@@ -58,14 +58,14 @@ fun MainScaffold(parentNavController: NavHostController) {
                 HomeScreen(navController = parentNavController)
             }
             composable(Routes.CHATBOT) {
-                ChatScreen()
+                ChatScreen(navController = parentNavController)
             }
             composable(Routes.JOURNAL) {
                 JournalScreen()
             }
             composable(Routes.STATISTIC) {
                 Box {
-                    Text("Statistic Screen Coming Soon")
+                    Text("Statistic Screen Coming Soon") /*TODO: Statistic Screen*/
                 }
             }
         }

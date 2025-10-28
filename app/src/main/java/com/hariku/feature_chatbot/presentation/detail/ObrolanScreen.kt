@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -38,7 +39,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.hariku.R
+import com.hariku.core.ui.components.Routes
 
 data class ChatSession(
     val id: Int,
@@ -58,11 +62,10 @@ val mockChatList = listOf(
 )
 
 @Composable
-fun ChatScreen() {
+fun ChatScreen(navController: NavController) {
     Scaffold(
         containerColor = Color(0xFFF9F9F9),
         topBar = { ChatTopBar() },
-        bottomBar = { ChatBottomNavigation() },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { },
@@ -85,7 +88,13 @@ fun ChatScreen() {
                 .background(Color.White)
         ) {
             items(mockChatList) { session ->
-                ChatItem(session = session)
+                ChatItem(
+                    todo = { /*TODO: Navigate to chat detail*/
+                        Log.d("DEBUG", "Chat Detail")
+                        navController.navigate(Routes.DETAIL_CHATBOT_PLACEHOLDER)
+                    },
+                    session = session
+                )
                 Divider(
                     color = Color.LightGray.copy(alpha = 0.5f),
                     thickness = 1.dp,
@@ -149,11 +158,13 @@ fun ChatTopBar() {
 }
 
 @Composable
-fun ChatItem(session: ChatSession) {
+fun ChatItem(todo: () -> Unit, session: ChatSession) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { }
+            .clickable {
+                todo()
+            }
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -214,74 +225,11 @@ fun ChatItem(session: ChatSession) {
     }
 }
 
-@Composable
-fun ChatBottomNavigation() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(
-                width = 1.dp,
-                color = Color.Gray,
-                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
-            )
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            BottomAppBar(
-                containerColor = Color.White,
-                tonalElevation = 4.dp,
-                actions = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        BottomNavItem(drawableId = R.drawable.ic_nav_home, label = "Home", selected = false)
-                        BottomNavItem(drawableId = R.drawable.ic_nav_chat, label = "Chat", selected = true)
-                        BottomNavItem(drawableId = R.drawable.ic_nav_journal, label = "Jurnal", selected = false)
-                        BottomNavItem(drawableId = R.drawable.ic_nav_stats, label = "Statistik", selected = false)
-                    }
-                }
-            )
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White)
-                    .padding(bottom = 16.dp, top = 8.dp)
-            ) {
-            }
-        }
-    }
-}
-
-
-@Composable
-fun BottomNavItem(
-    @DrawableRes drawableId: Int,
-    label: String,
-    selected: Boolean
-) {
-    val color = if (selected) Color(0xFF6F4E37) else Color.Gray
-    IconButton(onClick = { }) {
-        Image(
-            painter = painterResource(id = drawableId),
-            contentDescription = label,
-            colorFilter = ColorFilter.tint(color),
-            modifier = Modifier.size(28.dp)
-        )
-    }
-}
-
 @Preview(showBackground = true, widthDp = 430, heightDp = 932)
 @Composable
 fun ChatScreenPreview() {
     MaterialTheme {
-        ChatScreen()
+        ChatScreen(rememberNavController())
     }
 }
 

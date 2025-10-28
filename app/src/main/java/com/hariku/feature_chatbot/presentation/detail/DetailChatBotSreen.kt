@@ -43,6 +43,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.hariku.R
 
 
@@ -66,12 +68,12 @@ val mockMessageList = listOf(
 )
 
 @Composable
-fun ChatDetailScreen() {
+fun ChatDetailScreen(navController: NavController) {
     var messageText by remember { mutableStateOf("") }
 
     Scaffold(
         containerColor = Color(0xFFFDE8D8),
-        topBar = { ChatDetailTopBar() },
+        topBar = { ChatDetailTopBar({navController.popBackStack()}) },
         bottomBar = {
             ChatDetailInputBar(
                 text = messageText,
@@ -102,7 +104,7 @@ fun ChatDetailScreen() {
 }
 
 @Composable
-fun ChatDetailTopBar() {
+fun ChatDetailTopBar(backTodo: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -117,7 +119,9 @@ fun ChatDetailTopBar() {
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { }) {
+            IconButton(onClick = {
+                backTodo()
+            }) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_back_arrow),
                     contentDescription = "Kembali",
@@ -306,6 +310,6 @@ fun ChatDetailInputBar(text: String, onTextChanged: (String) -> Unit) {
 @Composable
 fun ChatDetailScreenPreview() {
     MaterialTheme {
-        ChatDetailScreen()
+        ChatDetailScreen(rememberNavController())
     }
 }
