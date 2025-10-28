@@ -2,6 +2,7 @@ package com.hariku.feature_onboarding.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,12 +17,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.hariku.R
+import com.hariku.core.ui.components.Routes
 
 @Composable
-fun Onboarding2Screen() {
+fun Onboarding2Screen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -94,7 +99,9 @@ fun Onboarding2Screen() {
                 }
 
                 Button(
-                    onClick = {},
+                    onClick = {
+                        navController.navigate(Routes.ONBOARDING3)
+                    },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC97D50)),
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
@@ -108,9 +115,19 @@ fun Onboarding2Screen() {
                     text = "Lewati",
                     color = Color(0xFFC97D50),
                     fontSize = 15.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier
+                        .clickable {
+                            navController.navigate(Routes.AUTH_GRAPH)
+                        }
                 )
             }
         }
     }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun Onboarding2ScreenPreview() {
+    Onboarding2Screen(rememberNavController())
 }
