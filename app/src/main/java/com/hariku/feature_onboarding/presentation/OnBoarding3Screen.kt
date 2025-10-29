@@ -65,7 +65,7 @@ fun Onboarding3Screen(navController: NavController) {
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "AKenali lebih dalam kesehatan mentalmu dengan tanggapan dan rekap chat Calico!",
+                        text = "Kenali lebih dalam kesehatan mentalmu dengan tanggapan dan rekap chat Calico!",
                         fontSize = 18.sp,
                         color = Color(0xFF757575),
                         textAlign = TextAlign.Center
