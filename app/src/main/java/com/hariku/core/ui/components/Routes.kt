@@ -6,9 +6,7 @@ object Routes {
     const val REGISTER = "register"
 
     const val SPLASH = "splash"
-    const val ONBOARDING1 = "onboarding1"
-    const val ONBOARDING2 = "onboarding2"
-    const val ONBOARDING3 = "onboarding3"
+    const val ONBOARDING = "onboarding"
 
     const val PIN_GRAPH = "pin_graph"
     const val TETAPKAN_PIN = "tetapkan_pin"

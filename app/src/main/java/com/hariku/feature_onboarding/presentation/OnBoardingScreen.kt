@@ -35,7 +35,7 @@ import com.hariku.R
 import com.hariku.core.ui.components.Routes
 
 @Composable
-fun Onboarding1Screen(navController: NavController) {
+fun OnboardingScreen(navController: NavController) {
 
     val boxColorSelected = Color(0xFFC97D50)
     val boxColorUnselected  = Color(0xFFDDDDDD)
@@ -235,5 +235,5 @@ fun Onboarding1Screen(navController: NavController) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Onboarding1ScreenPreview() {
-    Onboarding1Screen(rememberNavController())
+    OnboardingScreen(rememberNavController())
 }
