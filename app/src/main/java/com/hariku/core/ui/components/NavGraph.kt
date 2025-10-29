@@ -10,9 +10,7 @@ import androidx.navigation.navigation
 import com.hariku.feature_auth.presentation.login.LoginScreen
 import com.hariku.feature_auth.presentation.register.RegisterScreen
 import com.hariku.feature_chatbot.presentation.detail.ChatDetailScreen
-import com.hariku.feature_onboarding.presentation.Onboarding1Screen
-import com.hariku.feature_onboarding.presentation.Onboarding2Screen
-import com.hariku.feature_onboarding.presentation.Onboarding3Screen
+import com.hariku.feature_onboarding.presentation.OnboardingScreen
 import com.hariku.feature_onboarding.presentation.SplashScreen
 import com.hariku.feature_pin.presentation.FillPinScreen
 import com.hariku.feature_profile.presentation.ProfileScreen
@@ -23,21 +21,15 @@ fun NavGraph(navController: NavHostController) {
 
         composable(Routes.SPLASH){
             SplashScreen() {
-                navController.navigate(Routes.ONBOARDING1){
+                navController.navigate(Routes.ONBOARDING){
                     popUpTo(Routes.SPLASH){
                         inclusive = true
                     }
                 }
             }
         }
-        composable(Routes.ONBOARDING1){
-            Onboarding1Screen(navController = navController)
-        }
-        composable(Routes.ONBOARDING2){
-            Onboarding2Screen(navController = navController)
-        }
-        composable(Routes.ONBOARDING3){
-            Onboarding3Screen(navController = navController)
+        composable(Routes.ONBOARDING){
+            OnboardingScreen(navController = navController)
         }
 
         navigation(
