@@ -1,3 +1,4 @@
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,6 +16,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,12 +39,25 @@ import androidx.navigation.compose.rememberNavController
 import com.hariku.R
 import com.hariku.core.ui.components.Routes
 
+private enum class Stage {
+    CREATE,
+    CONFIRM
+    //INPUT
+}
+
 @Composable
 fun PinScreenFull(navController: NavController) { /*TODO: PIN creation function*/
     
     var pinValue by remember { mutableStateOf("") }
+
+    var createdPin by remember { mutableStateOf("") } //ADDED
+    var errorMessage by remember { mutableStateOf<String?>(null) } //ADDED
+
+    var stage by remember { mutableStateOf(Stage.CREATE) }
+
     val maxPinLength = 4
-    
+    //val list = remember { mutableStateListOf<Int>() }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -50,89 +65,160 @@ fun PinScreenFull(navController: NavController) { /*TODO: PIN creation function*
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Spacer(modifier = Modifier.height(50.dp))
-            
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 12.dp),
-                horizontalArrangement = Arrangement.End
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Lewati",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily.Default,
-                        fontWeight = FontWeight(600),
-                        color = Color(0xFF242424),
-                        textDecoration = TextDecoration.Underline,
-                    ),
+                Spacer(modifier = Modifier.height(50.dp))
+                Row(
                     modifier = Modifier
-                        .clickable {
-                            navController.navigate(Routes.HOME) {
-                                popUpTo(0) { inclusive = true }
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 12.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Text(
+                        text = when(stage){
+                            Stage.CREATE -> {
+                                "Lewati"
+                            }
+                            Stage.CONFIRM -> {
+                                ""
+                            }
+                        },
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            fontFamily = FontFamily.Default,
+                            fontWeight = FontWeight(600),
+                            color = Color(0xFF242424),
+                            textDecoration = TextDecoration.Underline,
+                        ),
+                        modifier = Modifier
+                            .clickable {
+                                if (stage == Stage.CREATE){
+                                    navController.navigate(Routes.HOME) {
+                                        popUpTo(0) { inclusive = true }
+                                    }
+                                }
+                            }
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Text(
+                    text = when(stage){
+                        Stage.CREATE -> {
+                            "Tetapkan Pin Keamanan"
+                        }
+                        Stage.CONFIRM -> {
+                            "Konfirmasi Pin"
+                        }
+                    },
+                    style = TextStyle(
+                        fontSize = 24.sp,
+                        fontFamily = FontFamily.Default,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF242424),
+                        textAlign = TextAlign.Center,
+                    ),
+                    modifier = Modifier.padding(horizontal = 40.dp)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = when(stage){
+                        Stage.CREATE -> {
+                            "Setiap membuka aplikasi, Urai akan meminta pin keamanan"
+                        }
+                        Stage.CONFIRM -> {
+                            ""
+                        }
+                    },
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        lineHeight = 20.sp,
+                        fontFamily = FontFamily.Default,
+                        fontWeight = FontWeight.Normal,
+                        color = Color(0xFF242424),
+                        textAlign = TextAlign.Center,
+                    ),
+                    modifier = Modifier.padding(horizontal = 60.dp)
+                )
+
+                if (errorMessage != null) { //ADDED
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = errorMessage!!,
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            color = Color.Red,
+                            textAlign = TextAlign.Center,
+                        ),
+                        modifier = Modifier.padding(horizontal = 40.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Bottom
+            ){
+                PinDotsComposable(
+                    count = maxPinLength,
+                    filled = pinValue.length
+                )
+
+                Spacer(modifier = Modifier.height(48.dp))
+
+                NumpadComposable(
+                    onNumberClick = { number ->
+                        if (pinValue.length < maxPinLength) {
+                            pinValue += number
+                        }
+                        if (pinValue.length == maxPinLength) {
+                            when (stage) {
+                                Stage.CREATE -> {
+                                    // 1. Store the new PIN
+                                    createdPin = pinValue
+                                    // 2. Clear the input for confirmation
+                                    pinValue = ""
+                                    // 3. Move to the confirmation stage
+                                    stage = Stage.CONFIRM
+                                }
+                                Stage.CONFIRM -> {
+                                    if (pinValue == createdPin) {
+                                        // SUCCESS: PINs match, navigate to home
+                                        // TODO: Save the PIN securely before navigating
+                                        navController.navigate(Routes.HOME) {
+                                            popUpTo(0) { inclusive = true }
+                                        }
+                                    } else {
+                                        // FAILURE: PINs do not match, show error and reset
+                                        errorMessage = "PIN tidak cocok. Silakan buat ulang."
+                                        pinValue = ""
+                                        createdPin = ""
+                                        stage = Stage.CREATE
+                                    }
+                                }
                             }
                         }
+                    },
+                    onBackspaceClick = {
+                        if (pinValue.isNotEmpty()) {
+                            pinValue = pinValue.dropLast(1)
+                            errorMessage = null // Clear error on backspace
+                        }
+                    }
                 )
+                Spacer(modifier = Modifier.height(200.dp))
             }
-            
-            Spacer(modifier = Modifier.height(32.dp))
-            
-            Text(
-                text = "Tetapkan Pin Keamanan",
-                style = TextStyle(
-                    fontSize = 24.sp,
-                    fontFamily = FontFamily.Default,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF242424),
-                    textAlign = TextAlign.Center,
-                ),
-                modifier = Modifier.padding(horizontal = 40.dp)
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            Text(
-                text = "Setiap membuka aplikasi, Urai akan meminta pin keamanan",
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    lineHeight = 20.sp,
-                    fontFamily = FontFamily.Default,
-                    fontWeight = FontWeight.Normal,
-                    color = Color(0xFF242424),
-                    textAlign = TextAlign.Center,
-                ),
-                modifier = Modifier.padding(horizontal = 60.dp)
-            )
-            
-            Spacer(modifier = Modifier.height(32.dp))
-            
-            PinDotsComposable(
-                count = maxPinLength,
-                filled = pinValue.length
-            )
-            
-            Spacer(modifier = Modifier.height(48.dp))
-            
-            NumpadComposable(
-                onNumberClick = { number ->
-                    if (pinValue.length < maxPinLength) {
-                        pinValue += number
-                    }
-                    if (pinValue.length == maxPinLength) {
-                        navController.navigate(Routes.KONFIRMASI_PIN)
-                    } /*TODO: PIN creation function*/
-                },
-                onBackspaceClick = {
-                    if (pinValue.isNotEmpty()) {
-                        pinValue = pinValue.dropLast(1)
-                    }
-                }
-            )
-            
-            Spacer(modifier = Modifier.weight(1f))
         }
         
         Box(
@@ -170,7 +256,7 @@ fun PinDotsComposable(count: Int, filled: Int) {
 
 @Composable
 fun NumpadComposable(
-    onNumberClick: (String) -> Unit,
+    onNumberClick: (Int) -> Unit,
     onBackspaceClick: () -> Unit,
 ) {
     val buttonSize = 72.dp
@@ -181,23 +267,23 @@ fun NumpadComposable(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-            NumberButton(number = "1", size = buttonSize, onClick = { onNumberClick("1") })
-            NumberButton(number = "2", size = buttonSize, onClick = { onNumberClick("2") })
-            NumberButton(number = "3", size = buttonSize, onClick = { onNumberClick("3") })
+            NumberButton(number = "1", size = buttonSize, onClick = { onNumberClick(1) })
+            NumberButton(number = "2", size = buttonSize, onClick = { onNumberClick(2) })
+            NumberButton(number = "3", size = buttonSize, onClick = { onNumberClick(3) })
         }
         Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-            NumberButton(number = "4", size = buttonSize, onClick = { onNumberClick("4") })
-            NumberButton(number = "5", size = buttonSize, onClick = { onNumberClick("5") })
-            NumberButton(number = "6", size = buttonSize, onClick = { onNumberClick("6") })
+            NumberButton(number = "4", size = buttonSize, onClick = { onNumberClick(4) })
+            NumberButton(number = "5", size = buttonSize, onClick = { onNumberClick(5) })
+            NumberButton(number = "6", size = buttonSize, onClick = { onNumberClick(6) })
         }
         Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-            NumberButton(number = "7", size = buttonSize, onClick = { onNumberClick("7") })
-            NumberButton(number = "8", size = buttonSize, onClick = { onNumberClick("8") })
-            NumberButton(number = "9", size = buttonSize, onClick = { onNumberClick("9") })
+            NumberButton(number = "7", size = buttonSize, onClick = { onNumberClick(7) })
+            NumberButton(number = "8", size = buttonSize, onClick = { onNumberClick(8) })
+            NumberButton(number = "9", size = buttonSize, onClick = { onNumberClick(9) })
         }
         Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
             Spacer(modifier = Modifier.size(buttonSize))
-            NumberButton(number = "0", size = buttonSize, onClick = { onNumberClick("0") })
+            NumberButton(number = "0", size = buttonSize, onClick = { onNumberClick(0) })
             
             Box(
                 modifier = Modifier
@@ -243,7 +329,7 @@ fun NumberButton(
 }
 
 
-@Preview(showBackground = true, widthDp = 430, heightDp = 932)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PinScreenFullPreview() {
     PinScreenFull(rememberNavController())
