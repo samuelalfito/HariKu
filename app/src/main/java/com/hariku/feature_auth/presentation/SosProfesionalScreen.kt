@@ -36,15 +36,13 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hariku.R // Pastikan package R Anda sudah benar
+import com.hariku.R
 
-/**
- * Layar Bantuan Profesional (Hotline).
- */
+
 @Composable
 fun SosProfessionalScreen() {
     Scaffold(
-        containerColor = Color(0xFFFFFFFF), // Latar belakang yang sama
+        containerColor = Color(0xFFFFFFFF),
         topBar = { SosProTopBar() },
         bottomBar = { SosProHomeIndicator() }
     ) { paddingValues ->
@@ -52,7 +50,7 @@ fun SosProfessionalScreen() {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(horizontal = 24.dp), // Padding kiri & kanan
+                .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(modifier = Modifier.height(130.dp))
@@ -75,7 +73,6 @@ fun SosProfessionalScreen() {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Daftar Tombol Hotline
             HotlineButton(
                 title = "Hotline Pemerintah",
                 prefix = "Hotline 24 jam: ",
@@ -101,16 +98,14 @@ fun SosProfessionalScreen() {
     }
 }
 
-/**
- * Composable kustom untuk satu tombol hotline.
- */
+
 @Composable
 fun HotlineButton(
     title: String,
     prefix: String,
     hotline: String
 ) {
-    val hotlineColor = Color(0xFFB55D6C) // Warna merah tua
+    val hotlineColor = Color(0xFFB55D6C)
     val textHotlineColor = Color.Black
 
     Box(
@@ -123,8 +118,8 @@ fun HotlineButton(
                 shape = RoundedCornerShape(16.dp)
             )
             .background(Color.Transparent)
-            .clickable { /* TODO: Aksi Panggil (Intent) */ }
-            .padding(vertical = 16.dp), // Padding di dalam Box
+            .clickable { }
+            .padding(vertical = 16.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -135,7 +130,6 @@ fun HotlineButton(
                 fontSize = 20.sp
             )
             Spacer(modifier = Modifier.height(4.dp))
-            // Teks hotline dengan gaya berbeda
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(color = Color.Black, fontSize = 16.sp, fontWeight = FontWeight.Bold)) {
@@ -155,25 +149,20 @@ fun HotlineButton(
     }
 }
 
-/**
- * Top Bar untuk layar ini (Status Bar + Tombol Kembali).
- * Drawable: ic_signal, ic_wifi, ic_battery, ic_back_arrow
- */
 @Composable
 fun SosProTopBar() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.Transparent) // Latar belakang transparan
+            .background(Color.Transparent)
     ) {
-        // --- 2. Tombol Kembali ---
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 4.dp), // Padding kecil untuk IconButton
+                .padding(start = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { /* TODO: Aksi Kembali */ }) {
+            IconButton(onClick = { }) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_back_arrow),
                     contentDescription = "Kembali",
@@ -184,9 +173,6 @@ fun SosProTopBar() {
     }
 }
 
-/**
- * Indikator Home (garis hitam di bawah).
- */
 @Composable
 fun SosProHomeIndicator() {
     Box(
@@ -197,8 +183,6 @@ fun SosProHomeIndicator() {
     ) {
     }
 }
-
-// --- Preview ---
 
 @Preview(showBackground = true, widthDp = 430, heightDp = 932)
 @Composable

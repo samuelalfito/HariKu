@@ -32,15 +32,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hariku.R // Pastikan package R Anda sudah benar
+import com.hariku.R
 
-/**
- * Layar SOS untuk keadaan darurat.
- */
 @Composable
 fun SosScreen() {
     Scaffold(
-        // Menggunakan warna latar belakang yang sama dengan layar PIN
         containerColor = Color(0xFFFFFFFF),
         topBar = { SosTopBar() },
         bottomBar = { HomeIndicator() }
@@ -49,7 +45,7 @@ fun SosScreen() {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(horizontal = 24.dp), // Padding kiri & kanan untuk konten
+                .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(modifier = Modifier.height(180.dp))
@@ -90,7 +86,6 @@ fun SosScreen() {
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            // Tombol 1: Teknik Panca Indra (Outlined)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -98,16 +93,16 @@ fun SosScreen() {
                     .clip(RoundedCornerShape(28.dp))
                     .border(
                         width = 1.dp,
-                        color = Color(0xFFB55D6C), // Warna merah tua
+                        color = Color(0xFFB55D6C),
                         shape = RoundedCornerShape(28.dp)
                     )
-                    .background(Color.Transparent) // Latar belakang transparan
-                    .clickable { /* TODO: Aksi Tombol 1 */ },
+                    .background(Color.Transparent)
+                    .clickable { },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "Coba Teknik 5 Panca Indra",
-                    color = Color(0xFFB55D6C), // Warna teks sama dengan border
+                    color = Color(0xFFB55D6C),
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
                 )
@@ -115,19 +110,18 @@ fun SosScreen() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Tombol 2: Bantuan Profesional (Solid)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
                     .clip(RoundedCornerShape(28.dp))
-                    .background(Color(0xFFB55D6C)) // Latar belakang merah tua
-                    .clickable { /* TODO: Aksi Tombol 2 */ },
+                    .background(Color(0xFFB55D6C))
+                    .clickable { },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "Bantuan Profesional",
-                    color = Color.White, // Warna teks putih
+                    color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
                 )
@@ -136,29 +130,23 @@ fun SosScreen() {
     }
 }
 
-/**
- * Top Bar sederhana untuk layar SOS (Status Bar + Tombol Kembali).
- * Drawable yang dibutuhkan: ic_signal, ic_wifi, ic_battery, ic_back_arrow
- */
 @Composable
 fun SosTopBar() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            // Latar belakang transparan agar menyatu dengan scaffold
             .background(Color.Transparent)
     ) {
 
         Spacer(modifier = Modifier.height(10.dp))
-        // --- 2. Tombol Kembali ---
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 4.dp), // Padding kecil untuk IconButton
+                .padding(start = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            IconButton(onClick = { /* TODO: Aksi Kembali */ }) {
+            IconButton(onClick = { }) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_back_arrow),
                     contentDescription = "Kembali",
@@ -169,9 +157,6 @@ fun SosTopBar() {
     }
 }
 
-/**
- * Indikator Home (garis hitam di bawah).
- */
 @Composable
 fun HomeIndicator() {
     Box(
@@ -181,8 +166,6 @@ fun HomeIndicator() {
         contentAlignment = Alignment.Center
     ){}
 }
-
-// --- Preview ---
 
 @Preview(showBackground = true, widthDp = 430, heightDp = 932)
 @Composable
