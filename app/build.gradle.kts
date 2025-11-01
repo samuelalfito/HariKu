@@ -69,4 +69,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.analytics)
+    
+    //View Pager
+    implementation("com.google.accompanist:accompanist-pager:0.32.0")
 }
