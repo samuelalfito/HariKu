@@ -4,7 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,12 +24,12 @@ fun BottomNavBar(selectedIndex: Int = 0, onItemSelected: (Int) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(88.dp)
             .background(
                 color = Color.White,
                 shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
             )
-            .padding(horizontal = 32.dp),
+            .padding(horizontal = 32.dp, vertical = 8.dp)
+            .navigationBarsPadding(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

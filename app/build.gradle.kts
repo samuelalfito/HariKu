@@ -2,8 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-
     alias(libs.plugins.google.services)
+    id("androidx.room")
+    id("com.google.devtools.ksp") version "1.5.30-1.0.0"
 }
 
 android {
@@ -41,6 +42,10 @@ android {
     buildFeatures {
         compose = true
     }
+    
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 }
 
 dependencies {
@@ -69,4 +74,14 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.analytics)
+    
+    //Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    
+    //Koin
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.androidx.navigation)
 }
