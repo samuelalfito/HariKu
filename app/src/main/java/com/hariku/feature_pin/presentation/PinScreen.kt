@@ -1,4 +1,3 @@
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,7 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -38,25 +37,43 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hariku.R
 import com.hariku.core.ui.components.Routes
+import com.hariku.feature_pin.data.local.PinDatabase
+import com.hariku.feature_pin.data.local.entity.Pin
+import com.hariku.feature_pin.presentation.PinScreenViewModel
+import org.koin.androidx.compose.koinViewModel
+import kotlin.getValue
 
 private enum class Stage {
     CREATE,
-    CONFIRM
-    //INPUT
+    CONFIRM,
+    INPUT
 }
 
 @Composable
-fun PinScreenFull(navController: NavController) { /*TODO: PIN creation function*/
+fun PinScreenFull( /*TODO: Fitur ganti Pin (tunggu tombol ganti pin)*/
+    navController: NavController,
+    viewModel: PinScreenViewModel = koinViewModel()
+) {
     
     var pinValue by remember { mutableStateOf("") }
-
     var createdPin by remember { mutableStateOf("") } //ADDED
     var errorMessage by remember { mutableStateOf<String?>(null) } //ADDED
-
     var stage by remember { mutableStateOf(Stage.CREATE) }
+
+    val pin: Pin? by viewModel.pin.observeAsState()
 
     val maxPinLength = 4
     //val list = remember { mutableStateListOf<Int>() }
+
+    if (pin != null) {
+        stage = Stage.INPUT
+    }
+
+    //Testing, buka komentar kalo mau ganti pin soalnya belum ada fitur ganti pin
+//    if(pin != null){
+//        viewModel.deletePin(pin = pin!!)
+//        stage = Stage.CREATE
+//    }
 
     Box(
         modifier = Modifier
@@ -85,6 +102,9 @@ fun PinScreenFull(navController: NavController) { /*TODO: PIN creation function*
                                 "Lewati"
                             }
                             Stage.CONFIRM -> {
+                                ""
+                            }
+                            Stage.INPUT -> {
                                 ""
                             }
                         },
@@ -116,6 +136,9 @@ fun PinScreenFull(navController: NavController) { /*TODO: PIN creation function*
                         Stage.CONFIRM -> {
                             "Konfirmasi Pin"
                         }
+                        Stage.INPUT -> {
+                            "Masukkan Pin"
+                        }
                     },
                     style = TextStyle(
                         fontSize = 24.sp,
@@ -135,6 +158,9 @@ fun PinScreenFull(navController: NavController) { /*TODO: PIN creation function*
                             "Setiap membuka aplikasi, Urai akan meminta pin keamanan"
                         }
                         Stage.CONFIRM -> {
+                            ""
+                        }
+                        Stage.INPUT -> {
                             ""
                         }
                     },
@@ -185,23 +211,36 @@ fun PinScreenFull(navController: NavController) { /*TODO: PIN creation function*
                         if (pinValue.length == maxPinLength) {
                             when (stage) {
                                 Stage.CREATE -> {
-                                    // 1. Store the new PIN
                                     createdPin = pinValue
-                                    // 2. Clear the input for confirmation
                                     pinValue = ""
-                                    // 3. Move to the confirmation stage
                                     stage = Stage.CONFIRM
                                 }
                                 Stage.CONFIRM -> {
                                     if (pinValue == createdPin) {
                                         // SUCCESS: PINs match, navigate to home
-                                        // TODO: Save the PIN securely before navigating
+
+                                        viewModel.addPin(pin = Pin(pin = createdPin))
+
                                         navController.navigate(Routes.HOME) {
                                             popUpTo(0) { inclusive = true }
                                         }
                                     } else {
                                         // FAILURE: PINs do not match, show error and reset
                                         errorMessage = "PIN tidak cocok. Silakan buat ulang."
+                                        pinValue = ""
+                                        createdPin = ""
+                                        stage = Stage.CREATE
+                                    }
+                                }
+                                Stage.INPUT -> {
+                                    if(pinValue == pin?.pin) {
+                                        navController.navigate(Routes.HOME) {
+                                            popUpTo(0) { inclusive = true }
+                                        }
+                                    }
+                                    else {
+                                        // FAILURE: PINs do not match, show error and reset
+                                        errorMessage = "PIN tidak cocok."
                                         pinValue = ""
                                         createdPin = ""
                                         stage = Stage.CREATE

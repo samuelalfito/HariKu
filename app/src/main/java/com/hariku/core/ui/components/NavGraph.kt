@@ -1,6 +1,5 @@
 package com.hariku.core.ui.components
 
-import ConfirmPinScreen
 import PinScreenFull
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -50,9 +49,6 @@ fun NavGraph(navController: NavHostController) {
         ){
             composable(Routes.TETAPKAN_PIN){
                 PinScreenFull(navController = navController)
-            }
-            composable(Routes.KONFIRMASI_PIN){
-                ConfirmPinScreen(navController = navController)
             }
             composable(Routes.MASUKKAN_PIN){
                 FillPinScreen(navController = navController)
