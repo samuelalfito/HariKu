@@ -85,4 +85,7 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.androidx.navigation)
+    
+    //View Pager
+    implementation("com.google.accompanist:accompanist-pager:0.32.0")
 }

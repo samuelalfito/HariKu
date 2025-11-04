@@ -20,6 +20,7 @@ material3 = "1.4.0"
 roomRuntime = "2.8.3"
 uiText = "1.9.4"
 navigationRuntimeKtx = "2.9.5"
+composeTesting = "1.0.0-alpha08"
 runtimeLivedata = "1.9.4"
 
 [libraries]
@@ -49,10 +50,13 @@ firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-compose-ui-text = { group = "androidx.compose.ui", name = "ui-text", version.ref = "uiText" }
+
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 koin-androidx-navigation = { module = "io.insert-koin:koin-androidx-navigation", version.ref = "koinAndroidxNavigation" }
 androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+
+androidx-compose-testing = { group = "androidx.xr.compose", name = "compose-testing", version.ref = "composeTesting" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
