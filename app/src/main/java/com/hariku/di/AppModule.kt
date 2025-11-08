@@ -1,11 +1,24 @@
 package com.hariku.di
 
-import com.hariku.feature_pin.data.local.PinDatabase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.hariku.feature_auth.presentation.login.di.loginModule
+import com.hariku.feature_auth.presentation.register.di.registerModule
 import com.hariku.feature_pin.di.pinModule
-import com.hariku.feature_pin.domain.repository.PinRepository
-import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val appModule = listOf(
-    pinModule
+    module {
+        single {
+            FirebaseAuth.getInstance()
+        }
+    },
+    module {
+        single {
+            FirebaseFirestore.getInstance()
+        }
+    },
+    pinModule,
+    loginModule,
+    registerModule
 )

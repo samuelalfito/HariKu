@@ -20,8 +20,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,15 +47,37 @@ import com.hariku.core.ui.components.Routes
 import com.hariku.feature_auth.presentation.components.AuthDivider
 import com.hariku.feature_auth.presentation.components.RegularTextField
 import com.hariku.feature_auth.presentation.components.TextLogo
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
-fun LoginScreen(navController: NavController) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+fun LoginScreen(
+    navController: NavController,
+    viewModel: LoginScreenViewModel = koinViewModel()
+) {
     var passwordVisible by remember { mutableStateOf(false) }
 
+    val uiState by viewModel.uiState.collectAsState()
+
     val orangeColor = Color(0xFFCD8C63)
+
+    LaunchedEffect(key1 = uiState) {
+        if (uiState.loginSuccess) {
+            // SUKSES! Arahkan ke PIN_GRAPH
+            // Ini adalah cara navigasi yang benar
+            navController.navigate(Routes.PIN_GRAPH) {
+                // Hapus tumpukan navigasi auth agar user tidak bisa kembali ke login
+                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+            }
+        }
+
+        if (uiState.error != null) {
+            // ADA ERROR! Tampilkan Snackbar atau Toast di sini
+            Log.e("LoginScreen", "Error: ${uiState.error}")
+            // Beri tahu ViewModel bahwa error sudah ditampilkan
+            viewModel.onErrorShown()
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -92,16 +117,16 @@ fun LoginScreen(navController: NavController) {
                     .fillMaxWidth()
             ) {
                 RegularTextField(
-                    text = email,
-                    onValueChange = { email = it },
+                    text = uiState.email,
+                    onValueChange = { viewModel.onEmailChange(it) },
                     placeholder = "Email "
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 RegularTextField(
-                    text = password,
-                    onValueChange = { password = it },
+                    text = uiState.password,
+                    onValueChange = { viewModel.onPasswordChange(it) },
                     isPassword = true,
                     placeholder = "Password"
                 )
@@ -113,8 +138,9 @@ fun LoginScreen(navController: NavController) {
                         /*TODO: LOGIN FEATURE
                                 PIN Verification, if have PIN go to Routes.MASUKKAN_PIN*/
                         Log.d("DEBUG", "Login")
-                        navController.navigate(Routes.PIN_GRAPH)
+                        viewModel.onLoginClicked()
                     },
+                    enabled = !uiState.isLoading,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
@@ -123,12 +149,20 @@ fun LoginScreen(navController: NavController) {
                     ),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text(
-                        text = "Login",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.White
-                    )
+                    if (uiState.isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            color = Color.White,
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Text(
+                            text = "Login",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color.White
+                        )
+                    }
                 }
             }
 

@@ -1,5 +1,6 @@
 package com.hariku.feature_auth.presentation.register
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,8 +19,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,17 +51,42 @@ import com.hariku.feature_auth.presentation.components.TextLogo
 import com.hariku.R
 import com.hariku.core.ui.components.Routes
 import com.hariku.core.ui.theme.HariKuTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun RegisterScreen(navController: NavController) {
-    var email by remember { mutableStateOf("") }
-    var name by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+fun RegisterScreen(
+    navController: NavController,
+    viewModel: RegisterScreenViewModel = koinViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    var errorMessage by remember { mutableStateOf("") }
+
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPassword by remember { mutableStateOf("") }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
 
     val orangeColor = Color(0xFFCD8C63)
+
+    if(uiState.error != null && uiState.error != ""){ errorMessage = uiState.error!! }
+
+    // --- TAMBAHAN: Menangani navigasi dan error ---
+    LaunchedEffect(key1 = uiState) {
+        if (uiState.registerSuccess) {
+            // SUKSES! Arahkan ke PIN_GRAPH
+            navController.navigate(Routes.PIN_GRAPH) {
+                // Hapus tumpukan navigasi auth agar user tidak bisa kembali
+                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+            }
+        }
+
+        if (uiState.error != null) {
+            // ADA ERROR! Tampilkan Snackbar atau Toast di sini
+            Log.e("RegisterScreen", "Error: ${uiState.error}")
+            // Beri tahu ViewModel bahwa error sudah ditampilkan
+            viewModel.onErrorShown()
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -94,24 +123,24 @@ fun RegisterScreen(navController: NavController) {
                     .fillMaxWidth()
             ) {
                 RegularTextField(
-                    text = email,
-                    onValueChange = { email = it },
+                    text = uiState.email,
+                    onValueChange = { viewModel.onEmailChange(it) },
                     placeholder = "Email atau Nomor Telepon"
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 RegularTextField(
-                    text = name,
-                    onValueChange = { name = it },
+                    text = uiState.name,
+                    onValueChange = { viewModel.onNameChange(it) },
                     placeholder = "Nama"
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 RegularTextField(
-                    text = password,
-                    onValueChange = { password = it },
+                    text = uiState.password,
+                    onValueChange = { viewModel.onPasswordChange(it) },
                     isPassword = true,
                     placeholder = "Kata Sandi (Minimal 8 Karakter)"
                 )
@@ -119,10 +148,20 @@ fun RegisterScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 RegularTextField(
-                    text = confirmPassword,
-                    onValueChange = { confirmPassword = it },
+                    text = uiState.confirmPassword,
+                    onValueChange = { viewModel.onConfirmPasswordChange(it) },
                     isPassword = true,
                     placeholder = "Konfirmasi Kata Sandi"
+                )
+
+                Text(
+                    text = errorMessage,
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        color = Color.Red,
+                        textAlign = TextAlign.Center,
+                    ),
+                    modifier = Modifier.padding(horizontal = 40.dp)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -130,8 +169,9 @@ fun RegisterScreen(navController: NavController) {
                 Button(
                     onClick = {
                         /*TODO REGISTER FEATURE*/
-                        navController.navigate(Routes.PIN_GRAPH)
+                        viewModel.onRegisterClicked()
                     },
+                    enabled = !uiState.isLoading,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
@@ -140,12 +180,20 @@ fun RegisterScreen(navController: NavController) {
                         containerColor = orangeColor
                     )
                 ) {
-                    Text(
-                        text = "Daftar",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.White
-                    )
+                    if (uiState.isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            color = Color.White,
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Text(
+                            text = "Daftar",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color.White
+                        )
+                    }
                 }
             }
 
