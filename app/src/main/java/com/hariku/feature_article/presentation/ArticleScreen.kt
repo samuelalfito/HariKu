@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +28,9 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,13 +41,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -58,11 +60,16 @@ import com.hariku.feature_article.presentation.components.CategoryCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ArticleScreen() {
-    var searchQuery by remember { mutableStateOf("") }
+fun ArticleScreen(viewModel: ArticleViewModel = ArticleViewModel()) {
+    val searchQuery by viewModel.searchQuery
+    val filteredArticles = viewModel.filteredArticles
 
     Scaffold(
-        topBar = { ArticleTopBar(searchQuery = searchQuery, onSearchQueryChange = { searchQuery }) },
+        topBar = {
+            ArticleTopBar(
+                searchQuery = searchQuery,
+                onSearchQueryChange = viewModel::onSearchQueryChange
+            )},
         containerColor = MaterialTheme.colorScheme.background,
     ) { padding ->
         LazyColumn(
@@ -71,57 +78,114 @@ fun ArticleScreen() {
                 .padding(padding)
                 .padding(horizontal = 16.dp)
         ) {
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Artikel Pilihan",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF333333)
-                )
-                Text(
-                    text = "Pahami topik kesehatan mental dengan lebih baik.",
-                    fontSize = 12.sp,
-                    color = Color(0xFF9F9F9F)
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-            }
+            if (searchQuery.isBlank()) {
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "Artikel Pilihan",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF333333)
+                    )
+                    Text(
+                        text = "Pahami topik kesehatan mental dengan lebih baik.",
+                        fontSize = 12.sp,
+                        color = Color(0xFF9F9F9F)
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                }
 
-            item {
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(vertical = 8.dp)
-                ) {
-                    items(sampleArticles) { article ->
-                        ArticleCard(article = article)
+                item {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        contentPadding = PaddingValues(vertical = 8.dp)
+                    ) {
+                        items(sampleArticles) { article ->
+                            ArticleCard(article = article, modifier = Modifier.width(250.dp))
+                        }
                     }
                 }
-            }
 
-            item {
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = "Kategori",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF333333)
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-            }
+                item {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = "Kategori",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF333333)
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
 
-            item {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.height(520.dp),
-                    userScrollEnabled = false
-                ) {
-                    items(categories) { imageRes ->
-                        CategoryCard(imageRes)
+                item {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier.height(520.dp),
+                        userScrollEnabled = false
+                    ) {
+                        items(categories) { imageRes ->
+                            CategoryCard(imageRes)
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            } else {
+                if (filteredArticles.isEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(top = 40.dp),
+                            contentAlignment = Alignment.TopCenter
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 32.dp)
+                                    .align(Alignment.TopCenter),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Search,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(64.dp),
+                                    tint = Color(0xFFBDBDBD)
+                                )
+                                Spacer(modifier = Modifier.height(12.dp))
+                                Text(
+                                    text = "Artikel tidak ditemukan",
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF333333)
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "Coba kata kunci lain atau bersihkan pencarian.",
+                                    fontSize = 16.sp,
+                                    color = Color(0xFF9F9F9F)
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Button(
+                                    onClick = { viewModel.onSearchQueryChange("") },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = Color(0xFFE1A071),
+                                        contentColor = Color.White
+                                    ),
+                                    shape = RoundedCornerShape(8.dp)
+                                ) {
+                                    Text("Bersihkan Pencarian")
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    items(filteredArticles) { article ->
+                        Spacer(modifier = Modifier.height(24.dp))
+                        ArticleCard(article = article, modifier = Modifier.fillMaxWidth())
                     }
                 }
-                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
@@ -148,76 +212,97 @@ fun ArticleTopBar(
             )
         },
         title = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.dp)
-                    .padding(end = 28.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.surface)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Icon(
-                        painter = painterResource(id = R.drawable.search_lens),
-                        contentDescription = "Search Icon",
-                        modifier = Modifier.size(12.dp),
-                        tint = Color(0xFF9F9F9F)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-
-                    BasicTextField(
-                        value = searchQuery,
-                        onValueChange = { onSearchQueryChange(it) },
-                        singleLine = true,
-                        textStyle = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.colorScheme.onSurface
-                        ),
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight(),
-                        decorationBox = { innerTextField ->
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.CenterStart
-                            ) {
-                                if (searchQuery.isEmpty()) {
-                                    Text(
-                                        text = "Cari Artikel",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = Color.Gray
-                                    )
-                                }
-                                innerTextField()
-                            }
-                        },
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            imeAction = ImeAction.Search
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onSearch = {  }
-                        )
-                    )
-
-                    if (searchQuery.isNotEmpty()) {
-                        IconButton(onClick = { onSearchQueryChange("") }) {
-                            Icon(
-                                Icons.Default.Close,
-                                contentDescription = "Clear",
-                                modifier = Modifier.size(18.dp)
-                            )
-                        }
-                    }
-                }
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(40.dp)
+                .padding(end = 28.dp)) {
+                SearchBar(
+                    query = searchQuery,
+                    onQueryChange = onSearchQueryChange,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(40.dp)
+                        .align(Alignment.CenterStart)
+                        .padding(horizontal = 0.dp)
+                )
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color(0xFFE1A071)
         ),
     )
+}
+
+@Composable
+private fun SearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color.White)
+            .padding(horizontal = 8.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.search_lens),
+                contentDescription = "Search Icon",
+                modifier = Modifier.size(12.dp),
+                tint = Color(0xFF9F9F9F)
+            )
+
+            Spacer(modifier = Modifier.width(6.dp))
+
+            BasicTextField(
+                value = query,
+                onValueChange = { onQueryChange(it) },
+                singleLine = true,
+                textStyle = MaterialTheme.typography.bodySmall.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                ),
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
+                decorationBox = { innerTextField ->
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        if (query.isEmpty()) {
+                            Text(
+                                text = "Cari Artikel",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color(0xFF9F9F9F)
+                            )
+                        }
+                        innerTextField()
+                    }
+                },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {  }
+                )
+            )
+
+            if (query.isNotEmpty()) {
+                IconButton(onClick = { onQueryChange("") }) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = "Clear",
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            }
+        }
+    }
 }
 
 val sampleArticles = listOf(
@@ -259,6 +344,7 @@ val categories = listOf(
 @Composable
 private fun ArticleScreenPreview() {
     HariKuTheme {
-        ArticleScreen()
+        val previewViewModel = ArticleViewModel().apply { setArticles(sampleArticles) }
+        ArticleScreen(viewModel = previewViewModel)
     }
 }

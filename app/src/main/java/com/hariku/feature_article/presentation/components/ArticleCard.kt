@@ -26,15 +26,14 @@ import androidx.compose.ui.unit.sp
 import com.hariku.R
 import com.hariku.core.ui.theme.HariKuTheme
 import com.hariku.feature_article.domain.model.Article
-import com.hariku.feature_article.presentation.ArticleScreen
 
 @Composable
 fun ArticleCard(
-    article: Article
+    article: Article,
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier
-            .width(250.dp)
+        modifier = modifier
             .height(240.dp)
             .clickable { },
         shape = RoundedCornerShape(12.dp),
@@ -86,6 +85,6 @@ private fun ArticleCardPreview() {
             readTime = "5 Menit",
             imageRes = R.drawable.cat
         )
-        ArticleCard(article = sample)
+        ArticleCard(article = sample, modifier = Modifier.width(250.dp))
     }
 }
