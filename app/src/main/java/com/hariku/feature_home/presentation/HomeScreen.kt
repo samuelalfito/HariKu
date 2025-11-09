@@ -40,9 +40,14 @@ import com.hariku.core.ui.components.Routes
 import com.hariku.feature_home.presentation.components.ActivityCard
 import com.hariku.feature_home.presentation.components.ChatCard
 import com.hariku.feature_home.presentation.components.MoodCard
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun HomeScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    moodViewModel: MoodViewModel = koinViewModel()
+) {
     Box(
         modifier = modifier.fillMaxSize()
     ) {
@@ -108,7 +113,7 @@ fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    MoodCard()
+                    MoodCard(viewModel = moodViewModel)
                     Card(
                         shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.cardColors(containerColor = Color(0xFF71a77a)),
