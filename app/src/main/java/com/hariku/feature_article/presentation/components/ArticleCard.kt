@@ -45,7 +45,7 @@ fun ArticleCard(article: Article) {
                 contentDescription = article.title,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(140.dp),
+                    .height(150.dp),
                 contentScale = ContentScale.Crop
             )
             Column(
