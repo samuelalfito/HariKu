@@ -62,93 +62,7 @@ fun ArticleScreen() {
     var searchQuery by remember { mutableStateOf("") }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                modifier = Modifier
-                    .height(72.dp)
-                    .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)),
-                navigationIcon = {
-                    Icon(
-                        painterResource(id = R.drawable.back_arrow),
-                        contentDescription = "Back",
-                        modifier = Modifier
-                            .size(48.dp)
-                            .statusBarsPadding()
-                            .clickable { }
-                    )
-                },
-                title = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(40.dp)
-                            .padding(end = 28.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(MaterialTheme.colorScheme.surface)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Icon(
-                                painter = painterResource(id = R.drawable.search_lens),
-                                contentDescription = "Search Icon",
-                                modifier = Modifier.size(12.dp),
-                                tint = Color(0xFF9F9F9F)
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-
-                            BasicTextField(
-                                value = searchQuery,
-                                onValueChange = { searchQuery = it },
-                                singleLine = true,
-                                textStyle = MaterialTheme.typography.bodySmall.copy(
-                                    color = MaterialTheme.colorScheme.onSurface
-                                ),
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxHeight(),
-                                decorationBox = { innerTextField ->
-                                    Box(
-                                        modifier = Modifier.fillMaxSize(),
-                                        contentAlignment = Alignment.CenterStart
-                                    ) {
-                                        if (searchQuery.isEmpty()) {
-                                            Text(
-                                                text = "Cari Artikel",
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = Color.Gray
-                                            )
-                                        }
-                                        innerTextField()
-                                    }
-                                },
-                                keyboardOptions = KeyboardOptions.Default.copy(
-                                    imeAction = ImeAction.Search
-                                ),
-                                keyboardActions = KeyboardActions(
-                                    onSearch = {  }
-                                )
-                            )
-
-                            if (searchQuery.isNotEmpty()) {
-                                IconButton(onClick = { searchQuery = "" }) {
-                                    Icon(
-                                        Icons.Default.Close,
-                                        contentDescription = "Clear",
-                                        modifier = Modifier.size(18.dp)
-                                    )
-                                }
-                            }
-                        }
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFE1A071)
-                ),
-            )
-        },
+        topBar = { ArticleTopBar(searchQuery = searchQuery, onSearchQueryChange = { searchQuery }) },
         containerColor = MaterialTheme.colorScheme.background,
     ) { padding ->
         LazyColumn(
@@ -170,7 +84,7 @@ fun ArticleScreen() {
                     fontSize = 12.sp,
                     color = Color(0xFF9F9F9F)
                 )
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(6.dp))
             }
 
             item {
@@ -213,16 +127,109 @@ fun ArticleScreen() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ArticleTopBar(
+    searchQuery: String,
+    onSearchQueryChange: (String) -> Unit
+) {
+    TopAppBar(
+        modifier = Modifier
+            .height(72.dp)
+            .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)),
+        navigationIcon = {
+            Icon(
+                painterResource(id = R.drawable.back_arrow),
+                contentDescription = "Back",
+                modifier = Modifier
+                    .size(48.dp)
+                    .statusBarsPadding()
+                    .clickable { }
+            )
+        },
+        title = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(40.dp)
+                    .padding(end = 28.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.surface)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Icon(
+                        painter = painterResource(id = R.drawable.search_lens),
+                        contentDescription = "Search Icon",
+                        modifier = Modifier.size(12.dp),
+                        tint = Color(0xFF9F9F9F)
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+
+                    BasicTextField(
+                        value = searchQuery,
+                        onValueChange = { onSearchQueryChange(it) },
+                        singleLine = true,
+                        textStyle = MaterialTheme.typography.bodySmall.copy(
+                            color = MaterialTheme.colorScheme.onSurface
+                        ),
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
+                        decorationBox = { innerTextField ->
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.CenterStart
+                            ) {
+                                if (searchQuery.isEmpty()) {
+                                    Text(
+                                        text = "Cari Artikel",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = Color.Gray
+                                    )
+                                }
+                                innerTextField()
+                            }
+                        },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Search
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onSearch = {  }
+                        )
+                    )
+
+                    if (searchQuery.isNotEmpty()) {
+                        IconButton(onClick = { onSearchQueryChange("") }) {
+                            Icon(
+                                Icons.Default.Close,
+                                contentDescription = "Clear",
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color(0xFFE1A071)
+        ),
+    )
+}
+
 val sampleArticles = listOf(
     Article(
         id = 1,
-        title = "Kendalikan Kekhawatiranmu",
+        title = "Kendalikan Kekhawatiranmu!",
         category = "Kecemasan",
         readTime = "5 Menit",
     ),
     Article(
         id = 2,
-        title = "5 Hal yang Dapat Memicu Depresi",
+        title = "5 Hal yang Dapat Membantu Kecemasanmu!",
         category = "Depresi",
         readTime = "5 Menit"
     ),
