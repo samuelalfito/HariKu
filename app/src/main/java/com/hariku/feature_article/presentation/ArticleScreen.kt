@@ -53,7 +53,6 @@ import androidx.compose.ui.unit.sp
 import com.hariku.R
 import com.hariku.core.ui.theme.HariKuTheme
 import com.hariku.feature_article.domain.model.Article
-import com.hariku.feature_article.domain.model.Category
 import com.hariku.feature_article.presentation.components.ArticleCard
 import com.hariku.feature_article.presentation.components.CategoryCard
 
@@ -204,8 +203,8 @@ fun ArticleScreen() {
                     modifier = Modifier.height(520.dp),
                     userScrollEnabled = false
                 ) {
-                    items(categories) { category ->
-                        CategoryCard(category = category)
+                    items(categories) { imageRes ->
+                        CategoryCard(imageRes)
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -219,7 +218,7 @@ val sampleArticles = listOf(
         id = 1,
         title = "Kendalikan Kekhawatiranmu",
         category = "Kecemasan",
-        readTime = "5 Menit"
+        readTime = "5 Menit",
     ),
     Article(
         id = 2,
@@ -236,14 +235,14 @@ val sampleArticles = listOf(
 )
 
 val categories = listOf(
-    Category(1, "STRES", R.drawable.ic_kategori_stres),
-    Category(2, "KECEMASAN", R.drawable.ic_kategori_kecemasan),
-    Category(3, "MOTIVASI DIRI", R.drawable.ic_kategori_motivasi_diri),
-    Category(4, "TIDUR", R.drawable.ic_kategori_tidur),
-    Category(5, "DEPRESI", R.drawable.ic_kategori_depresi),
-    Category(6, "KESADARAN PENUH", R.drawable.ic_kategori_kesadaran_penuh),
-    Category(7, "STRATEGI COPING", R.drawable.ic_kategori_strategi_coping),
-    Category(8, "HUBUNGAN", R.drawable.ic_kategori_hubungan)
+    R.drawable.ic_kategori_stres,
+    R.drawable.ic_kategori_kecemasan,
+    R.drawable.ic_kategori_motivasi_diri,
+    R.drawable.ic_kategori_tidur,
+    R.drawable.ic_kategori_depresi,
+    R.drawable.ic_kategori_kesadaran_penuh,
+    R.drawable.ic_kategori_strategi_coping,
+    R.drawable.ic_kategori_hubungan
 )
 
 @Preview

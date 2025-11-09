@@ -12,10 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.hariku.feature_article.domain.model.Category
 
 @Composable
-fun CategoryCard(category: Category) {
+fun CategoryCard(
+    imageRes: Int
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -25,7 +26,7 @@ fun CategoryCard(category: Category) {
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = category.iconRes),
+            painter = painterResource(id = imageRes),
             contentDescription = "Category Background",
             modifier = Modifier.matchParentSize()
         )
