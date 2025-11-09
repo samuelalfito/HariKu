@@ -226,18 +226,21 @@ val sampleArticles = listOf(
         title = "Kendalikan Kekhawatiranmu!",
         category = "Kecemasan",
         readTime = "5 Menit",
+        imageRes = R.drawable.cat
     ),
     Article(
         id = 2,
         title = "5 Hal yang Dapat Membantu Kecemasanmu!",
         category = "Depresi",
-        readTime = "5 Menit"
+        readTime = "5 Menit",
+        imageRes = R.drawable.cat
     ),
     Article(
         id = 3,
         title = "Cara Mengatasi Stres di Tempat Kerja",
         category = "Stres",
-        readTime = "7 Menit"
+        readTime = "7 Menit",
+        imageRes = R.drawable.cat
     )
 )
 

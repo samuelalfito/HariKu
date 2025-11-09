@@ -29,7 +29,9 @@ import com.hariku.feature_article.domain.model.Article
 import com.hariku.feature_article.presentation.ArticleScreen
 
 @Composable
-fun ArticleCard(article: Article) {
+fun ArticleCard(
+    article: Article
+) {
     Card(
         modifier = Modifier
             .width(250.dp)
@@ -41,7 +43,7 @@ fun ArticleCard(article: Article) {
     ) {
         Column {
             Image(
-                painter = painterResource(id = R.drawable.cat),
+                painter = painterResource(id = article.imageRes),
                 contentDescription = article.title,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -81,7 +83,8 @@ private fun ArticleCardPreview() {
             id = 1,
             title = "Kendalikan Kekhawatiranmu",
             category = "Kecemasan",
-            readTime = "5 Menit"
+            readTime = "5 Menit",
+            imageRes = R.drawable.cat
         )
         ArticleCard(article = sample)
     }
