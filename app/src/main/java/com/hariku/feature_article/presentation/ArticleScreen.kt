@@ -60,7 +60,7 @@ import com.hariku.feature_article.presentation.components.CategoryCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ArticleScreen(viewModel: ArticleViewModel = ArticleViewModel()) {
+fun ArticleScreen(viewModel: ArticleViewModel = viewModel()) {
     val searchQuery by viewModel.searchQuery
     val filteredArticles = viewModel.filteredArticles
 
