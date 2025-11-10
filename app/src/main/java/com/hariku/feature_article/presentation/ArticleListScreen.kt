@@ -34,7 +34,6 @@ fun KecemaasanScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
             .wrapContentHeight()
     ) {
         Box(
@@ -62,7 +61,6 @@ fun KecemaasanScreen() {
                     modifier = Modifier
                         .size(90.dp)
                         .scale(1.5f)
-//                    tint = Color.White
                 )
             }
         }
