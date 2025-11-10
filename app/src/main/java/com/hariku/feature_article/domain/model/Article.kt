@@ -5,4 +5,7 @@ data class Article(
     val title: String,
     val category: String,
     val readTime: String,
+    val imageRes: Int,
+    val author: String = "Anonymous",
+    val content: String = ""
 )
