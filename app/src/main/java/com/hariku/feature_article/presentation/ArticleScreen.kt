@@ -32,9 +32,9 @@ fun ArticleScreen(viewModel: ArticleViewModel = viewModel()) {
         containerColor = MaterialTheme.colorScheme.background,
     ) { padding ->
         if (searchQuery.isBlank()) {
-            SearchEmpty()
+            SearchEmpty(contentPadding = padding)
         } else {
-            SearchResult(filteredArticles, viewModel)
+            SearchResult(filteredArticles, viewModel, contentPadding = padding)
         }
     }
 }

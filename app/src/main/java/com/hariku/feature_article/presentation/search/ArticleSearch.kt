@@ -40,128 +40,139 @@ import com.hariku.feature_article.presentation.components.CategoryCard
 import com.hariku.feature_article.presentation.sampleArticles
 
 @Composable
-fun SearchEmpty() {
-    LazyColumn(
+fun SearchEmpty(
+    contentPadding: PaddingValues = PaddingValues()
+) {
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Artikel Pilihan",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF333333)
-            )
-            Text(
-                text = "Pahami topik kesehatan mental dengan lebih baik.",
-                fontSize = 12.sp,
-                color = Color(0xFF9F9F9F)
-            )
-            Spacer(modifier = Modifier.height(6.dp))
-        }
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = contentPadding
+        ) {
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Artikel Pilihan",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF333333)
+                )
+                Text(
+                    text = "Pahami topik kesehatan mental dengan lebih baik.",
+                    fontSize = 12.sp,
+                    color = Color(0xFF9F9F9F)
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+            }
 
-        item {
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(vertical = 8.dp)
-            ) {
-                items(sampleArticles) { article ->
-                    ArticleCard(article = article, modifier = Modifier.width(250.dp))
+            item {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(vertical = 8.dp)
+                ) {
+                    items(sampleArticles) { article ->
+                        ArticleCard(article = article, modifier = Modifier.width(250.dp))
+                    }
                 }
             }
-        }
 
-        item {
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = "Kategori",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF333333)
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-        }
-
-        item {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 520.dp),
-                userScrollEnabled = false
-            ) {
-                items(categories) { imageRes ->
-                    CategoryCard(imageRes)
-                }
+            item {
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = "Kategori",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF333333)
+                )
+                Spacer(modifier = Modifier.height(12.dp))
             }
-            Spacer(modifier = Modifier.height(16.dp))
+
+            item {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 520.dp),
+                    userScrollEnabled = false
+                ) {
+                    items(categories) { imageRes ->
+                        CategoryCard(imageRes)
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         }
     }
 }
 
 @Composable
-fun SearchResult(filteredArticles: List<Article>, viewModel: ArticleViewModel) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
-    ) {
-        if (filteredArticles.isEmpty()) {
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = 40.dp),
-                    contentAlignment = Alignment.TopCenter
-                ) {
-                    Column(
+fun SearchResult(
+    filteredArticles: List<Article>,
+    viewModel: ArticleViewModel,
+    contentPadding: PaddingValues = PaddingValues()
+) {
+    Box(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = contentPadding
+        ) {
+            if (filteredArticles.isEmpty()) {
+                item {
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 32.dp)
-                            .align(Alignment.TopCenter),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            .padding(top = 40.dp),
+                        contentAlignment = Alignment.TopCenter
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = null,
-                            modifier = Modifier.size(64.dp),
-                            tint = Color(0xFFBDBDBD)
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = "Artikel tidak ditemukan",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF333333)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Coba kata kunci lain atau bersihkan pencarian.",
-                            fontSize = 16.sp,
-                            color = Color(0xFF9F9F9F)
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Button(
-                            onClick = { viewModel.onSearchQueryChange("") },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFE1A071),
-                                contentColor = Color.White
-                            ),
-                            shape = RoundedCornerShape(8.dp)
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 32.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text("Bersihkan Pencarian")
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = null,
+                                modifier = Modifier.size(64.dp),
+                                tint = Color(0xFFBDBDBD)
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Text(
+                                text = "Artikel tidak ditemukan",
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF333333)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Coba kata kunci lain atau bersihkan pencarian.",
+                                fontSize = 16.sp,
+                                color = Color(0xFF9F9F9F)
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Button(
+                                onClick = { viewModel.onSearchQueryChange("") },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFFE1A071),
+                                    contentColor = Color.White
+                                ),
+                                shape = RoundedCornerShape(8.dp)
+                            ) {
+                                Text("Bersihkan Pencarian")
+                            }
                         }
                     }
                 }
-            }
-        } else {
-            items(filteredArticles) { article ->
-                Spacer(modifier = Modifier.height(24.dp))
-                ArticleCard(article = article, modifier = Modifier.fillMaxWidth())
+            } else {
+                items(filteredArticles) { article ->
+                    Spacer(modifier = Modifier.height(24.dp))
+                    ArticleCard(article = article, modifier = Modifier.fillMaxWidth())
+                }
             }
         }
     }
