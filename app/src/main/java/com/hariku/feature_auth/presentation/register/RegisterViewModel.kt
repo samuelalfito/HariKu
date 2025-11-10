@@ -3,7 +3,7 @@ package com.hariku.feature_auth.presentation.register
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hariku.feature_auth.domain.AuthRepository
+import com.hariku.feature_auth.domain.usecase.SignUpUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -13,24 +13,26 @@ import kotlinx.coroutines.launch
  * Data class untuk menampung SEMUA state yang dibutuhkan oleh RegisterScreen.
  */
 data class RegisterUiState(
-    val name: String = "", // <-- TAMBAHAN
+    val name: String = "",
     val email: String = "",
     val password: String = "",
     val confirmPassword: String = "",
     val isLoading: Boolean = false,
-    val registerSuccess: Boolean = false, // <-- Diganti namanya
+    val registerSuccess: Boolean = false,
     val error: String? = null
 )
 
 /**
  * ViewModel untuk RegisterScreen.
+ * Bergantung pada UseCase, bukan langsung ke Repository.
+ * Clean Architecture: UI → ViewModel → UseCase → Repository
  */
-class RegisterScreenViewModel( // <-- Diganti namanya
-    private val repository: AuthRepository
+class RegisterScreenViewModel(
+    private val useCase: SignUpUseCase
 ) : ViewModel() {
 
     // StateFlow privat untuk internal ViewModel
-    private val _uiState = MutableStateFlow(RegisterUiState()) // <-- Pakai state baru
+    private val _uiState = MutableStateFlow(RegisterUiState())
     // StateFlow publik yang hanya bisa dibaca (read-only) oleh UI
     val uiState = _uiState.asStateFlow()
 
@@ -65,37 +67,25 @@ class RegisterScreenViewModel( // <-- Diganti namanya
     /**
      * Dipanggil oleh UI (Button) saat tombol register diklik.
      */
-    fun onRegisterClicked() { // <-- Diganti namanya
+    fun onRegisterClicked() {
         // Jangan proses jika sedang loading
         if (_uiState.value.isLoading) return
 
-        // --- VALIDASI SISI KLIEN ---
         val currentState = _uiState.value
-        if (currentState.name.isBlank() || currentState.email.isBlank() || currentState.password.isBlank()) {
-            _uiState.update { it.copy(error = "Nama, email dan password tidak boleh kosong") }
-            return
-        }
-
+        
+        // Validasi password match (ini tetap di ViewModel karena UI specific)
         if (currentState.password != currentState.confirmPassword) {
             _uiState.update { it.copy(error = "Password tidak cocok") }
             return
         }
-
-        // (Opsional) Anda bisa menambahkan validasi kekuatan password di sini
-        if (currentState.password.length < 8) {
-            _uiState.update { it.copy(error = "Password minimal 8 karakter") }
-            return
-        }
-
-        // --- PROSES ---
 
         // Set state ke loading
         _uiState.update { it.copy(isLoading = true, error = null) }
 
         // Jalankan di coroutine
         viewModelScope.launch {
-            // Panggil repository (menggunakan currentState yang sudah divalidasi)
-            val result = repository.signUp(
+            // Panggil UseCase (validasi lain sudah di dalam UseCase)
+            val result = useCase(
                 name = currentState.name,
                 email = currentState.email,
                 password = currentState.password
@@ -104,11 +94,11 @@ class RegisterScreenViewModel( // <-- Diganti namanya
             // Proses hasilnya
             result.onSuccess { authUser ->
                 // Sukses
-                Log.d("RegisterScreenViewModel", "Sign Up Success") // <-- Diganti namanya
+                Log.d("RegisterScreenViewModel", "Sign Up Success: ${authUser.name}")
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        registerSuccess = true // <-- Setel status sukses
+                        registerSuccess = true
                     )
                 }
             }.onFailure { exception ->

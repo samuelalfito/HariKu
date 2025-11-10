@@ -3,7 +3,7 @@ package com.hariku.feature_auth.presentation.login
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hariku.feature_auth.domain.AuthRepository
+import com.hariku.feature_auth.domain.usecase.LoginUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -23,10 +23,11 @@ data class LoginUiState(
 
 /**
  * ViewModel untuk LoginScreen.
- * Hanya bergantung pada interface AuthRepository.
+ * Bergantung pada UseCase, bukan langsung ke Repository.
+ * Clean Architecture: UI → ViewModel → UseCase → Repository
  */
 class LoginScreenViewModel(
-    private val repository: AuthRepository // <-- Bergantung pada Interface, bukan Impl
+    private val useCase: LoginUseCase
 ) : ViewModel() {
 
     // StateFlow privat untuk internal ViewModel
@@ -62,13 +63,13 @@ class LoginScreenViewModel(
         viewModelScope.launch {
             val currentState = _uiState.value
 
-            // Panggil repository
-            val result = repository.login(currentState.email, currentState.password)
+            // Panggil UseCase
+            val result = useCase(currentState.email, currentState.password)
 
             // Proses hasilnya
             result.onSuccess { authUser ->
                 // Sukses
-                Log.d("LoginScreenViewModel", "Login Success")
+                Log.d("LoginScreenViewModel", "Login Success: ${authUser.name}")
                 _uiState.update {
                     it.copy(
                         isLoading = false,
@@ -95,3 +96,4 @@ class LoginScreenViewModel(
         _uiState.update { it.copy(error = null) }
     }
 }
+
