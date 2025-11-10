@@ -13,6 +13,7 @@ import com.hariku.feature_onboarding.presentation.OnboardingScreen
 import com.hariku.feature_onboarding.presentation.SplashScreen
 import com.hariku.feature_pin.presentation.FillPinScreen
 import com.hariku.feature_profile.presentation.ProfileScreen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NavGraph(navController: NavHostController) {
