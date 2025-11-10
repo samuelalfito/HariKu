@@ -65,35 +65,35 @@ fun CustomizeCatScreen(
     val catDataList = listOf(
         CatData(
             id = 1,
-            drawable = R.drawable.ic_customize_cat_1,
+            drawable = R.drawable.ic_customize_cat_01,
             name = "HariKu",
             subtitle = "EMPATI DAN SUPORTIF",
             description = "Hariku adalah kucing yang menggunakan terapi perilaku kognitif (CBT) dan memiliki kepribadian yang ramah dan suportif, siap untuk mendengarkan ceritamu!"
         ),
         CatData(
             id = 2,
-            drawable = R.drawable.ic_customize_cat_2,
+            drawable = R.drawable.ic_customize_cat_02,
             name = "Luna",
             subtitle = "CERIA DAN OPTIMIS",
             description = "Luna adalah kucing yang penuh energi positif, selalu siap menghibur dan membuat harimu lebih cerah dengan pendekatan yang menyenangkan!"
         ),
         CatData(
             id = 3,
-            drawable = R.drawable.ic_customize_cat_3,
+            drawable = R.drawable.ic_customize_cat_03,
             name = "Moy",
             subtitle = "PROFESIONAL DAN INFORMATIF",
             description = "Moy adalah kucing yang memberikan informasi tentang kondisi kesehatan mental dan menghubungkan mereka dengan sumber daya kesehatan mental."
         ),
         CatData(
             id = 4,
-            drawable = R.drawable.ic_customize_cat_4,
+            drawable = R.drawable.ic_customize_cat_04,
             name = "Mochi",
             subtitle = "LEMBUT DAN PENYAYANG",
             description = "Mochi adalah kucing yang sangat lembut dan penuh kasih sayang, selalu memberikan kehangatan dan kenyamanan di setiap percakapan!"
         ),
         CatData(
             id = 5,
-            drawable = R.drawable.ic_customize_cat_5,
+            drawable = R.drawable.ic_customize_cat_05,
             name = "Midnight",
             subtitle = "MISTERIUS DAN INTUITIF",
             description = "Midnight adalah kucing yang intuitif dan memahami perasaanmu dengan mendalam, memberikan wawasan yang bermakna untuk pertumbuhanmu!"
