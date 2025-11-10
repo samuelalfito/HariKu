@@ -17,6 +17,7 @@ object Routes {
     const val HOME = "home"
     const val CHATBOT = "chatbot"
     const val DETAIL_CHATBOT_PLACEHOLDER = "detail_chatbot_PLACEHOLDER"
+    const val CUSTOMIZE_CAT = "customize_cat"
     const val JOURNAL = "journal"
     const val STATISTIC = "statistic"
     const val PROFILE = "profile"
