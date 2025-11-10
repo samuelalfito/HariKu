@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -73,6 +74,7 @@ fun ArticleScreen() {
                         contentDescription = "Back",
                         modifier = Modifier
                             .size(48.dp)
+                            .statusBarsPadding()
                             .clickable { }
                     )
                 },
@@ -199,7 +201,7 @@ fun ArticleScreen() {
                     columns = GridCells.Fixed(2),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.height(500.dp),
+                    modifier = Modifier.height(520.dp),
                     userScrollEnabled = false
                 ) {
                     items(categories) { category ->
@@ -234,12 +236,14 @@ val sampleArticles = listOf(
 )
 
 val categories = listOf(
-    Category(1, "STRES", Color(0xFFFF9999)),
-    Category(2, "KECEMASAN", Color(0xFFB39DDB)),
-    Category(3, "MOTIVASI\nDIRI", Color(0xFFFFB74D)),
-    Category(4, "TIDUR", Color(0xFF90A4AE)),
-    Category(5, "DEPRESI", Color(0xFF7E57C2)),
-    Category(6, "MINDFULNESS", Color(0xFF81C784))
+    Category(1, "STRES", R.drawable.ic_kategori_stres),
+    Category(2, "KECEMASAN", R.drawable.ic_kategori_kecemasan),
+    Category(3, "MOTIVASI DIRI", R.drawable.ic_kategori_motivasi_diri),
+    Category(4, "TIDUR", R.drawable.ic_kategori_tidur),
+    Category(5, "DEPRESI", R.drawable.ic_kategori_depresi),
+    Category(6, "KESADARAN PENUH", R.drawable.ic_kategori_kesadaran_penuh),
+    Category(7, "STRATEGI COPING", R.drawable.ic_kategori_strategi_coping),
+    Category(8, "HUBUNGAN", R.drawable.ic_kategori_hubungan)
 )
 
 @Preview
