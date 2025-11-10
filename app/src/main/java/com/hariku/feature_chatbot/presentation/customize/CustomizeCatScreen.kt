@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -23,7 +22,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,6 +43,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hariku.R
 import com.hariku.core.ui.theme.HariKuTheme
+import com.hariku.feature_chatbot.presentation.components.CustomizeTopBar
+import com.hariku.core.ui.components.Routes
 
 data class CatData(
     val id: Int,
@@ -97,44 +97,15 @@ fun CustomizeCatScreen(
             name = "Midnight",
             subtitle = "MISTERIUS DAN INTUITIF",
             description = "Midnight adalah kucing yang intuitif dan memahami perasaanmu dengan mendalam, memberikan wawasan yang bermakna untuk pertumbuhanmu!"
-        ),
-        CatData(
-            id = 6,
-            drawable = R.drawable.ic_customize_cat_6,
-            name = "Whiskers",
-            subtitle = "LUCU DAN MENGHIBUR",
-            description = "Whiskers adalah kucing yang selalu membawa tawa dan kebahagiaan, membantu meringankan bebanmu dengan cara yang menyenangkan!"
         )
     )
 
     Scaffold(
         topBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White)
-                    .statusBarsPadding()
-            ) {
-                IconButton(
-                    onClick = { navController.navigateUp() },
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .padding(start = 8.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.back_arrow),
-                        contentDescription = "Back",
-                        tint = Color(0xFFC87C47)
-                    )
-                }
-
-                Text(
-                    text = "Customize",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
+            CustomizeTopBar(
+                title = "Customize",
+                onBackClick = { navController.navigateUp() }
+            )
         }
     ) { paddingValues ->
         Column(
@@ -233,11 +204,29 @@ fun CustomizeCatScreen(
                         Alignment.CenterHorizontally
                     )
                 ) {
-                    for (i in 3..5) {
+                    for (i in 3..4) {
                         CatSelectionItem(
                             catData = catDataList[i],
                             isSelected = selectedCatIndex == i,
                             onClick = { selectedCatIndex = i }
+                        )
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(CircleShape)
+                            .clickable {
+                                navController.navigate(Routes.CUSTOMIZE_NEW_CAT)
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_customize_new_cat),
+                            contentDescription = "Add New Cat",
+                            modifier = Modifier
+                                .size(90.dp)
+                                .clip(CircleShape)
                         )
                     }
                 }
