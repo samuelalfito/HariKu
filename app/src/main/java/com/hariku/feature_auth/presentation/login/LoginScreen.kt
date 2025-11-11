@@ -40,6 +40,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hariku.R
@@ -137,7 +138,7 @@ fun LoginScreen(
                     onClick = {
                         /*TODO: LOGIN FEATURE
                                 PIN Verification, if have PIN go to Routes.MASUKKAN_PIN*/
-                        Log.d("DEBUG", "Login")
+                        Log.d("HariKu:LoginScreen", "Login")
                         viewModel.onLoginClicked()
                     },
                     enabled = !uiState.isLoading,
@@ -150,11 +151,7 @@ fun LoginScreen(
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     if (uiState.isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp),
-                            color = Color.White,
-                            strokeWidth = 2.dp
-                        )
+                        CircularProgressIndicator()
                     } else {
                         Text(
                             text = "Login",
@@ -254,5 +251,8 @@ fun LoginScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun LoginScreenPreview() {
-    LoginScreen(rememberNavController())
+    LoginScreen(
+        navController = rememberNavController(),
+        viewModel = viewModel()
+    )
 }
