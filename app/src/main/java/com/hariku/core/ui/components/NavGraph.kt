@@ -22,13 +22,7 @@ fun NavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = Routes.SPLASH){
 
         composable(Routes.SPLASH){
-            SplashScreen() {
-                navController.navigate(Routes.ONBOARDING){
-                    popUpTo(Routes.SPLASH){
-                        inclusive = true
-                    }
-                }
-            }
+            SplashScreen(navController = navController)
         }
         composable(Routes.ONBOARDING){
             OnboardingScreen(navController = navController)

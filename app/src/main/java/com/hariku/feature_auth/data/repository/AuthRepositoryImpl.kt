@@ -1,9 +1,14 @@
 package com.hariku.feature_auth.data.repository
 
+import com.google.firebase.auth.FirebaseUser
 import com.hariku.feature_auth.data.mapper.UserMapper
 import com.hariku.feature_auth.data.remote.AuthRemoteDataSource
 import com.hariku.feature_auth.domain.model.AuthUser
 import com.hariku.feature_auth.domain.repository.AuthRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 
 /**
  * Implementasi Repository untuk Authentication.
@@ -68,5 +73,43 @@ class AuthRepositoryImpl(
         // Untuk getCurrentUser yang sinkron, kita kembalikan data dari FirebaseUser
         // Data lengkap dari Firestore bisa diambil secara async di tempat lain
         return UserMapper.fromFirebaseUser(firebaseUser)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getAuthState(): Flow<AuthUser?> {
+        // 1. Ambil Flow mentah dari data source
+        return remoteDataSource.getAuthStateFlow()
+            .flatMapLatest { firebaseUser ->
+                // flatMapLatest hebat karena jika user log out lalu log in cepat,
+                // ia akan membatalkan permintaan Firestore yang lama.
+
+                if (firebaseUser == null) {
+                    // 2. Jika user null (logout), kirim null ke UI
+                    flowOf(null)
+                } else {
+                    // 3. Jika user login, kita ambil data LENGKAP dari Firestore
+                    //    Sama seperti logika di fungsi login() Anda.
+                    flowOf(fetchUserFromFirestoreOrFallback(firebaseUser))
+                }
+            }
+    }
+
+    override fun logout() {
+        // Cukup teruskan panggilan ke data source
+        remoteDataSource.logout()
+    }
+
+    /**
+     * Fungsi helper pribadi untuk mengambil data dari Firestore
+     * dengan fallback ke data Firebase Auth.
+     */
+    private suspend fun fetchUserFromFirestoreOrFallback(firebaseUser: FirebaseUser): AuthUser {
+        val userDto = remoteDataSource.getUserFromFirestore(firebaseUser.uid)
+        return if (userDto != null) {
+            UserMapper.fromDto(userDto)
+        } else {
+            // Fallback jika Firestore belum siap/kosong
+            UserMapper.fromFirebaseUser(firebaseUser)
+        }
     }
 }

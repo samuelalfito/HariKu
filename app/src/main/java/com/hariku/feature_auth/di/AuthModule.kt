@@ -3,8 +3,10 @@ package com.hariku.feature_auth.di
 import com.hariku.feature_auth.data.remote.AuthRemoteDataSource
 import com.hariku.feature_auth.data.repository.AuthRepositoryImpl
 import com.hariku.feature_auth.domain.repository.AuthRepository
+import com.hariku.feature_auth.domain.usecase.CheckLoginStatusUseCase
 import com.hariku.feature_auth.domain.usecase.GetCurrentUserUseCase
 import com.hariku.feature_auth.domain.usecase.LoginUseCase
+import com.hariku.feature_auth.domain.usecase.LogoutUseCase
 import com.hariku.feature_auth.domain.usecase.SignUpUseCase
 import com.hariku.feature_auth.presentation.login.LoginScreenViewModel
 import com.hariku.feature_auth.presentation.register.RegisterScreenViewModel
@@ -50,6 +52,14 @@ val authModule = module {
     factory {
         GetCurrentUserUseCase(repository = get())
     }
+
+    factory {
+        CheckLoginStatusUseCase(repository = get())
+    }
+
+    factory {
+        LogoutUseCase(repository = get())
+    }
     
     // ============================================
     // PRESENTATION LAYER - ViewModels
@@ -62,4 +72,3 @@ val authModule = module {
         RegisterScreenViewModel(get())
     }
 }
-
