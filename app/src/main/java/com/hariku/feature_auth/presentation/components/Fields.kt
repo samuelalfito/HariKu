@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
@@ -70,10 +71,14 @@ fun RegularTextField(text: String, onValueChange: (String) -> Unit, isPassword: 
             {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     if (passwordVisible) {
-                        Text(text = "Sembunyikan", style = TextStyle(fontSize = 14.sp, color = Color(0xFF333333)))
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_eye_off),
+                            contentDescription = "Tampilkan kata sandi",
+                            modifier = Modifier.size(33.dp)
+                        )
                     } else {
                         Image(
-                            painter = painterResource(id = R.drawable.show_password),
+                            painter = painterResource(id = R.drawable.ic_eye_on),
                             contentDescription = "Tampilkan kata sandi",
                             modifier = Modifier.size(33.dp)
                         )
@@ -110,4 +115,20 @@ fun AuthDivider() {
             modifier = Modifier.weight(1f)
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RegularTextFieldPreview() {
+    RegularTextField(
+        text = "test",
+        onValueChange = {},
+        placeholder = "test"
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AuthDividerPreview() {
+    AuthDivider()
 }
