@@ -46,7 +46,8 @@ class AuthRepositoryImpl(
             val authUser = AuthUser(
                 uid = firebaseUser.uid,
                 email = firebaseUser.email,
-                name = firebaseUser.displayName
+                name = firebaseUser.displayName,
+                photoUrl = firebaseUser.photoUrl?.toString()
             )
 
             val userMap = UserMapper.toFirestoreMap(authUser)
@@ -66,7 +67,8 @@ class AuthRepositoryImpl(
             val authUser = AuthUser(
                 uid = firebaseUser.uid,
                 email = firebaseUser.email,
-                name = name
+                name = name,
+                photoUrl = null
             )
             
             val userMap = UserMapper.toFirestoreMap(authUser)

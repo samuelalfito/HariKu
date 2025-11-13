@@ -3,6 +3,7 @@ package com.hariku.feature_auth.presentation.register
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hariku.feature_auth.domain.usecase.LoginWithGoogleUseCase
 import com.hariku.feature_auth.domain.usecase.SignUpUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +24,7 @@ data class RegisterUiState(
  * ViewModel untuk RegisterScreen.
  */
 class RegisterScreenViewModel(
-    private val useCase: SignUpUseCase
+    private val signUpUseCase: SignUpUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RegisterUiState())
@@ -74,7 +75,7 @@ class RegisterScreenViewModel(
         _uiState.update { it.copy(isLoading = true, error = null) }
 
         viewModelScope.launch {
-            val result = useCase(
+            val result = signUpUseCase(
                 name = currentState.name,
                 email = currentState.email,
                 password = currentState.password
