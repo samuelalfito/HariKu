@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -138,7 +139,7 @@ fun JournalScreen(navController: NavController) {
                 SearchBar(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
-                    placeholder = "Cari Jurnal atau Halaman",
+                    placeholder = "Cari Jurnal atau Halaman"
                 )
                 Spacer(modifier = Modifier.height(32.dp))
                 LazyVerticalGrid(
@@ -147,8 +148,7 @@ fun JournalScreen(navController: NavController) {
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    items(journals.size) { index ->
-                        val journal = journals[index]
+                    items(journals.filter({it.title.contains(other = searchQuery, ignoreCase = true)})) { journal ->
                         JournalCard(
                             title = journal.title,
                             bgRes = journal.bgRes,
