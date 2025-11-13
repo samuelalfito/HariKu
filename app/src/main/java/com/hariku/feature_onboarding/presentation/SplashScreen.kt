@@ -15,13 +15,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.hariku.R
 import com.hariku.core.ui.components.Routes
-import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -70,15 +68,13 @@ fun SplashScreen(
         // Blok ini akan berjalan setiap kali 'navState' berubah
         when (navState) {
             AuthNavigationState.AUTHENTICATED -> {
-                // Arahkan ke Home dan hapus splash dari back stack
-                navController.navigate(Routes.PIN_GRAPH) {
+                navController.navigate(Routes.PinGraph.route) {
                     popUpTo(navController.graph.startDestinationId) { inclusive = true }
                 }
             }
             AuthNavigationState.UNAUTHENTICATED -> {
-                // Arahkan ke Login dan hapus splash dari back stack
-                navController.navigate(Routes.ONBOARDING) {
-                    popUpTo(Routes.SPLASH) { inclusive = true }
+                navController.navigate(Routes.Onboarding.route) {
+                    popUpTo(Routes.Splash.route) { inclusive = true }
                 }
             }
             AuthNavigationState.LOADING -> {

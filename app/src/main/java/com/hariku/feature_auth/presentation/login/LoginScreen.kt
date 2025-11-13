@@ -33,8 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -66,7 +64,7 @@ fun LoginScreen(
         if (uiState.loginSuccess) {
             // SUKSES! Arahkan ke PIN_GRAPH
             // Ini adalah cara navigasi yang benar
-            navController.navigate(Routes.PIN_GRAPH) {
+            navController.navigate(Routes.PinGraph.route) {
                 // Hapus tumpukan navigasi auth agar user tidak bisa kembali ke login
                 popUpTo(navController.graph.startDestinationId) { inclusive = true }
             }
@@ -219,7 +217,7 @@ fun LoginScreen(
                         .padding(0.dp)
                         .clickable {
                             Log.d("DEBUG", "Daftar")
-                            navController.navigate(Routes.REGISTER)
+                            navController.navigate(Routes.Register.route)
                         }
                 )
             }

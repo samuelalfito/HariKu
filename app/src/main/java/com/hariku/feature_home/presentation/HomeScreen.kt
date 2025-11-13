@@ -80,7 +80,7 @@ fun HomeScreen(
                                 .size(32.dp)
                                 .clickable(
                                     onClick = {
-                                        navController.navigate(Routes.PROFILE)
+                                        navController.navigate(Routes.Profile.route)
                                     }
                                 )
                         )
@@ -95,7 +95,9 @@ fun HomeScreen(
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
-                        onClick = {},
+                        onClick = {
+                            navController.navigate(Routes.SosGraph.route)
+                        },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF8A7A)),
                         shape = RoundedCornerShape(16.dp)
                     ) {
@@ -121,7 +123,12 @@ fun HomeScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 24.dp)
                     ) {
-                        Box {
+                        Box(
+                            modifier = Modifier
+                                .clickable{
+                                    navController.navigate(Routes.CreateNotePrompt.route)
+                                }
+                        ) {
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth(),
@@ -148,7 +155,6 @@ fun HomeScreen(
                                     fontSize = 15.sp
                                 )
                             }
-                            Spacer(modifier = Modifier.width(8.dp))
                         }
                     }
                     Column(modifier = Modifier.padding(horizontal = 24.dp)) {
@@ -162,7 +168,11 @@ fun HomeScreen(
                             title = "HariKu",
                             message = "Halo! Aku Hariku, siap membantumu...",
                             date = "29/05",
-                            unreadCount = 2
+                            unreadCount = 2,
+                            onClick = {
+                                // Navigate directly to Chatbot Detail Screen (it will be implemented later)
+                                navController.navigate(Routes.DetailChatbot.createRoute("HariKu"))
+                            }
                         )
                     }
                     Column(modifier = Modifier.padding(horizontal = 24.dp)) {
@@ -180,19 +190,28 @@ fun HomeScreen(
                             ActivityCard(
                                 "Panduan Meditasi",
                                 R.drawable.img_home_meditation,
-                                backgroundColor = Color(0xFFa0cfe7)
+                                backgroundColor = Color(0xFFa0cfe7),
+                                onClick = {
+                                    navController.navigate(Routes.Meditation.route)
+                                }
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             ActivityCard(
                                 "Latihan 5 Panca Indra",
                                 R.drawable.img_home_senses,
-                                backgroundColor = Color(0xFFfff0e5)
+                                backgroundColor = Color(0xFFfff0e5),
+                                onClick = {
+                                    navController.navigate(Routes.Senses.route)
+                                }
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             ActivityCard(
                                 "Artikel Pilihan",
                                 R.drawable.img_home_article,
-                                backgroundColor = Color(0xFFcbe1fc)
+                                backgroundColor = Color(0xFFcbe1fc),
+                                onClick = {
+                                    navController.navigate(Routes.Article.route)
+                                }
                             )
                         }
                     }

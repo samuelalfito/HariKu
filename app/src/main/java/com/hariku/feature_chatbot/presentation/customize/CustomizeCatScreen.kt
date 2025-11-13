@@ -217,7 +217,7 @@ fun CustomizeCatScreen(
                             .size(100.dp)
                             .clip(CircleShape)
                             .clickable {
-                                navController.navigate(Routes.CUSTOMIZE_NEW_CAT)
+                                navController.navigate(Routes.CustomizeNewCat.route)
                             },
                         contentAlignment = Alignment.Center
                     ) {

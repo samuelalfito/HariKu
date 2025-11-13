@@ -2,7 +2,6 @@ import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,10 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Divider
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -89,13 +84,13 @@ fun ChatScreen(navController: NavController) {
         ) {
             items(mockChatList) { session ->
                 ChatItem(
-                    todo = { /*TODO: Navigate to chat detail*/
+                    todo = {
                         Log.d("DEBUG", "Chat Detail")
-                        navController.navigate(Routes.DETAIL_CHATBOT_PLACEHOLDER)
+                        navController.navigate(Routes.DetailChatbot.createRoute(session.id.toString()))
                     },
                     session = session
                 )
-                Divider(
+                androidx.compose.material3.HorizontalDivider(
                     color = Color.LightGray.copy(alpha = 0.5f),
                     thickness = 1.dp,
                     modifier = Modifier.padding(horizontal = 16.dp)
@@ -232,4 +227,3 @@ fun ChatScreenPreview() {
         ChatScreen(rememberNavController())
     }
 }
-

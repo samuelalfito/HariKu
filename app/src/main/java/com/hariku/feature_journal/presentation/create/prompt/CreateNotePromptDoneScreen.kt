@@ -33,17 +33,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.hariku.R
+import com.hariku.core.ui.components.Routes
 
 @Composable
-fun CreateNotePromptDoneScreen(modifier: Modifier = Modifier) {
+fun CreateNotePromptDoneScreen(navController: NavController) {
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFF6F6F6))
             .padding(horizontal = 16.dp),
@@ -57,7 +60,7 @@ fun CreateNotePromptDoneScreen(modifier: Modifier = Modifier) {
                 .padding(bottom = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { /* TODO: Back */ }) {
+            IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_back_arrow),
                     contentDescription = "Back"
@@ -177,7 +180,7 @@ fun CreateNotePromptDoneScreen(modifier: Modifier = Modifier) {
         
         Spacer(Modifier.height(24.dp))
         Button(
-            onClick = {/* TODO */ },
+            onClick = { navController.navigate(Routes.CreateNote.route) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
@@ -188,7 +191,7 @@ fun CreateNotePromptDoneScreen(modifier: Modifier = Modifier) {
         }
         Spacer(Modifier.height(12.dp))
         OutlinedButton(
-            onClick = {/* TODO */ },
+            onClick = { navController.navigate(Routes.CreateNote.route) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
@@ -209,5 +212,5 @@ fun CreateNotePromptDoneScreen(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun Preview() {
-    CreateNotePromptDoneScreen()
+    CreateNotePromptDoneScreen(NavController(LocalContext.current))
 }

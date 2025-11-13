@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -33,14 +34,15 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.hariku.R
 
 
 @Composable
-fun SosProfessionalScreen() {
+fun SosProfessionalScreen(navController: NavController) {
     Scaffold(
         containerColor = Color(0xFFFFFFFF),
-        topBar = { SosProTopBar() },
+        topBar = { SosProTopBar(navController) },
         bottomBar = { SosProHomeIndicator() }
     ) { paddingValues ->
         Column(
@@ -147,7 +149,7 @@ fun HotlineButton(
 }
 
 @Composable
-fun SosProTopBar() {
+fun SosProTopBar(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -159,7 +161,9 @@ fun SosProTopBar() {
                 .padding(start = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { }) {
+            IconButton(onClick = {
+                navController.popBackStack()
+            }) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_back_arrow),
                     contentDescription = "Kembali",
@@ -185,6 +189,6 @@ fun SosProHomeIndicator() {
 @Composable
 fun SosProfessionalScreenPreview() {
     MaterialTheme {
-        SosProfessionalScreen()
+        SosProfessionalScreen(navController = NavController(LocalContext.current))
     }
 }

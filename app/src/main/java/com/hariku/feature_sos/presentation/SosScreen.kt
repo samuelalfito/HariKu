@@ -23,16 +23,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.hariku.R
+import com.hariku.core.ui.components.Routes
 
 @Composable
-fun SosScreen() {
+fun SosScreen(navController: NavController) {
     Scaffold(
         containerColor = Color(0xFFFFFFFF),
         topBar = { SosTopBar() },
@@ -113,7 +116,9 @@ fun SosScreen() {
                     .height(56.dp)
                     .clip(RoundedCornerShape(28.dp))
                     .background(Color(0xFFB55D6C))
-                    .clickable { },
+                    .clickable {
+                        navController.navigate(Routes.SosProfessional.route)
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -168,6 +173,6 @@ fun HomeIndicator() {
 @Composable
 fun SosScreenPreview() {
     MaterialTheme {
-        SosScreen()
+        SosScreen(navController = NavController(LocalContext.current) )
     }
 }

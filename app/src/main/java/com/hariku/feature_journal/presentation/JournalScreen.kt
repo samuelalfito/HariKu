@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,17 +40,17 @@ import com.hariku.R
 import com.hariku.feature_journal.domain.model.Journal
 import com.hariku.feature_journal.presentation.components.JournalCard
 import com.hariku.feature_journal.presentation.components.SearchBar
+import androidx.navigation.NavController
+import com.hariku.core.ui.components.Routes
 
 @Composable
-fun JournalScreen() {
+fun JournalScreen(navController: NavController) {
     var searchQuery by remember { mutableStateOf("") }
-    
     val journals = listOf(
         Journal("STRES", R.drawable.img_pink_bg),
         Journal("HARIAN", R.drawable.img_green_bg),
         Journal("Blunder", R.drawable.img_purple_bg)
     )
-    
     Scaffold(
         floatingActionButton = {
             Box(
@@ -109,7 +110,10 @@ fun JournalScreen() {
                     val journal = journals[index]
                     JournalCard(
                         title = journal.title,
-                        bgRes = journal.bgRes
+                        bgRes = journal.bgRes,
+                        onClick = {
+                            navController.navigate(Routes.JournalDetail.createRoute(journal.title))
+                        }
                     )
                 }
             }
@@ -120,5 +124,5 @@ fun JournalScreen() {
 @Preview
 @Composable
 private fun Preview() {
-    JournalScreen()
+    JournalScreen(navController = NavController(LocalContext.current))
 }
