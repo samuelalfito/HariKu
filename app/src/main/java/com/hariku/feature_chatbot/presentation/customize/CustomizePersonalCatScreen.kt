@@ -1,11 +1,28 @@
 package com.hariku.feature_chatbot.presentation.customize
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -22,8 +39,8 @@ import com.hariku.core.ui.theme.HariKuTheme
 
 @Composable
 fun CustomizePersonalCatScreen(navController: NavController) {
-    var languageStyle by remember { mutableStateOf(0.5f) }
-    var professionalStyle by remember { mutableStateOf(0.5f) }
+    var languageStyle by remember { mutableFloatStateOf(0.5f) }
+    var professionalStyle by remember { mutableFloatStateOf(0.5f) }
     var feedbackType by remember { mutableStateOf("CBT-Based") }
     var selectedGoals by remember { mutableStateOf(setOf("Refleksi Diri")) }
     var otherGoal by remember { mutableStateOf("") }
