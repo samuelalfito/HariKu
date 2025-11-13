@@ -9,9 +9,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-/**
- * Data class untuk menampung SEMUA state yang dibutuhkan oleh RegisterScreen.
- */
 data class RegisterUiState(
     val name: String = "",
     val email: String = "",
@@ -24,74 +21,65 @@ data class RegisterUiState(
 
 /**
  * ViewModel untuk RegisterScreen.
- * Bergantung pada UseCase, bukan langsung ke Repository.
- * Clean Architecture: UI → ViewModel → UseCase → Repository
  */
 class RegisterScreenViewModel(
     private val useCase: SignUpUseCase
 ) : ViewModel() {
 
-    // StateFlow privat untuk internal ViewModel
     private val _uiState = MutableStateFlow(RegisterUiState())
-    // StateFlow publik yang hanya bisa dibaca (read-only) oleh UI
     val uiState = _uiState.asStateFlow()
 
     /**
-     * Dipanggil oleh UI (TextField) setiap kali nama berubah.
+     * Setiap nama berubah.
      */
     fun onNameChange(name: String) {
         _uiState.update { it.copy(name = name, error = null) }
     }
 
     /**
-     * Dipanggil oleh UI (TextField) setiap kali email berubah.
+     * Setiap email berubah.
      */
     fun onEmailChange(email: String) {
         _uiState.update { it.copy(email = email, error = null) }
     }
 
     /**
-     * Dipanggil oleh UI (TextField) setiap kali password berubah.
+     * Setiap password berubah.
      */
     fun onPasswordChange(password: String) {
         _uiState.update { it.copy(password = password, error = null) }
     }
 
     /**
-     * Dipanggil oleh UI (TextField) setiap kali konfirmasi password berubah.
+     * Setiap konfirmasi password berubah.
      */
     fun onConfirmPasswordChange(password: String) {
         _uiState.update { it.copy(confirmPassword = password, error = null) }
     }
 
     /**
-     * Dipanggil oleh UI (Button) saat tombol register diklik.
+     * Saat tombol register diklik.
      */
     fun onRegisterClicked() {
-        // Jangan proses jika sedang loading
+        // Loading lock
         if (_uiState.value.isLoading) return
 
         val currentState = _uiState.value
         
-        // Validasi password match (ini tetap di ViewModel karena UI specific)
         if (currentState.password != currentState.confirmPassword) {
             _uiState.update { it.copy(error = "Password tidak cocok") }
             return
         }
 
-        // Set state ke loading
         _uiState.update { it.copy(isLoading = true, error = null) }
 
-        // Jalankan di coroutine
         viewModelScope.launch {
-            // Panggil UseCase (validasi lain sudah di dalam UseCase)
             val result = useCase(
                 name = currentState.name,
                 email = currentState.email,
                 password = currentState.password
             )
 
-            // Proses hasilnya
             result.onSuccess { authUser ->
                 // Sukses
                 Log.d("RegisterScreenViewModel", "Sign Up Success: ${authUser.name}")

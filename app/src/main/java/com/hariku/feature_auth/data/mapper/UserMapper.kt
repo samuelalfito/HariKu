@@ -4,10 +4,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.hariku.feature_auth.data.dto.UserDto
 import com.hariku.feature_auth.domain.model.AuthUser
 
-/**
- * Mapper untuk konversi antara Data Layer dan Domain Layer.
- * Ini memastikan Domain Layer tidak bergantung pada implementasi Firebase atau DTO.
- */
 object UserMapper {
     
     /**
