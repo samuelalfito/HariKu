@@ -13,7 +13,8 @@ object UserMapper {
         return AuthUser(
             uid = firebaseUser.uid,
             email = firebaseUser.email,
-            name = name ?: firebaseUser.displayName
+            name = name ?: firebaseUser.displayName,
+            photoUrl = firebaseUser.photoUrl?.toString()
         )
     }
     
@@ -24,7 +25,8 @@ object UserMapper {
         return AuthUser(
             uid = dto.uid.orEmpty(),
             email = dto.email,
-            name = dto.name
+            name = dto.name,
+            photoUrl = dto.photoUrl
         )
     }
     
@@ -35,7 +37,8 @@ object UserMapper {
         return UserDto(
             uid = authUser.uid,
             email = authUser.email,
-            name = authUser.name
+            name = authUser.name,
+            photoUrl = authUser.photoUrl
         )
     }
     
@@ -47,6 +50,7 @@ object UserMapper {
             "uid" to authUser.uid,
             "email" to authUser.email,
             "name" to authUser.name,
+            "photoUrl" to authUser.photoUrl,
             "createdAt" to System.currentTimeMillis()
         )
     }

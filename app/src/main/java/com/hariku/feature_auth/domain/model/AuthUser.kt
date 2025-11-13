@@ -7,6 +7,7 @@ package com.hariku.feature_auth.domain.model
 data class AuthUser(
     val uid: String,
     val email: String?,
-    val name: String?
+    val name: String?,
+    val photoUrl: String? = null
 )
 
