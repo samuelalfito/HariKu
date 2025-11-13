@@ -23,17 +23,13 @@ class AuthRepositoryImpl(
 
     override suspend fun login(email: String, password: String): Result<AuthUser> {
         return try {
-            // 1. Login melalui Remote Data Source
             val firebaseUser = remoteDataSource.login(email, password)
             
-            // 2. Ambil data lengkap dari Firestore
             val userDto = remoteDataSource.getUserFromFirestore(firebaseUser.uid)
             
-            // 3. Konversi ke Domain Model menggunakan Mapper
             val authUser = if (userDto != null) {
                 UserMapper.fromDto(userDto)
             } else {
-                // Fallback jika data tidak ada di Firestore
                 UserMapper.fromFirebaseUser(firebaseUser)
             }
             
@@ -46,17 +42,14 @@ class AuthRepositoryImpl(
 
     override suspend fun signUp(email: String, password: String, name: String): Result<AuthUser> {
         return try {
-            // 1. Sign up melalui Remote Data Source
-            val firebaseUser = remoteDataSource.signUp(email, password)
+            val firebaseUser = remoteDataSource.signUp(email, password, name)
             
-            // 2. Buat Domain Model
             val authUser = AuthUser(
                 uid = firebaseUser.uid,
                 email = firebaseUser.email,
                 name = name
             )
             
-            // 3. Konversi ke Map dan simpan ke Firestore
             val userMap = UserMapper.toFirestoreMap(authUser)
             remoteDataSource.saveUserToFirestore(firebaseUser.uid, userMap)
             
@@ -70,45 +63,31 @@ class AuthRepositoryImpl(
     override fun getCurrentUser(): AuthUser? {
         val firebaseUser = remoteDataSource.getCurrentFirebaseUser() ?: return null
         
-        // Untuk getCurrentUser yang sinkron, kita kembalikan data dari FirebaseUser
-        // Data lengkap dari Firestore bisa diambil secara async di tempat lain
         return UserMapper.fromFirebaseUser(firebaseUser)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getAuthState(): Flow<AuthUser?> {
-        // 1. Ambil Flow mentah dari data source
         return remoteDataSource.getAuthStateFlow()
             .flatMapLatest { firebaseUser ->
-                // flatMapLatest hebat karena jika user log out lalu log in cepat,
-                // ia akan membatalkan permintaan Firestore yang lama.
 
                 if (firebaseUser == null) {
-                    // 2. Jika user null (logout), kirim null ke UI
                     flowOf(null)
                 } else {
-                    // 3. Jika user login, kita ambil data LENGKAP dari Firestore
-                    //    Sama seperti logika di fungsi login() Anda.
                     flowOf(fetchUserFromFirestoreOrFallback(firebaseUser))
                 }
             }
     }
 
     override fun logout() {
-        // Cukup teruskan panggilan ke data source
         remoteDataSource.logout()
     }
 
-    /**
-     * Fungsi helper pribadi untuk mengambil data dari Firestore
-     * dengan fallback ke data Firebase Auth.
-     */
     private suspend fun fetchUserFromFirestoreOrFallback(firebaseUser: FirebaseUser): AuthUser {
         val userDto = remoteDataSource.getUserFromFirestore(firebaseUser.uid)
         return if (userDto != null) {
             UserMapper.fromDto(userDto)
         } else {
-            // Fallback jika Firestore belum siap/kosong
             UserMapper.fromFirebaseUser(firebaseUser)
         }
     }

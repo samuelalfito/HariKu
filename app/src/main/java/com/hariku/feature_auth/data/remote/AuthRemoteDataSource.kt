@@ -2,6 +2,7 @@ package com.hariku.feature_auth.data.remote
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.hariku.feature_auth.data.dto.UserDto
 import kotlinx.coroutines.channels.awaitClose
@@ -32,9 +33,21 @@ class AuthRemoteDataSource(
     /**
      * Sign up (registrasi) dengan email dan password menggunakan Firebase Auth
      */
-    suspend fun signUp(email: String, password: String): FirebaseUser {
+    suspend fun signUp(email: String, password: String, name: String): FirebaseUser { // Terima 'name' di sini
         val authResult = auth.createUserWithEmailAndPassword(email, password).await()
-        return authResult.user ?: throw IllegalStateException("User null setelah sign up")
+        val firebaseUser = authResult.user ?: throw IllegalStateException("User null setelah sign up")
+
+        // 4. Buat request untuk update profil
+        val profileUpdates = UserProfileChangeRequest.Builder()
+            .setDisplayName(name)
+            // .setPhotoUri(Uri.parse("url_foto_jika_ada"))
+            .build()
+
+        // 5. Terapkan update ke user dan tunggu selesai
+        firebaseUser.updateProfile(profileUpdates).await()
+
+        // 6. Kembalikan user yang profilnya sudah di-update
+        return firebaseUser
     }
     
     /**
