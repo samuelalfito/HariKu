@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hariku.R
+import com.hariku.core.ui.components.FloatingActButton
 import com.hariku.core.ui.components.Routes
 
 data class ChatSession(
@@ -62,18 +62,12 @@ fun ChatScreen(navController: NavController) {
         containerColor = Color(0xFFF9F9F9),
         topBar = { ChatTopBar() },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { },
-                shape = RoundedCornerShape(50.dp),
-                containerColor = Color(0xFFD9A188),
-                modifier = Modifier.size(72.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_tambah_obrolan),
-                    contentDescription = "Tambah Obrolan",
-                    modifier = Modifier.size(72.dp)
-                )
-            }
+            FloatingActButton(
+                label = "Create New Chat",
+                onClick = {
+                    navController.navigate(Routes.CustomizeNewCat.route)
+                }
+            )
         }
     ) { paddingValues ->
         LazyColumn(
