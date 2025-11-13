@@ -1,5 +1,7 @@
 package com.hariku.feature_auth.presentation.login
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,12 +28,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -46,19 +48,24 @@ import com.hariku.core.ui.components.Routes
 import com.hariku.feature_auth.presentation.components.AuthDivider
 import com.hariku.feature_auth.presentation.components.RegularTextField
 import com.hariku.feature_auth.presentation.components.TextLogo
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 
+@SuppressLint("ContextCastToActivity")
 @Composable
 fun LoginScreen(
     navController: NavController,
     viewModel: LoginScreenViewModel = koinViewModel()
 ) {
-    var passwordVisible by remember { mutableStateOf(false) }
-
     val uiState by viewModel.uiState.collectAsState()
-
     val orangeColor = Color(0xFFCD8C63)
+    val context = LocalContext.current as Activity
+    val googleAuthUiClient = remember(context) { //Key nya context, kalau context berubah buat ulang
+        GoogleAuthUiClient(context = context)
+    }
+    val scope = rememberCoroutineScope()
+
 
     LaunchedEffect(key1 = uiState) {
         if (uiState.loginSuccess) {
@@ -164,7 +171,17 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { },
+                onClick = {
+                    scope.launch {
+                        val tokenCredential = googleAuthUiClient.signIn()
+
+                        if (tokenCredential != null) {
+                            viewModel.onGoogleSignInSuccess(tokenCredential.idToken)
+                        } else {
+                            viewModel.onGoogleSignInFailed("Login Google dibatalkan atau gagal.")
+                        }
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp)

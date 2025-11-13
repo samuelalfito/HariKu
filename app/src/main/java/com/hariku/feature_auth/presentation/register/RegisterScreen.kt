@@ -164,7 +164,6 @@ fun RegisterScreen(
 
                 Button(
                     onClick = {
-                        /*TODO REGISTER FEATURE*/
                         viewModel.onRegisterClicked()
                     },
                     enabled = !uiState.isLoading,
@@ -177,11 +176,7 @@ fun RegisterScreen(
                     )
                 ) {
                     if (uiState.isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp),
-                            color = Color.White,
-                            strokeWidth = 2.dp
-                        )
+                        CircularProgressIndicator()
                     } else {
                         Text(
                             text = "Daftar",

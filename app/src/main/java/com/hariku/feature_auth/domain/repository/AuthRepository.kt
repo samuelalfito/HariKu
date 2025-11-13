@@ -12,6 +12,11 @@ interface AuthRepository {
      */
     suspend fun login(email: String, password: String): Result<AuthUser>
 
+    /**
+     * Login dengan google
+     */
+    suspend fun loginWithGoogle(idToken: String): Result<AuthUser>
+
     fun logout()
 
     /**
