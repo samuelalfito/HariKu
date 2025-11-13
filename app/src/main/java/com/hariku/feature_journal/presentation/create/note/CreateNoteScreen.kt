@@ -10,15 +10,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.hariku.R
+import com.hariku.core.ui.components.Routes
 
 @Composable
-fun CreateNoteScreen() {
+fun CreateNoteScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -176,7 +179,13 @@ fun CreateNoteScreen() {
                 )
                 Spacer(Modifier.height(24.dp))
                 Button(
-                    onClick = { /* TODO */ },
+                    onClick = {
+                        navController.navigate(Routes.Home.route) {
+                            popUpTo(Routes.Home.route) {
+                                inclusive = true
+                            }
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
@@ -193,5 +202,5 @@ fun CreateNoteScreen() {
 @Preview
 @Composable
 private fun Preview() {
-    CreateNoteScreen()
+    CreateNoteScreen(NavController(LocalContext.current))
 }

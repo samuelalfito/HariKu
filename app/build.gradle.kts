@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.ksp)
     id("androidx.room")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
 }
 
 android {
@@ -97,4 +98,7 @@ dependencies {
     //Material3 Icon
     implementation("androidx.compose.material:material-icons-extended:1.5.0")
     implementation("androidx.compose.material3:material3:1.1.0")
+    
+    //Kotlinx Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 }

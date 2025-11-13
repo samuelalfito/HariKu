@@ -69,8 +69,7 @@ fun LoginScreen(
 
     LaunchedEffect(key1 = uiState) {
         if (uiState.loginSuccess) {
-            // SUKSES! Arahkan ke PIN_GRAPH
-            navController.navigate(Routes.PIN_GRAPH) {
+            navController.navigate(Routes.PinGraph.route) {
                 popUpTo(navController.graph.startDestinationId) { inclusive = true }
             }
         }
@@ -230,7 +229,7 @@ fun LoginScreen(
                         .padding(0.dp)
                         .clickable {
                             Log.d("DEBUG", "Daftar")
-                            navController.navigate(Routes.REGISTER)
+                            navController.navigate(Routes.Register.route)
                         }
                 )
             }

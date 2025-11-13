@@ -72,7 +72,7 @@ fun FillPinScreen(navController: NavController) { /*TODO: PIN Input and validati
                     ),
                     modifier = Modifier
                         .clickable {
-                            navController.navigate(Routes.HOME) {
+                            navController.navigate(Routes.Home.route) {
                                 popUpTo(0) { inclusive = true }
                             }
                         }
@@ -111,7 +111,7 @@ fun FillPinScreen(navController: NavController) { /*TODO: PIN Input and validati
                         pinValue += number
                     }
                     if (pinValue.length == maxPinLength) {
-                        navController.navigate(Routes.HOME) {
+                        navController.navigate(Routes.Home.route) {
                             popUpTo(0) { inclusive = true }
                         }
                     } /*TODO: PIN Input and validating function */

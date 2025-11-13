@@ -197,7 +197,7 @@ fun OnboardingScreen(navController: NavController) {
                     Button(
                         onClick = { /*TODO: Animate progress dots*/
                             if(selectedBoxIndex == 3){
-                                navController.navigate(Routes.AUTH_GRAPH)
+                                navController.navigate(Routes.AuthGraph.route)
                             }else{
                                 selectedBoxIndex = ((selectedBoxIndex + 1)%4)
                                 if(selectedBoxIndex==0){selectedBoxIndex+=1}
@@ -221,7 +221,7 @@ fun OnboardingScreen(navController: NavController) {
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier
                             .clickable {
-                                navController.navigate(Routes.AUTH_GRAPH)
+                                navController.navigate(Routes.AuthGraph.route)
                             }
                     )
 

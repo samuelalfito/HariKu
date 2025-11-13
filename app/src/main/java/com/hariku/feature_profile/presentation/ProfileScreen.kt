@@ -48,7 +48,7 @@ fun ProfileScreen(
                         .padding(start = 16.dp)
                         .size(28.dp)
                         .clickable {
-                            navController.popBackStack(route = Routes.HOME, inclusive = false)
+                            navController.popBackStack(route = Routes.Home.route, inclusive = false)
                         }
                 )
                 Text(
@@ -148,8 +148,8 @@ fun ProfileScreen(
 
                     // 2. Navigasi kembali ke halaman login
                     // dan hapus semua riwayat navigasi (back stack)
-                    navController.navigate(Routes.AUTH_GRAPH) { // (atau "auth_graph")
-                        popUpTo(Routes.HOME) {
+                    navController.navigate(Routes.AuthGraph.route) { // (atau "auth_graph")
+                        popUpTo(Routes.Home.route) {
                             inclusive = true
                         }
                     }
