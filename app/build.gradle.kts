@@ -101,4 +101,7 @@ dependencies {
     
     //Kotlinx Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
+    //Coil
+    implementation(libs.coil.compose)
 }
