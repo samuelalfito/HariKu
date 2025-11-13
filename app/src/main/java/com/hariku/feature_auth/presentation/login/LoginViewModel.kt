@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hariku.feature_auth.domain.usecase.LoginUseCase
+import com.hariku.feature_auth.domain.usecase.LoginWithGoogleUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -21,7 +22,8 @@ data class LoginUiState(
  * ViewModel untuk LoginScreen.
  */
 class LoginScreenViewModel(
-    private val useCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val loginWithGoogleUseCase: LoginWithGoogleUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -53,7 +55,7 @@ class LoginScreenViewModel(
         viewModelScope.launch {
             val currentState = _uiState.value
 
-            val result = useCase(currentState.email, currentState.password)
+            val result = loginUseCase(currentState.email, currentState.password)
 
             result.onSuccess { authUser ->
                 // Sukses
@@ -74,6 +76,41 @@ class LoginScreenViewModel(
                 }
             }
         }
+    }
+
+    fun onGoogleSignInSuccess(idToken: String) {
+        // Loading lock
+        if (_uiState.value.isLoading) return
+
+        _uiState.update { it.copy(isLoading = true, error = null) }
+
+        viewModelScope.launch {
+            val result = loginWithGoogleUseCase(idToken) // Panggil use case baru
+
+            result.onSuccess { authUser ->
+                Log.d("LoginVM", "Google Login Success: ${authUser.name}")
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        loginSuccess = true
+                    )
+                }
+            }.onFailure { exception ->
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = exception.message ?: "Terjadi kesalahan"
+                    )
+                }
+            }
+        }
+    }
+
+    fun onGoogleSignInFailed(errorMessage: String) {
+        _uiState.update {
+            it.copy(loginSuccess = false)
+        }
+        Log.e("LoginVM", "Google Login Failed: $errorMessage")
     }
 
     /**

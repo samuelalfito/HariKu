@@ -39,6 +39,26 @@ class AuthRepositoryImpl(
         }
     }
 
+    override suspend fun loginWithGoogle(idToken: String): Result<AuthUser> {
+        return try {
+            val firebaseUser = remoteDataSource.loginWithGoogle(idToken)
+
+            val authUser = AuthUser(
+                uid = firebaseUser.uid,
+                email = firebaseUser.email,
+                name = firebaseUser.displayName
+            )
+
+            val userMap = UserMapper.toFirestoreMap(authUser)
+            remoteDataSource.saveUserToFirestore(firebaseUser.uid, userMap)
+
+            Result.success(authUser)
+
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     override suspend fun signUp(email: String, password: String, name: String): Result<AuthUser> {
         return try {
             val firebaseUser = remoteDataSource.signUp(email, password, name)

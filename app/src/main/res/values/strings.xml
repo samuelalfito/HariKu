@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">HariKu</string>
+    <string name="web_client_id" translatable="false">715861009439-e9dl3vto7cecn9hn41a0t4rvie4sk322.apps.googleusercontent.com</string>
 </resources>

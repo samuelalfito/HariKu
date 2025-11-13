@@ -2,6 +2,7 @@ package com.hariku.feature_auth.data.remote
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.hariku.feature_auth.data.dto.UserDto
@@ -23,6 +24,12 @@ class AuthRemoteDataSource(
 
     suspend fun login(email: String, password: String): FirebaseUser {
         val authResult = auth.signInWithEmailAndPassword(email, password).await()
+        return authResult.user ?: throw IllegalStateException("User null setelah login")
+    }
+
+    suspend fun loginWithGoogle(id: String): FirebaseUser {
+        val credential = GoogleAuthProvider.getCredential(id, null)
+        val authResult = auth.signInWithCredential(credential).await()
         return authResult.user ?: throw IllegalStateException("User null setelah login")
     }
 

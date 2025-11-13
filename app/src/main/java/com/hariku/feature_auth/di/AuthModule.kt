@@ -6,6 +6,7 @@ import com.hariku.feature_auth.domain.repository.AuthRepository
 import com.hariku.feature_auth.domain.usecase.CheckLoginStatusUseCase
 import com.hariku.feature_auth.domain.usecase.GetCurrentUserUseCase
 import com.hariku.feature_auth.domain.usecase.LoginUseCase
+import com.hariku.feature_auth.domain.usecase.LoginWithGoogleUseCase
 import com.hariku.feature_auth.domain.usecase.LogoutUseCase
 import com.hariku.feature_auth.domain.usecase.SignUpUseCase
 import com.hariku.feature_auth.presentation.login.LoginScreenViewModel
@@ -15,7 +16,6 @@ import org.koin.dsl.module
 
 /**
  * Module Koin untuk feature_auth.
- * Mengikuti Clean Architecture: Presentation → Domain (UseCase) → Data (Repository) → Remote/Local
  */
 val authModule = module {
     
@@ -60,12 +60,19 @@ val authModule = module {
     factory {
         LogoutUseCase(repository = get())
     }
+
+    factory {
+        LoginWithGoogleUseCase(repository = get())
+    }
     
     // ============================================
     // PRESENTATION LAYER - ViewModels
     // ============================================
     viewModel {
-        LoginScreenViewModel(get())
+        LoginScreenViewModel(
+            loginUseCase = get(),
+            loginWithGoogleUseCase = get()
+        )
     }
     
     viewModel {
