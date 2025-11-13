@@ -68,20 +68,15 @@ fun RegisterScreen(
 
     if(uiState.error != null && uiState.error != ""){ errorMessage = uiState.error!! }
 
-    // --- TAMBAHAN: Menangani navigasi dan error ---
     LaunchedEffect(key1 = uiState) {
         if (uiState.registerSuccess) {
-            // SUKSES! Arahkan ke PIN_GRAPH
             navController.navigate(Routes.PinGraph.route) {
-                // Hapus tumpukan navigasi auth agar user tidak bisa kembali
                 popUpTo(navController.graph.startDestinationId) { inclusive = true }
             }
         }
 
         if (uiState.error != null) {
-            // ADA ERROR! Tampilkan Snackbar atau Toast di sini
             Log.e("RegisterScreen", "Error: ${uiState.error}")
-            // Beri tahu ViewModel bahwa error sudah ditampilkan
             viewModel.onErrorShown()
         }
     }
@@ -166,7 +161,6 @@ fun RegisterScreen(
 
                 Button(
                     onClick = {
-                        /*TODO REGISTER FEATURE*/
                         viewModel.onRegisterClicked()
                     },
                     enabled = !uiState.isLoading,
@@ -179,11 +173,7 @@ fun RegisterScreen(
                     )
                 ) {
                     if (uiState.isLoading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp),
-                            color = Color.White,
-                            strokeWidth = 2.dp
-                        )
+                        CircularProgressIndicator()
                     } else {
                         Text(
                             text = "Daftar",

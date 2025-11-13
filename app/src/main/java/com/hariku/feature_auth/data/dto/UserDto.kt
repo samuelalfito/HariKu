@@ -1,7 +1,7 @@
 package com.hariku.feature_auth.data.dto
 
 /**
- * DTO (Data Transfer Object) untuk User dari Firestore.
+ * DTO untuk User dari Firestore.
  * Nullable karena data dari network/database bisa saja tidak lengkap.
  */
 data class UserDto(

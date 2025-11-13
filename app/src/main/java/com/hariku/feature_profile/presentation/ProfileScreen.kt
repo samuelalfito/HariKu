@@ -93,7 +93,7 @@ fun ProfileScreen(
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "Izora",
+                            text = viewModel.currentUser?.name ?: "{NAME NOT SET}",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFF242424)
@@ -107,7 +107,7 @@ fun ProfileScreen(
                     }
 
                     Text(
-                        text = "izoratalia@gmail.com",
+                        text = viewModel.currentUser?.email ?: "{EMAIL NOT SET}",
                         fontSize = 14.sp,
                         color = Color(0xFF6B4E3D)
                     )

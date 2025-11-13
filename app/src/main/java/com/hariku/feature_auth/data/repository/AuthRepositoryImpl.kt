@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.flowOf
 
 /**
  * Implementasi Repository untuk Authentication.
- * Mengikuti Clean Architecture:
  * - Menggunakan Remote Data Source untuk akses data
  * - Menggunakan Mapper untuk konversi DTO ↔ Domain Model
  * - Tidak bergantung langsung pada Firebase (loose coupling)
@@ -33,6 +32,26 @@ class AuthRepositoryImpl(
                 UserMapper.fromFirebaseUser(firebaseUser)
             }
             
+            Result.success(authUser)
+
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun loginWithGoogle(idToken: String): Result<AuthUser> {
+        return try {
+            val firebaseUser = remoteDataSource.loginWithGoogle(idToken)
+
+            val authUser = AuthUser(
+                uid = firebaseUser.uid,
+                email = firebaseUser.email,
+                name = firebaseUser.displayName
+            )
+
+            val userMap = UserMapper.toFirestoreMap(authUser)
+            remoteDataSource.saveUserToFirestore(firebaseUser.uid, userMap)
+
             Result.success(authUser)
 
         } catch (e: Exception) {

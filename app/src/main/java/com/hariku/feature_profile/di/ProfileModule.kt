@@ -7,7 +7,8 @@ import org.koin.dsl.module
 val profileModule = module {
     viewModel {
         ProfileScreenViewModel(
-            logoutUseCase = get() // 'get()' akan mengambil LogoutUseCase dari authModule
+            logoutUseCase = get(),
+            getCurrentUserUseCase = get()
         )
     }
 }

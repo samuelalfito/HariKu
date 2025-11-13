@@ -2,6 +2,7 @@ package com.hariku.feature_auth.data.remote
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.hariku.feature_auth.data.dto.UserDto
@@ -13,7 +14,6 @@ import kotlinx.coroutines.tasks.await
 /**
  * Remote Data Source untuk Authentication.
  * Menangani semua interaksi dengan Firebase Auth dan Firestore.
- * Ini memisahkan logic Firebase dari Repository.
  */
 class AuthRemoteDataSource(
     private val auth: FirebaseAuth,
@@ -21,42 +21,39 @@ class AuthRemoteDataSource(
 ) {
     
     private val usersCollection = firestore.collection("Users")
-    
-    /**
-     * Login dengan email dan password menggunakan Firebase Auth
-     */
+
     suspend fun login(email: String, password: String): FirebaseUser {
         val authResult = auth.signInWithEmailAndPassword(email, password).await()
         return authResult.user ?: throw IllegalStateException("User null setelah login")
     }
-    
-    /**
-     * Sign up (registrasi) dengan email dan password menggunakan Firebase Auth
-     */
-    suspend fun signUp(email: String, password: String, name: String): FirebaseUser { // Terima 'name' di sini
+
+    suspend fun loginWithGoogle(id: String): FirebaseUser {
+        val credential = GoogleAuthProvider.getCredential(id, null)
+        val authResult = auth.signInWithCredential(credential).await()
+        return authResult.user ?: throw IllegalStateException("User null setelah login")
+    }
+
+    suspend fun signUp(email: String, password: String, name: String): FirebaseUser {
         val authResult = auth.createUserWithEmailAndPassword(email, password).await()
         val firebaseUser = authResult.user ?: throw IllegalStateException("User null setelah sign up")
 
-        // 4. Buat request untuk update profil
         val profileUpdates = UserProfileChangeRequest.Builder()
             .setDisplayName(name)
             // .setPhotoUri(Uri.parse("url_foto_jika_ada"))
             .build()
 
-        // 5. Terapkan update ke user dan tunggu selesai
         firebaseUser.updateProfile(profileUpdates).await()
 
-        // 6. Kembalikan user yang profilnya sudah di-update
         return firebaseUser
     }
-    
+
     /**
      * Mendapatkan current user dari Firebase Auth
      */
     fun getCurrentFirebaseUser(): FirebaseUser? {
         return auth.currentUser
     }
-    
+
     /**
      * Mendapatkan data user dari Firestore berdasarkan UID
      */
@@ -75,10 +72,7 @@ class AuthRemoteDataSource(
     suspend fun saveUserToFirestore(uid: String, userData: Map<String, Any?>) {
         usersCollection.document(uid).set(userData).await()
     }
-    
-    /**
-     * Logout dari Firebase Auth
-     */
+
     fun logout() {
         auth.signOut()
     }
@@ -86,14 +80,12 @@ class AuthRemoteDataSource(
     fun getAuthStateFlow(): Flow<FirebaseUser?> {
         return callbackFlow {
             val authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
-                // Mengirimkan FirebaseUser saat ini (bisa null jika logout)
+                // bisa null jika logout
                 trySend(firebaseAuth.currentUser)
             }
 
-            // Daftarkan listener
             auth.addAuthStateListener(authStateListener)
 
-            // Hapus listener saat Flow ditutup
             awaitClose {
                 auth.removeAuthStateListener(authStateListener)
             }

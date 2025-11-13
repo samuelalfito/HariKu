@@ -5,13 +5,17 @@ import kotlinx.coroutines.flow.Flow
 
 /**
  * Interface Repository untuk Authentication (Domain Layer).
- * ViewModel/UseCase akan bergantung pada interface ini, bukan implementasinya.
  */
 interface AuthRepository {
     /**
      * Login dengan email dan password.
      */
     suspend fun login(email: String, password: String): Result<AuthUser>
+
+    /**
+     * Login dengan google
+     */
+    suspend fun loginWithGoogle(idToken: String): Result<AuthUser>
 
     fun logout()
 
