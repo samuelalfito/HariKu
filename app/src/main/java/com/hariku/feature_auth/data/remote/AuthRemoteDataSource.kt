@@ -4,6 +4,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.hariku.feature_auth.data.dto.UserDto
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 /**
@@ -65,6 +68,23 @@ class AuthRemoteDataSource(
      */
     fun logout() {
         auth.signOut()
+    }
+
+    fun getAuthStateFlow(): Flow<FirebaseUser?> {
+        return callbackFlow {
+            val authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+                // Mengirimkan FirebaseUser saat ini (bisa null jika logout)
+                trySend(firebaseAuth.currentUser)
+            }
+
+            // Daftarkan listener
+            auth.addAuthStateListener(authStateListener)
+
+            // Hapus listener saat Flow ditutup
+            awaitClose {
+                auth.removeAuthStateListener(authStateListener)
+            }
+        }
     }
 }
 

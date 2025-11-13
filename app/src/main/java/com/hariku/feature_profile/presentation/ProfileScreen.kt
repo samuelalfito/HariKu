@@ -24,9 +24,13 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hariku.R
 import com.hariku.core.ui.components.Routes
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(
+    navController: NavController,
+    viewModel: ProfileScreenViewModel = koinViewModel() // <-- INJECT VIEWMODEL
+) {
     Scaffold(
         topBar = {
             Box(
@@ -137,7 +141,19 @@ fun ProfileScreen(navController: NavController) {
                 iconRes = R.drawable.keluar,
                 text = "Keluar",
                 textColor = Color(0xFFD98585),
-                disableRipple = true
+                disableRipple = true,
+                onClick = { // <-- TAMBAHKAN ONCLICK
+                    // 1. Panggil ViewModel untuk logout
+                    viewModel.onLogoutClicked()
+
+                    // 2. Navigasi kembali ke halaman login
+                    // dan hapus semua riwayat navigasi (back stack)
+                    navController.navigate(Routes.AUTH_GRAPH) { // (atau "auth_graph")
+                        popUpTo(Routes.HOME) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
     }
@@ -149,7 +165,8 @@ fun ProfileMenuItem(
     text: String,
     textColor: Color = Color(0xFF242424),
     isToggle: Boolean = false,
-    disableRipple: Boolean = false
+    disableRipple: Boolean = false,
+    onClick: () -> Unit = {}
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -162,7 +179,9 @@ fun ProfileMenuItem(
             .clickable(
                 interactionSource = interactionSource,
                 indication = if (disableRipple) null else LocalIndication.current
-            ) { }
+            ) {
+                onClick()
+            }
     ) {
         Row(
             modifier = Modifier

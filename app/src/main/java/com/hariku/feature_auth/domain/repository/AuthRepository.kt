@@ -1,6 +1,7 @@
 package com.hariku.feature_auth.domain.repository
 
 import com.hariku.feature_auth.domain.model.AuthUser
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Interface Repository untuk Authentication (Domain Layer).
@@ -12,6 +13,8 @@ interface AuthRepository {
      */
     suspend fun login(email: String, password: String): Result<AuthUser>
 
+    fun logout()
+
     /**
      * Sign up (registrasi) dengan email, password, dan nama.
      */
@@ -21,5 +24,7 @@ interface AuthRepository {
      * Mendapatkan user yang sedang login saat ini.
      */
     fun getCurrentUser(): AuthUser?
+
+    fun getAuthState(): Flow<AuthUser?>
 }
 
