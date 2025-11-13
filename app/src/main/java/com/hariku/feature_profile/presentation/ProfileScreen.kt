@@ -15,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.hariku.R
 import com.hariku.core.ui.components.Routes
 import org.koin.androidx.compose.koinViewModel
@@ -29,7 +32,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ProfileScreen(
     navController: NavController,
-    viewModel: ProfileScreenViewModel = koinViewModel() // <-- INJECT VIEWMODEL
+    viewModel: ProfileScreenViewModel = koinViewModel()
 ) {
     Scaffold(
         topBar = {
@@ -79,11 +82,21 @@ fun ProfileScreen(
                         .padding(vertical = 24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Box(
+                    AsyncImage(
+                        model = viewModel.currentUser?.photoUrl, //URI/URL foto profil
+                        contentDescription = "Foto Profil",
+
                         modifier = Modifier
                             .size(80.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFFF3B57B))
+                            .clip(CircleShape),
+
+                        contentScale = ContentScale.Crop,
+
+                        // placeholder warna polos
+                        placeholder = ColorPainter(Color(0xFFF3B57B)),
+
+                        // Placeholder kalo error
+                        error = ColorPainter(Color(0xFFF3B57B))
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
@@ -142,13 +155,10 @@ fun ProfileScreen(
                 text = "Keluar",
                 textColor = Color(0xFFD98585),
                 disableRipple = true,
-                onClick = { // <-- TAMBAHKAN ONCLICK
-                    // 1. Panggil ViewModel untuk logout
+                onClick = {
                     viewModel.onLogoutClicked()
 
-                    // 2. Navigasi kembali ke halaman login
-                    // dan hapus semua riwayat navigasi (back stack)
-                    navController.navigate(Routes.AuthGraph.route) { // (atau "auth_graph")
+                    navController.navigate(Routes.AuthGraph.route) {
                         popUpTo(Routes.Home.route) {
                             inclusive = true
                         }
