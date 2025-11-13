@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.flowOf
 
 /**
  * Implementasi Repository untuk Authentication.
- * Mengikuti Clean Architecture:
  * - Menggunakan Remote Data Source untuk akses data
  * - Menggunakan Mapper untuk konversi DTO ↔ Domain Model
  * - Tidak bergantung langsung pada Firebase (loose coupling)

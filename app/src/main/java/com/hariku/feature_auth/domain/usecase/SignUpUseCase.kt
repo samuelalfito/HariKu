@@ -5,7 +5,6 @@ import com.hariku.feature_auth.domain.repository.AuthRepository
 
 /**
  * UseCase untuk Sign Up (Registrasi).
- * Memisahkan logika bisnis dari ViewModel.
  */
 class SignUpUseCase(
     private val repository: AuthRepository

@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 /**
  * Interface Repository untuk Authentication (Domain Layer).
- * ViewModel/UseCase akan bergantung pada interface ini, bukan implementasinya.
  */
 interface AuthRepository {
     /**

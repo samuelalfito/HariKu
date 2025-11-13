@@ -33,8 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,17 +63,13 @@ fun LoginScreen(
     LaunchedEffect(key1 = uiState) {
         if (uiState.loginSuccess) {
             // SUKSES! Arahkan ke PIN_GRAPH
-            // Ini adalah cara navigasi yang benar
             navController.navigate(Routes.PIN_GRAPH) {
-                // Hapus tumpukan navigasi auth agar user tidak bisa kembali ke login
                 popUpTo(navController.graph.startDestinationId) { inclusive = true }
             }
         }
 
         if (uiState.error != null) {
-            // ADA ERROR! Tampilkan Snackbar atau Toast di sini
             Log.e("LoginScreen", "Error: ${uiState.error}")
-            // Beri tahu ViewModel bahwa error sudah ditampilkan
             viewModel.onErrorShown()
         }
     }
