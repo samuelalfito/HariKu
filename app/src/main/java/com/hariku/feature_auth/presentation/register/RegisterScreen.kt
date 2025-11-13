@@ -57,13 +57,7 @@ fun RegisterScreen(
     viewModel: RegisterScreenViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
     var errorMessage by remember { mutableStateOf("") }
-
-    var passwordVisible by remember { mutableStateOf(false) }
-    var confirmPassword by remember { mutableStateOf("") }
-    var confirmPasswordVisible by remember { mutableStateOf(false) }
-
     val orangeColor = Color(0xFFCD8C63)
 
     if(uiState.error != null && uiState.error != ""){ errorMessage = uiState.error!! }
@@ -192,36 +186,38 @@ fun RegisterScreen(
                 onPrivacyClick = { }
             )
 
+//            Spacer(modifier = Modifier.height(16.dp))
+//
+//            AuthDivider()
+
             Spacer(modifier = Modifier.height(16.dp))
 
-            AuthDivider()
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = { },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 32.dp)
-                    .height(56.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White
-                ),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.google),
-                    contentDescription = "Google Icon",
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Masuk Dengan Google",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.Black
-                )
-            }
+//            Button(
+//                onClick = {
+//
+//                },
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(horizontal = 32.dp)
+//                    .height(56.dp),
+//                colors = ButtonDefaults.buttonColors(
+//                    containerColor = Color.White
+//                ),
+//                shape = RoundedCornerShape(12.dp)
+//            ) {
+//                Image(
+//                    painter = painterResource(id = R.drawable.google),
+//                    contentDescription = "Google Icon",
+//                    modifier = Modifier.size(20.dp)
+//                )
+//                Spacer(modifier = Modifier.width(8.dp))
+//                Text(
+//                    text = "Masuk Dengan Google",
+//                    fontSize = 18.sp,
+//                    fontWeight = FontWeight.Medium,
+//                    color = Color.Black
+//                )
+//            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
