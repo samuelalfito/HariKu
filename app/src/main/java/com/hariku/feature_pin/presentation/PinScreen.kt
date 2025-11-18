@@ -37,11 +37,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hariku.R
 import com.hariku.core.ui.components.Routes
-import com.hariku.feature_pin.data.local.PinDatabase
 import com.hariku.feature_pin.data.local.entity.Pin
 import com.hariku.feature_pin.presentation.PinScreenViewModel
 import org.koin.androidx.compose.koinViewModel
-import kotlin.getValue
 
 private enum class Stage {
     CREATE,
@@ -118,7 +116,7 @@ fun PinScreenFull( /*TODO: Fitur ganti Pin (tunggu tombol ganti pin)*/
                         modifier = Modifier
                             .clickable {
                                 if (stage == Stage.CREATE){
-                                    navController.navigate(Routes.HOME) {
+                                    navController.navigate(Routes.Home.route) {
                                         popUpTo(0) { inclusive = true }
                                     }
                                 }
@@ -221,7 +219,7 @@ fun PinScreenFull( /*TODO: Fitur ganti Pin (tunggu tombol ganti pin)*/
 
                                         viewModel.addPin(pin = Pin(pin = createdPin))
 
-                                        navController.navigate(Routes.HOME) {
+                                        navController.navigate(Routes.Home.route) {
                                             popUpTo(0) { inclusive = true }
                                         }
                                     } else {
@@ -234,7 +232,7 @@ fun PinScreenFull( /*TODO: Fitur ganti Pin (tunggu tombol ganti pin)*/
                                 }
                                 Stage.INPUT -> {
                                     if(pinValue == pin?.pin) {
-                                        navController.navigate(Routes.HOME) {
+                                        navController.navigate(Routes.Home.route) {
                                             popUpTo(0) { inclusive = true }
                                         }
                                     }

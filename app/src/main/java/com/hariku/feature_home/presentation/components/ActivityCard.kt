@@ -1,6 +1,7 @@
 package com.hariku.feature_home.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -20,12 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ActivityCard(title: String, imageRes: Int, backgroundColor: Color) {
+fun ActivityCard(title: String, imageRes: Int, backgroundColor: Color, onClick: () -> Unit) {
     Card(
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier
             .width(140.dp)
-            .height(120.dp),
+            .height(120.dp)
+            .clickable{ onClick() },
         elevation = CardDefaults.cardElevation(2.dp),
         colors = CardDefaults.cardColors(containerColor = backgroundColor)
     ) {

@@ -1,14 +1,12 @@
 package com.hariku.feature_journal.presentation.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,12 +23,13 @@ import androidx.compose.ui.unit.sp
 import com.hariku.R
 
 @Composable
-fun JournalCard(title: String, bgRes: Int) {
+fun JournalCard(title: String, bgRes: Int, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(4f / 5f) // Tetapkan rasio aspek agar tingginya proporsional
             .clip(RoundedCornerShape(20.dp)) // Untuk sudut tumpul
+            .clickable(onClick = onClick)
     ) {
         Image(
             painter = painterResource(id = bgRes),
@@ -62,5 +61,5 @@ fun JournalCard(title: String, bgRes: Int) {
 @Preview
 @Composable
 private fun Preview() {
-    JournalCard(title = "STRES", bgRes = com.hariku.R.drawable.img_pink_bg)
+    JournalCard(title = "STRES", bgRes = R.drawable.img_pink_bg, onClick = {})
 }

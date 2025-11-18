@@ -23,10 +23,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.hariku.R
 import com.hariku.feature_journal.domain.model.JournalData
 import com.hariku.feature_journal.presentation.components.AppTopBar
@@ -35,7 +37,7 @@ import com.hariku.feature_journal.presentation.components.JournalListCard
 import kotlinx.coroutines.launch
 
 @Composable
-fun JournalDetailScreen() {
+fun JournalDetailScreen(navController: NavController, journalId: String) {
     val tabTitles = listOf("List", "Tampilan Buku")
     val pagerState = rememberPagerState(pageCount = { tabTitles.size })
     val coroutineScope = rememberCoroutineScope()
@@ -52,7 +54,9 @@ fun JournalDetailScreen() {
         topBar = {
             AppTopBar(
                 title = "Stress",
-                onBackClick = { /* TODO */ }
+                onBackClick = {
+                    navController.popBackStack()
+                }
             )
         }
     ) { innerPadding ->
@@ -62,6 +66,7 @@ fun JournalDetailScreen() {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text(journalId)
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -136,7 +141,8 @@ fun BookViewContent(data: JournalData) {
     ) {
         JournalCard(
             title = "STRES",
-            bgRes = R.drawable.img_pink_bg
+            bgRes = R.drawable.img_pink_bg,
+            onClick = { /* Tidak ada aksi pada tampilan buku */ }
         )
         
         JournalListCard(
@@ -149,5 +155,8 @@ fun BookViewContent(data: JournalData) {
 @Preview(showBackground = true)
 @Composable
 fun JournalDetailScreenListPreview() {
-    JournalDetailScreen()
+    JournalDetailScreen(
+        navController = NavController(LocalContext.current),
+        journalId = "Stress"
+    )
 }

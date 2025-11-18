@@ -1,6 +1,7 @@
 package com.hariku.feature_home.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,10 +29,10 @@ import androidx.compose.ui.unit.sp
 import com.hariku.R
 
 @Composable
-fun ChatCard(title: String, message: String, date: String, unreadCount: Int) {
+fun ChatCard(title: String, message: String, date: String, unreadCount: Int, onClick: () -> Unit) {
     Card(
         shape = RoundedCornerShape(16.dp),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().clickable{ onClick() },
         elevation = CardDefaults.cardElevation(2.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
