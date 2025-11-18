@@ -1,6 +1,5 @@
 package com.hariku.core.ui.components
 
-import ChatScreen
 import PinScreenFull
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -12,6 +11,7 @@ import com.hariku.feature_article.presentation.ArticleScreen
 import com.hariku.feature_article.presentation.KecemaasanScreen
 import com.hariku.feature_auth.presentation.login.LoginScreen
 import com.hariku.feature_auth.presentation.register.RegisterScreen
+import com.hariku.feature_chatbot.presentation.ChatScreen
 import com.hariku.feature_chatbot.presentation.customize.CustomizeCatScreen
 import com.hariku.feature_chatbot.presentation.customize.CustomizeNewCatScreen
 import com.hariku.feature_chatbot.presentation.customize.CustomizePersonalCatScreen
