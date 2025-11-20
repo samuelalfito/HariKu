@@ -59,7 +59,7 @@ val chatbotMessages = listOf(
 )
 
 @Composable
-fun ChatDetailScreen(navController: NavController, chatbotId: String) {
+fun ChatbotDetailScreen(navController: NavController, chatbotId: String) {
     var messageText by remember { mutableStateOf("") }
     
     Scaffold(
@@ -126,9 +126,9 @@ fun DateSeparator(text: String) {
 
 @Preview
 @Composable
-fun ChatDetailScreenPreview() {
+fun ChatbotDetailScreenPreview() {
     MaterialTheme {
-        ChatDetailScreen(
+        ChatbotDetailScreen(
             rememberNavController(), "1"
         )
     }

@@ -11,7 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.hariku.feature_chatbot.presentation.ChatScreen
+import com.hariku.feature_chatbot.presentation.ChatbotScreen
 import com.hariku.feature_home.presentation.HomeScreen
 import com.hariku.feature_journal.presentation.JournalScreen
 import com.hariku.feature_statistic.presentation.components.CalendarView
@@ -60,7 +60,7 @@ fun MainScaffold(parentNavController: NavHostController) {
                 HomeScreen(navController = parentNavController)
             }
             composable(Routes.Chatbot.route) {
-                ChatScreen(navController = parentNavController)
+                ChatbotScreen(navController = parentNavController)
             }
             composable(Routes.Journal.route) {
                 JournalScreen(navController = parentNavController)

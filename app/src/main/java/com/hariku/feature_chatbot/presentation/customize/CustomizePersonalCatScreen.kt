@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.hariku.feature_chatbot.presentation.components.CustomizeTopBar
+import com.hariku.core.ui.components.CustomizeTopBar
 import com.hariku.feature_chatbot.presentation.components.ThreePointSlider
 import com.hariku.feature_chatbot.presentation.components.FeedbackTypeOption
 import com.hariku.feature_chatbot.presentation.components.GoalCheckbox
@@ -124,8 +124,7 @@ fun LanguageStyleSection(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        shape = RoundedCornerShape(16.dp)
     ) {
         Column(
             modifier = Modifier
@@ -331,7 +330,7 @@ fun GoalSection(
 
 @Preview
 @Composable
-private fun CustomizePersonalCatScreen() {
+private fun CustomizePersonalCatScreenPreview() {
     HariKuTheme {
         CustomizePersonalCatScreen(
             rememberNavController()
