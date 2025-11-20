@@ -48,7 +48,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hariku.R
 import com.hariku.core.ui.theme.HariKuTheme
-import com.hariku.feature_chatbot.presentation.components.CustomizeTopBar
+import com.hariku.core.ui.components.CustomizeTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -137,7 +137,7 @@ fun CustomizeNewCatScreen(
                     containerColor = Color.White
                 ),
                 elevation = CardDefaults.cardElevation(
-                    defaultElevation = 4.dp
+                    defaultElevation = 0.dp
                 )
             ) {
                 LazyVerticalGrid(
