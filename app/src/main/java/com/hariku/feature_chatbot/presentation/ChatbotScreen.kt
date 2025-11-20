@@ -139,7 +139,7 @@ val chatbotData = listOf(
 )
 
 @Composable
-fun ChatScreen(navController: NavController) {
+fun ChatbotScreen(navController: NavController) {
     Scaffold(
         containerColor = Color(0xFFF9F9F9),
         topBar = {
@@ -184,8 +184,8 @@ fun ChatScreen(navController: NavController) {
 
 @Preview
 @Composable
-fun ChatScreenPreview() {
+fun ChatbotScreenPreview() {
     MaterialTheme {
-        ChatScreen(rememberNavController())
+        ChatbotScreen(rememberNavController())
     }
 }
