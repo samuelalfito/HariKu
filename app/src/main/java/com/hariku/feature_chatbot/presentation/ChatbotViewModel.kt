@@ -6,13 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
-import com.hariku.feature_chatbot.domain.model.Chatbot
-import com.hariku.feature_chatbot.domain.usecase.GetChatbotsUseCase
+import com.hariku.feature_chatbot.domain.model.ChatbotWithHistory
+import com.hariku.feature_chatbot.domain.usecase.GetChatbotsWithHistoryUseCase
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class ChatbotViewModel(
-    private val getChatbotsUseCase: GetChatbotsUseCase,
+    private val getChatbotsWithHistoryUseCase: GetChatbotsWithHistoryUseCase,
     private val firebaseAuth: FirebaseAuth
 ) : ViewModel() {
     
@@ -26,7 +26,7 @@ class ChatbotViewModel(
     private fun loadChatbots() {
         val userId = firebaseAuth.currentUser?.uid ?: return
         
-        getChatbotsUseCase(userId)
+        getChatbotsWithHistoryUseCase(userId)
             .onEach { result ->
                 result.fold(
                     onSuccess = { chatbots ->
@@ -54,8 +54,7 @@ class ChatbotViewModel(
 }
 
 data class ChatbotUiState(
-    val chatbots: List<Chatbot> = emptyList(),
+    val chatbots: List<ChatbotWithHistory> = emptyList(),
     val isLoading: Boolean = true,
     val error: String? = null
 )
-

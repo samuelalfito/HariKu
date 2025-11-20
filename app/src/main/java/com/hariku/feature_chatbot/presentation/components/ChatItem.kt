@@ -22,10 +22,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hariku.feature_chatbot.domain.model.ChatbotData
+import com.hariku.feature_chatbot.domain.model.ChatbotWithHistory
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
-fun ChatItem(onClick: () -> Unit, chatbotData: ChatbotData) {
+fun ChatItem(onClick: () -> Unit, chatbotWithHistory: ChatbotWithHistory) {
+    val chatbot = chatbotWithHistory.chatbot
+    val dateFormat = SimpleDateFormat("dd/MM", Locale.getDefault())
+    val formattedDate = dateFormat.format(Date(chatbotWithHistory.lastMessageTime))
+    
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -35,8 +42,8 @@ fun ChatItem(onClick: () -> Unit, chatbotData: ChatbotData) {
             .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
         Image(
-            painter = painterResource(id = chatbotData.avatarResId),
-            contentDescription = "Avatar ${chatbotData.name}",
+            painter = painterResource(id = chatbot.avatarResId),
+            contentDescription = "Avatar ${chatbot.name}",
             modifier = Modifier
                 .size(50.dp)
                 .clip(CircleShape)
@@ -48,12 +55,12 @@ fun ChatItem(onClick: () -> Unit, chatbotData: ChatbotData) {
                 .padding(horizontal = 12.dp)
         ) {
             Text(
-                text = chatbotData.name,
+                text = chatbot.name,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
             Text(
-                text = chatbotData.lastMessage,
+                text = chatbotWithHistory.lastMessage,
                 color = Color.Gray,
                 fontSize = 14.sp,
                 maxLines = 1,
@@ -66,11 +73,11 @@ fun ChatItem(onClick: () -> Unit, chatbotData: ChatbotData) {
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = chatbotData.timestamp,
+                text = formattedDate,
                 color = Color.Gray,
                 fontSize = 12.sp
             )
-            if (chatbotData.unreadCount > 0) {
+            if (chatbotWithHistory.unreadCount > 0) {
                 Box(
                     modifier = Modifier
                         .size(20.dp)
@@ -79,7 +86,7 @@ fun ChatItem(onClick: () -> Unit, chatbotData: ChatbotData) {
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "${chatbotData.unreadCount}",
+                        text = "${chatbotWithHistory.unreadCount}",
                         color = Color.White,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold

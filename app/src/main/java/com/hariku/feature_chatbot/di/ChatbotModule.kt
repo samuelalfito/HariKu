@@ -1,5 +1,6 @@
 package com.hariku.feature_chatbot.di
 
+import com.hariku.feature_chatbot.data.mapper.ChatMessageMapper
 import com.hariku.feature_chatbot.data.mapper.ChatbotMapper
 import com.hariku.feature_chatbot.data.remote.ChatbotFirebaseService
 import com.hariku.feature_chatbot.data.repository.ChatbotRepositoryImpl
@@ -7,6 +8,7 @@ import com.hariku.feature_chatbot.domain.repository.ChatbotRepository
 import com.hariku.feature_chatbot.domain.usecase.AddChatbotUseCase
 import com.hariku.feature_chatbot.domain.usecase.GetChatbotByIdUseCase
 import com.hariku.feature_chatbot.domain.usecase.GetChatbotsUseCase
+import com.hariku.feature_chatbot.domain.usecase.GetChatbotsWithHistoryUseCase
 import com.hariku.feature_chatbot.presentation.ChatbotViewModel
 import com.hariku.feature_chatbot.presentation.customize.CustomizeCatViewModel
 import org.koin.core.module.dsl.viewModel
@@ -19,6 +21,10 @@ val chatbotModule = module {
     }
     
     single {
+        ChatMessageMapper
+    }
+    
+    single {
         ChatbotFirebaseService(
             firestore = get()
         )
@@ -27,7 +33,8 @@ val chatbotModule = module {
     single<ChatbotRepository> {
         ChatbotRepositoryImpl(
             firebaseService = get(),
-            mapper = get()
+            mapper = get(),
+            messageMapper = get()
         )
     }
     
@@ -37,6 +44,10 @@ val chatbotModule = module {
     
     factory {
         GetChatbotsUseCase(repository = get())
+    }
+    
+    factory {
+        GetChatbotsWithHistoryUseCase(repository = get())
     }
     
     factory {
@@ -52,7 +63,7 @@ val chatbotModule = module {
     
     viewModel {
         ChatbotViewModel(
-            getChatbotsUseCase = get(),
+            getChatbotsWithHistoryUseCase = get(),
             firebaseAuth = get()
         )
     }
