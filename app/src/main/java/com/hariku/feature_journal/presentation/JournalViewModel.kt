@@ -2,6 +2,7 @@ package com.hariku.feature_journal.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.hariku.feature_journal.domain.model.JournalEntry
 import com.hariku.feature_journal.domain.usecase.JournalUseCases
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,15 +19,14 @@ data class JournalUiState(
     val error: String? = null
 )
 
-class JournalScreenViewModel(
+class JournalViewModel(
     private val useCases: JournalUseCases
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(JournalUiState(isLoading = true))
     val uiState: StateFlow<JournalUiState> = _uiState
 
-    // TODO: Ganti dengan ID user yang sebenarnya dari Firebase Auth
-    private val currentUserId = "user_firebase_id_example"
+    private val currentUserId = getUserId()
 
     init {
         // Otomatis memuat jurnal saat ViewModel dibuat
@@ -89,6 +89,5 @@ class JournalScreenViewModel(
         }
     }
 
-    // Fungsi utilitas untuk mendapatkan ID user (misalnya, dipanggil dari event screen)
-    fun getUserId(): String = currentUserId
+    fun getUserId(): String = FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
 }

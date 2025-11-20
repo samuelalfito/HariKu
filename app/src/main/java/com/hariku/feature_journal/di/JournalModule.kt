@@ -6,7 +6,7 @@ import com.hariku.feature_journal.data.mapper.JournalMapper
 import com.hariku.feature_journal.data.repository.JournalRepositoryImpl
 import com.hariku.feature_journal.domain.repository.JournalRepository
 import com.hariku.feature_journal.domain.usecase.*
-import com.hariku.feature_journal.presentation.JournalScreenViewModel
+import com.hariku.feature_journal.presentation.JournalViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -52,7 +52,7 @@ val journalModule = module {
 
     // --- ViewModel ---
      viewModel{
-        JournalScreenViewModel(
+        JournalViewModel(
             useCases = get() // Menggunakan objek JournalUseCases
         )
     }

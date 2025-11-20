@@ -49,7 +49,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun JournalScreen(
     navController: NavController,
-    viewModel: JournalScreenViewModel = koinViewModel()
+    viewModel: JournalViewModel = koinViewModel()
 ) {
     var searchQuery by remember { mutableStateOf("") }
     val journals = listOf(
