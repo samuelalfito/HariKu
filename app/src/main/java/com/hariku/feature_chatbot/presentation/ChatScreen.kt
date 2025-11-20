@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -63,6 +64,78 @@ val chatbotData = listOf(
         "29/05",
         0
     ),
+    ChatbotData(
+        5,
+        R.drawable.ic_avatar_maman,
+        "Maman (Baru!)",
+        "Halo! Aku Maman, siap membantumu...",
+        "29/05",
+        0
+    ),
+    ChatbotData(
+        5,
+        R.drawable.ic_avatar_maman,
+        "Maman (Baru!)",
+        "Halo! Aku Maman, siap membantumu...",
+        "29/05",
+        0
+    ),
+    ChatbotData(
+        5,
+        R.drawable.ic_avatar_maman,
+        "Maman (Baru!)",
+        "Halo! Aku Maman, siap membantumu...",
+        "29/05",
+        0
+    ),
+    ChatbotData(
+        5,
+        R.drawable.ic_avatar_maman,
+        "Maman (Baru!)",
+        "Halo! Aku Maman, siap membantumu...",
+        "29/05",
+        0
+    ),
+    ChatbotData(
+        5,
+        R.drawable.ic_avatar_maman,
+        "Maman (Baru!)",
+        "Halo! Aku Maman, siap membantumu...",
+        "29/05",
+        0
+    ),
+    ChatbotData(
+        5,
+        R.drawable.ic_avatar_maman,
+        "Maman (Baru!)",
+        "Halo! Aku Maman, siap membantumu...",
+        "29/05",
+        0
+    ),
+    ChatbotData(
+        5,
+        R.drawable.ic_avatar_maman,
+        "Maman (Baru!)",
+        "Halo! Aku Maman, siap membantumu...",
+        "29/05",
+        0
+    ),
+    ChatbotData(
+        5,
+        R.drawable.ic_avatar_maman,
+        "Maman (Baru!)",
+        "Halo! Aku Maman, siap membantumu...",
+        "29/05",
+        0
+    ),
+    ChatbotData(
+        5,
+        R.drawable.ic_avatar_maman,
+        "Maman (Baru!)",
+        "Halo! Aku Maman, siap membantumu...",
+        "29/05",
+        0
+    ),
 )
 
 @Composable
@@ -72,22 +145,25 @@ fun ChatScreen(navController: NavController) {
         topBar = {
             SosTopBar(
                 title = "Obrolan",
-                onSosClick = { navController.navigate(Routes.SosGraph.route) })
+                onSosClick = { navController.navigate(Routes.SosGraph.route) }
+            )
         },
         floatingActionButton = {
             FloatingActButton(
                 label = "Create New Chat",
-                onClick = {
-                    navController.navigate(Routes.CustomizeCat.route)
-                }
+                onClick = { navController.navigate(Routes.CustomizeCat.route) }
             )
         }
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
+                .padding(
+                    top = paddingValues.calculateTopPadding(),
+                    start = paddingValues.calculateLeftPadding(LayoutDirection.Ltr),
+                    end = paddingValues.calculateRightPadding(LayoutDirection.Rtl)
+                )
                 .background(Color.White)
+                .fillMaxSize()
         ) {
             items(chatbotData) { chatbot ->
                 ChatItem(

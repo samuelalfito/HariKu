@@ -40,8 +40,7 @@ fun ChatDetailTopBar(chatbotId: String, onBackClick: () -> Unit, onSosClick: () 
             }) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_back_arrow),
-                    contentDescription = "Kembali",
-                    modifier = Modifier.size(24.dp)
+                    contentDescription = "Kembali"
                 )
             }
         },
@@ -72,7 +71,7 @@ fun ChatDetailTopBar(chatbotId: String, onBackClick: () -> Unit, onSosClick: () 
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFF68674)
                 ),
-                shape = RoundedCornerShape(size = 25.dp)
+                shape = CircleShape
             ) {
                 Text(
                     text = "SOS",
@@ -87,7 +86,6 @@ fun ChatDetailTopBar(chatbotId: String, onBackClick: () -> Unit, onSosClick: () 
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.White
-        ),
-        expandedHeight = 80.dp
+        )
     )
 }

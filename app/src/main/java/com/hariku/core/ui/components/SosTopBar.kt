@@ -2,6 +2,7 @@ package com.hariku.core.ui.components
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -38,7 +39,7 @@ fun SosTopBar(title: String, onSosClick: () -> Unit) {
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFF68674)
                 ),
-                shape = RoundedCornerShape(size = 25.dp)
+                shape = CircleShape
             ) {
                 Text(
                     text = "SOS",
@@ -54,7 +55,6 @@ fun SosTopBar(title: String, onSosClick: () -> Unit) {
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.White
         ),
-        windowInsets = WindowInsets(0),
-        expandedHeight = 80.dp
+        windowInsets = WindowInsets(0.dp)
     )
 }
