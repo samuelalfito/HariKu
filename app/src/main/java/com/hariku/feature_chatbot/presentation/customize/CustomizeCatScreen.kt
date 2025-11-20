@@ -20,11 +20,15 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +49,7 @@ import com.hariku.R
 import com.hariku.core.ui.theme.HariKuTheme
 import com.hariku.core.ui.components.CustomizeTopBar
 import com.hariku.core.ui.components.Routes
+import org.koin.androidx.compose.koinViewModel
 
 data class CatData(
     val id: Int,
@@ -58,9 +63,12 @@ data class CatData(
 @Composable
 fun CustomizeCatScreen(
     navController: NavController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: CustomizeCatViewModel = koinViewModel()
 ) {
     var selectedCatIndex by remember { mutableIntStateOf(0) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val uiState = viewModel.uiState
 
     val catDataList = listOf(
         CatData(
@@ -100,13 +108,28 @@ fun CustomizeCatScreen(
         )
     )
 
+    LaunchedEffect(uiState.isSuccess) {
+        if (uiState.isSuccess) {
+            navController.navigateUp()
+            viewModel.resetState()
+        }
+    }
+
+    LaunchedEffect(uiState.error) {
+        uiState.error?.let { error ->
+            snackbarHostState.showSnackbar(error)
+            viewModel.resetState()
+        }
+    }
+
     Scaffold(
         topBar = {
             CustomizeTopBar(
                 title = "Customize",
                 onBackClick = { navController.navigateUp() }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Column(
             modifier = modifier
@@ -232,7 +255,15 @@ fun CustomizeCatScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Button(
-                onClick = { },
+                onClick = {
+                    val selectedCat = catDataList[selectedCatIndex]
+                    viewModel.addChatbot(
+                        name = selectedCat.name,
+                        subtitle = selectedCat.subtitle,
+                        description = selectedCat.description,
+                        avatarResId = selectedCat.drawable
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp)
@@ -240,14 +271,22 @@ fun CustomizeCatScreen(
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFC87C47)
-                )
+                ),
+                enabled = !uiState.isLoading
             ) {
-                Text(
-                    text = "Lanjut",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White
-                )
+                if (uiState.isLoading) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
+                } else {
+                    Text(
+                        text = "Lanjut",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.White
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
