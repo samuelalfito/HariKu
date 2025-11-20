@@ -44,9 +44,13 @@ import com.hariku.core.ui.components.Routes
 import com.hariku.feature_journal.domain.model.Journal
 import com.hariku.feature_journal.presentation.components.JournalCard
 import com.hariku.feature_journal.presentation.components.SearchBar
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun JournalScreen(navController: NavController) {
+fun JournalScreen(
+    navController: NavController,
+    viewModel: JournalScreenViewModel = koinViewModel()
+) {
     var searchQuery by remember { mutableStateOf("") }
     val journals = listOf(
         Journal("STRES", R.drawable.img_pink_bg),
