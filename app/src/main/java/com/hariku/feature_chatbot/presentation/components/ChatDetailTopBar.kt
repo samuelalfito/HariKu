@@ -34,7 +34,12 @@ import com.hariku.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatDetailTopBar(chatbotId: String, onBackClick: () -> Unit, onSosClick: () -> Unit) {
+fun ChatDetailTopBar(
+    chatbotId: String,
+    avatarResId: Int,
+    onBackClick: () -> Unit,
+    onSosClick: () -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(bottomStart = 15.dp, bottomEnd = 15.dp),
@@ -55,8 +60,8 @@ fun ChatDetailTopBar(chatbotId: String, onBackClick: () -> Unit, onSosClick: () 
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.ic_avatar_hariku),
-                        contentDescription = "Avatar Hariku",
+                        painter = painterResource(id = avatarResId),
+                        contentDescription = "Avatar Bot",
                         modifier = Modifier
                             .size(50.dp)
                             .clip(CircleShape)

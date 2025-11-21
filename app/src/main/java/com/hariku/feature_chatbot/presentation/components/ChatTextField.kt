@@ -25,7 +25,12 @@ import androidx.compose.ui.unit.dp
 import com.hariku.R
 
 @Composable
-fun ChatTextFieldBar(text: String, onTextChanged: (String) -> Unit) {
+fun ChatTextFieldBar(
+    text: String,
+    onTextChanged: (String) -> Unit,
+    onSendClick: () -> Unit = {},
+    enabled: Boolean = true
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -37,13 +42,13 @@ fun ChatTextFieldBar(text: String, onTextChanged: (String) -> Unit) {
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Kolom Teks
             TextField(
                 value = text,
                 onValueChange = onTextChanged,
                 modifier = Modifier.weight(1f),
                 placeholder = { Text("Ketik Pesan Anda") },
                 shape = RoundedCornerShape(24.dp),
+                enabled = enabled,
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
@@ -56,10 +61,14 @@ fun ChatTextFieldBar(text: String, onTextChanged: (String) -> Unit) {
             Spacer(modifier = Modifier.width(12.dp))
             
             IconButton(
-                onClick = { },
+                onClick = onSendClick,
                 modifier = Modifier
                     .size(48.dp)
-                    .background(Color(0xFFD9A188), CircleShape)
+                    .background(
+                        color = if (enabled && text.isNotBlank()) Color(0xFFD9A188) else Color.Gray,
+                        shape = CircleShape
+                    ),
+                enabled = enabled && text.isNotBlank()
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_send),

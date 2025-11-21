@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.utils.loadPropertyFromResources
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -24,6 +24,18 @@ android {
         versionName = "1.0"
         
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        val properties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            properties.load(localPropertiesFile.inputStream())
+        }
+        
+        buildConfigField(
+            "String",
+            "GEMINI_API_KEY",
+            "\"${properties.getProperty("gemini.api.key", "")}\""
+        )
     }
     
     buildTypes {
@@ -44,6 +56,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     
     room {
@@ -104,4 +117,7 @@ dependencies {
 
     //Coil
     implementation(libs.coil.compose)
+    
+    //Gemini AI
+    implementation("com.google.ai.client.generativeai:generativeai:0.1.2")
 }

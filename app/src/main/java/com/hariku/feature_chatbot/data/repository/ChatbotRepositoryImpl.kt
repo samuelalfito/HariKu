@@ -1,8 +1,10 @@
 package com.hariku.feature_chatbot.data.repository
 
+import com.hariku.feature_chatbot.data.dto.ChatMessageDto
 import com.hariku.feature_chatbot.data.mapper.ChatMessageMapper
 import com.hariku.feature_chatbot.data.mapper.ChatbotMapper
 import com.hariku.feature_chatbot.data.remote.ChatbotFirebaseService
+import com.hariku.feature_chatbot.data.remote.GeminiApiService
 import com.hariku.feature_chatbot.domain.model.Chatbot
 import com.hariku.feature_chatbot.domain.model.ChatMessage
 import com.hariku.feature_chatbot.domain.model.ChatbotWithHistory
@@ -10,9 +12,11 @@ import com.hariku.feature_chatbot.domain.repository.ChatbotRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import java.util.UUID
 
 class ChatbotRepositoryImpl(
     private val firebaseService: ChatbotFirebaseService,
+    private val geminiApiService: GeminiApiService,
     private val mapper: ChatbotMapper,
     private val messageMapper: ChatMessageMapper
 ) : ChatbotRepository {
@@ -95,8 +99,40 @@ class ChatbotRepositoryImpl(
     
     override suspend fun sendMessage(message: ChatMessage): Result<Unit> {
         return try {
-            val dto = messageMapper.toDto(message)
-            firebaseService.sendMessage(dto, message.userId, message.chatbotId)
+            val userMessageDto = messageMapper.toDto(message)
+            firebaseService.sendMessage(userMessageDto, message.userId, message.chatbotId)
+            
+            val chatbotDto = firebaseService.getChatbotById(message.chatbotId, message.userId)
+            val chatbot = chatbotDto?.let { mapper.toDomain(it, message.userId) }
+                ?: return Result.failure(Exception("Chatbot tidak ditemukan"))
+            
+            val recentMessagesDto: List<ChatMessageDto> = firebaseService.getRecentMessages(
+                chatbotId = message.chatbotId,
+                userId = message.userId,
+                limit = 10
+            )
+            val history: List<Pair<String, Boolean>> = recentMessagesDto.map { dto: ChatMessageDto ->
+                Pair(dto.message, dto.fromUser)
+            }
+            
+            val botResponse = geminiApiService.generateResponse(
+                chatbot = chatbot,
+                userMessage = message.message,
+                conversationHistory = history
+            )
+            
+            val botMessage = ChatMessage(
+                id = UUID.randomUUID().toString(),
+                chatbotId = message.chatbotId,
+                userId = message.userId,
+                message = botResponse,
+                isFromUser = false,
+                timestamp = System.currentTimeMillis(),
+                isRead = false
+            )
+            val botMessageDto = messageMapper.toDto(botMessage)
+            firebaseService.sendMessage(botMessageDto, message.userId, message.chatbotId)
+            
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

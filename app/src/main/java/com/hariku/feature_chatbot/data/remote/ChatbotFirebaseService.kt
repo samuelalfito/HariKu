@@ -1,6 +1,7 @@
 package com.hariku.feature_chatbot.data.remote
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.hariku.feature_chatbot.data.dto.ChatMessageDto
 import com.hariku.feature_chatbot.data.dto.ChatbotDto
 import kotlinx.coroutines.channels.awaitClose
@@ -30,7 +31,7 @@ class ChatbotFirebaseService(
     
     fun getChatbots(userId: String): Flow<List<ChatbotDto>> = callbackFlow {
         val listener = getUserBotsCollection(userId)
-            .orderBy("createdAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     close(error)
@@ -68,7 +69,7 @@ class ChatbotFirebaseService(
     
     fun getChatMessages(chatbotId: String, userId: String): Flow<List<ChatMessageDto>> = callbackFlow {
         val listener = getBotMessagesCollection(userId, chatbotId)
-            .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.ASCENDING)
+            .orderBy("timestamp", Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     close(error)
@@ -84,7 +85,7 @@ class ChatbotFirebaseService(
     
     suspend fun getLastMessage(chatbotId: String, userId: String): ChatMessageDto? {
         val result = getBotMessagesCollection(userId, chatbotId)
-            .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+            .orderBy("timestamp", Query.Direction.DESCENDING)
             .limit(1)
             .get()
             .await()
@@ -102,9 +103,19 @@ class ChatbotFirebaseService(
         return result.size()
     }
     
+    suspend fun getRecentMessages(chatbotId: String, userId: String, limit: Int = 10): List<ChatMessageDto> {
+        val result = getBotMessagesCollection(userId, chatbotId)
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .limit(limit.toLong())
+            .get()
+            .await()
+        
+        return result.toObjects(ChatMessageDto::class.java).reversed()
+    }
+    
     suspend fun sendMessage(message: ChatMessageDto, userId: String, chatbotId: String) {
         getBotMessagesCollection(userId, chatbotId)
-            .document(message.id ?: "")
+            .document(message.id.ifEmpty { java.util.UUID.randomUUID().toString() })
             .set(message)
             .await()
     }
