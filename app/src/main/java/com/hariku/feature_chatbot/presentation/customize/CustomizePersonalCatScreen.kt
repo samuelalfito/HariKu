@@ -1,5 +1,7 @@
 package com.hariku.feature_chatbot.presentation.customize
 
+import android.widget.Toast
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,18 +15,16 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,14 +36,17 @@ import com.hariku.feature_chatbot.presentation.components.ThreePointSlider
 import com.hariku.feature_chatbot.presentation.components.FeedbackTypeOption
 import com.hariku.feature_chatbot.presentation.components.GoalCheckbox
 import com.hariku.core.ui.theme.HariKuTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun CustomizePersonalCatScreen(navController: NavController) {
-    var languageStyle by remember { mutableFloatStateOf(0.5f) }
-    var professionalStyle by remember { mutableFloatStateOf(0.5f) }
-    var feedbackType by remember { mutableStateOf("CBT-Based") }
-    var selectedGoals by remember { mutableStateOf(setOf("Refleksi Diri")) }
-    var otherGoal by remember { mutableStateOf("") }
+fun CustomizePersonalCatScreen(
+    navController: NavController,
+    nama: String,
+    avatarResId: Int,
+    viewModel: CustomizePersonalCatViewModel = koinViewModel()
+) {
+    val uiState = viewModel.uiState
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -53,57 +56,90 @@ fun CustomizePersonalCatScreen(navController: NavController) {
         },
         containerColor = Color(0xFFF2F2F2)
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 20.dp, vertical = 16.dp)
-        ) {
-            LanguageStyleSection(
-                languageStyle = languageStyle,
-                onLanguageStyleChange = { languageStyle = it },
-                professionalStyle = professionalStyle,
-                onProfessionalStyleChange = { professionalStyle = it }
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            FeedbackTypeSection(
-                feedbackType = feedbackType,
-                onFeedbackTypeChange = { feedbackType = it }
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            GoalSection(
-                selectedGoals = selectedGoals,
-                onGoalsChange = { selectedGoals = it },
-                otherGoal = otherGoal,
-                onOtherGoalChange = { otherGoal = it }
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Button(
-                onClick = { },
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFB88157)
-                ),
-                shape = RoundedCornerShape(12.dp)
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 20.dp, vertical = 16.dp)
             ) {
-                Text(
-                    text = "Selesai",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White
+                LanguageStyleSection(
+                    languageStyle = uiState.languageStyle,
+                    onLanguageStyleChange = { viewModel.updateLanguageStyle(it) },
+                    professionalStyle = uiState.professionalStyle,
+                    onProfessionalStyleChange = { viewModel.updateProfessionalStyle(it) }
                 )
-            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
+
+                FeedbackTypeSection(
+                    feedbackType = uiState.feedbackType,
+                    onFeedbackTypeChange = { viewModel.updateFeedbackType(it) }
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                GoalSection(
+                    selectedGoals = uiState.selectedGoals,
+                    onGoalsChange = { viewModel.updateGoals(it) },
+                    otherGoal = uiState.otherGoal,
+                    onOtherGoalChange = { viewModel.updateOtherGoal(it) }
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Button(
+                    onClick = {
+                        viewModel.saveChatbot(
+                            name = nama,
+                            avatarResId = avatarResId,
+                            onSuccess = {
+                                Toast.makeText(
+                                    context,
+                                    "Chatbot berhasil dibuat!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                navController.popBackStack(
+                                    route = "customize_cat",
+                                    inclusive = false
+                                )
+                            },
+                            onError = { error ->
+                                Toast.makeText(
+                                    context,
+                                    "Error: $error",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFB88157)
+                    ),
+                    shape = RoundedCornerShape(12.dp),
+                    enabled = !uiState.isSaving
+                ) {
+                    if (uiState.isSaving) {
+                        CircularProgressIndicator(
+                            color = Color.White,
+                            modifier = Modifier.height(24.dp)
+                        )
+                    } else {
+                        Text(
+                            text = "Selesai",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.White
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         }
     }
 }
@@ -333,7 +369,9 @@ fun GoalSection(
 private fun CustomizePersonalCatScreenPreview() {
     HariKuTheme {
         CustomizePersonalCatScreen(
-            rememberNavController()
+            rememberNavController(),
+            nama = "Karakter Saya",
+            avatarResId = 0
         )
     }
 }

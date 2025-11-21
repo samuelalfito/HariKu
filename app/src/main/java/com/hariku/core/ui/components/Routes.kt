@@ -43,7 +43,11 @@ sealed class Routes(val route: String) {
     @Serializable
     object CustomizeNewCat : Routes("customize_new_cat")
     @Serializable
-    object CustomizePersonalCat : Routes("customize_personal_cat")
+    data class CustomizePersonalCat(val name: String, val avatarResId: Int) : Routes("customize_personal_cat/{name}/{avatarResId}") {
+        companion object {
+            fun createRoute(name: String, avatarResId: Int) = "customize_personal_cat/$name/$avatarResId"
+        }
+    }
 
     @Serializable
     object Journal : Routes("journal")

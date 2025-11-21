@@ -56,7 +56,11 @@ fun NavGraph(navController: NavHostController) {
         }
         composable(Routes.CustomizeCat.route) { CustomizeCatScreen(navController) }
         composable(Routes.CustomizeNewCat.route) { CustomizeNewCatScreen(navController) }
-        composable(Routes.CustomizePersonalCat.route) { CustomizePersonalCatScreen(navController) }
+        composable("customize_personal_cat/{name}/{avatarResId}") { backStackEntry ->
+            val name = backStackEntry.arguments?.getString("name") ?: ""
+            val avatarResId = backStackEntry.arguments?.getString("avatarResId")?.toIntOrNull() ?: 0
+            CustomizePersonalCatScreen(navController, name, avatarResId)
+        }
         composable(Routes.Journal.route) { JournalScreen(navController) }
         composable("journal_detail/{journalId}") { backStackEntry ->
             val journalId = backStackEntry.arguments?.getString("journalId") ?: ""

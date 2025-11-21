@@ -15,6 +15,8 @@ import com.hariku.feature_chatbot.domain.usecase.MarkMessagesAsReadUseCase
 import com.hariku.feature_chatbot.domain.usecase.SendMessageUseCase
 import com.hariku.feature_chatbot.presentation.ChatbotViewModel
 import com.hariku.feature_chatbot.presentation.customize.CustomizeCatViewModel
+import com.hariku.feature_chatbot.presentation.customize.CustomizeNewCatViewModel
+import com.hariku.feature_chatbot.presentation.customize.CustomizePersonalCatViewModel
 import com.hariku.feature_chatbot.presentation.detail.ChatbotDetailViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -79,6 +81,17 @@ val chatbotModule = module {
     
     viewModel {
         CustomizeCatViewModel(
+            addChatbotUseCase = get(),
+            firebaseAuth = get()
+        )
+    }
+    
+    viewModel {
+        CustomizeNewCatViewModel()
+    }
+    
+    viewModel {
+        CustomizePersonalCatViewModel(
             addChatbotUseCase = get(),
             firebaseAuth = get()
         )
