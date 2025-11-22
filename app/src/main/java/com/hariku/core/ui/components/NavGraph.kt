@@ -70,9 +70,41 @@ fun NavGraph(navController: NavHostController) {
         composable(Routes.Profile.route) { ProfileScreen(navController) }
         composable(Routes.SosGraph.route) { SosScreen(navController) }
         composable(Routes.SosProfessional.route) { SosProfessionalScreen(navController) }
-        composable(Routes.Meditation.route) { MeditationScreen() }
-        composable(Routes.MeditationMusic.route) { MeditationSongScreen() }
-        composable(Routes.MeditationCompleted.route) { MeditationSongCompletedScreen() }
+        composable(Routes.Meditation.route) {
+            MeditationScreen(
+                onNavigateToSong = { songId ->
+                    navController.navigate(Routes.MeditationMusic.createRoute(songId))
+                }
+            )
+        }
+        composable("meditation_music/{songId}") { backStackEntry ->
+            val songId = backStackEntry.arguments?.getString("songId") ?: ""
+            MeditationSongScreen(
+                songId = songId,
+                onNavigateToCompleted = { completedSongId ->
+                    navController.navigate(Routes.MeditationCompleted.createRoute(completedSongId)) {
+                        popUpTo("meditation_music/$songId") { inclusive = true }
+                    }
+                },
+                onNavigateBack = { navController.navigateUp() }
+            )
+        }
+        composable("meditation_completed/{songId}") { backStackEntry ->
+            val songId = backStackEntry.arguments?.getString("songId") ?: ""
+            MeditationSongCompletedScreen(
+                songId = songId,
+                onReturnToMeditationClick = {
+                    navController.navigate(Routes.Meditation.route) {
+                        popUpTo(Routes.Meditation.route) { inclusive = true }
+                    }
+                },
+                onRepeatClick = { repeatSongId ->
+                    navController.navigate(Routes.MeditationMusic.createRoute(repeatSongId)) {
+                        popUpTo("meditation_completed/$songId") { inclusive = true }
+                    }
+                }
+            )
+        }
         composable(Routes.Senses.route) { SensesStep1Screen() }
         composable(Routes.SensesCompleted.route) { SenseComplete() }
         composable(Routes.Article.route) { ArticleScreen() }

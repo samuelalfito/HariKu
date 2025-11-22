@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,17 +19,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun MeditationSongCompletedScreen() {
-    val PrimaryColor = Color(0xFFD17F4B)
-    val TextDarkColor = Color(0xFF333333)
-    val BlackColor = Color(0xFF000000)
-    val ButtonCornerRadius = 16.dp
-
-    val onReturnToMeditationClick: () -> Unit = { }
-    val onRepeatClick: () -> Unit = { }
-
+fun MeditationSongCompletedScreen(
+    songId: String,
+    onReturnToMeditationClick: () -> Unit,
+    onRepeatClick: (String) -> Unit,
+    viewModel: MeditationSongViewModel = koinViewModel()
+) {
+    val state = viewModel.state
+    
+    LaunchedEffect(songId) {
+        if (state.song == null) {
+            viewModel.loadSong(songId)
+        }
+    }
+    
+    val primaryColor = Color(0xFFD17F4B)
+    val textDarkColor = Color(0xFF333333)
+    val blackColor = Color(0xFF000000)
+    val buttonCornerRadius = 16.dp
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -43,18 +55,18 @@ fun MeditationSongCompletedScreen() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Mengapa Cemas",
+                text = state.song?.title ?: "Meditasi",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = TextDarkColor
+                color = textDarkColor
             )
             Text(
-                text = "Meditasi",
+                text = state.song?.category ?: "Selesai",
                 fontSize = 12.sp,
                 color = Color.Gray
             )
         }
-
+        
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -63,8 +75,7 @@ fun MeditationSongCompletedScreen() {
             contentAlignment = Alignment.Center
         ) {
             Card(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(24.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -76,7 +87,6 @@ fun MeditationSongCompletedScreen() {
                         .padding(top = 32.dp, bottom = 80.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-
                     Image(
                         painter = painterResource(id = R.drawable.selesai),
                         contentDescription = "Gambar Kucing Selesai",
@@ -86,36 +96,36 @@ fun MeditationSongCompletedScreen() {
                             .height(240.dp)
                             .clip(RoundedCornerShape(16.dp))
                     )
-
+                    
                     Spacer(modifier = Modifier.height(32.dp))
-
+                    
                     Text(
                         text = "Selesai!",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = BlackColor,
+                        color = blackColor,
                         textAlign = TextAlign.Center
                     )
-
+                    
                     Spacer(modifier = Modifier.height(8.dp))
-
+                    
                     Text(
-                        text = "Satu langkah lebih dekat dalam mengatasi kecemasan",
+                        text = "Satu langkah lebih dekat dalam mengatasi ${state.song?.category?.lowercase() ?: "masalah"}",
                         fontSize = 18.sp,
-                        color = TextDarkColor,
+                        color = textDarkColor,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
-
+                    
                     Spacer(modifier = Modifier.height(40.dp))
-
+                    
                     Button(
                         onClick = onReturnToMeditationClick,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(40.dp),
-                        shape = RoundedCornerShape(ButtonCornerRadius),
-                        colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor)
+                        shape = RoundedCornerShape(buttonCornerRadius),
+                        colors = ButtonDefaults.buttonColors(containerColor = primaryColor)
                     ) {
                         Text(
                             text = "Kembali ke Halaman Meditasi",
@@ -124,18 +134,18 @@ fun MeditationSongCompletedScreen() {
                             color = Color.White
                         )
                     }
-
+                    
                     Spacer(modifier = Modifier.height(16.dp))
-
+                    
                     OutlinedButton(
-                        onClick = onRepeatClick,
+                        onClick = { onRepeatClick(songId) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(40.dp),
-                        shape = RoundedCornerShape(ButtonCornerRadius),
-                        border = BorderStroke(2.dp, PrimaryColor),
+                        shape = RoundedCornerShape(buttonCornerRadius),
+                        border = BorderStroke(2.dp, primaryColor),
                         colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = PrimaryColor,
+                            contentColor = primaryColor,
                             containerColor = Color.White
                         )
                     ) {
