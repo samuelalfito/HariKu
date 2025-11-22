@@ -81,8 +81,6 @@ sealed class Routes(val route: String) {
 
     @Serializable
     object Senses : Routes("senses")
-    @Serializable
-    object SensesCompleted : Routes("senses_completed")
 
     @Serializable
     object Article : Routes("article")
