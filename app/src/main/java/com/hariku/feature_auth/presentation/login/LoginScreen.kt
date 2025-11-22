@@ -1,5 +1,7 @@
 package com.hariku.feature_auth.presentation.login
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,23 +22,25 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hariku.R
@@ -44,15 +48,37 @@ import com.hariku.core.ui.components.Routes
 import com.hariku.feature_auth.presentation.components.AuthDivider
 import com.hariku.feature_auth.presentation.components.RegularTextField
 import com.hariku.feature_auth.presentation.components.TextLogo
+import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 
+@SuppressLint("ContextCastToActivity")
 @Composable
-fun LoginScreen(navController: NavController) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
-
+fun LoginScreen(
+    navController: NavController,
+    viewModel: LoginScreenViewModel = koinViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
     val orangeColor = Color(0xFFCD8C63)
+    val context = LocalContext.current as Activity
+    val googleAuthUiClient = remember(context) { //Key nya context, kalau context berubah buat ulang
+        GoogleAuthUiClient(context = context)
+    }
+    val scope = rememberCoroutineScope()
+
+
+    LaunchedEffect(key1 = uiState) {
+        if (uiState.loginSuccess) {
+            navController.navigate(Routes.PinGraph.route) {
+                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+            }
+        }
+
+        if (uiState.error != null) {
+            Log.e("LoginScreen", "Error: ${uiState.error}")
+            viewModel.onErrorShown()
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -92,16 +118,16 @@ fun LoginScreen(navController: NavController) {
                     .fillMaxWidth()
             ) {
                 RegularTextField(
-                    text = email,
-                    onValueChange = { email = it },
+                    text = uiState.email,
+                    onValueChange = { viewModel.onEmailChange(it) },
                     placeholder = "Email "
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 RegularTextField(
-                    text = password,
-                    onValueChange = { password = it },
+                    text = uiState.password,
+                    onValueChange = { viewModel.onPasswordChange(it) },
                     isPassword = true,
                     placeholder = "Password"
                 )
@@ -112,9 +138,10 @@ fun LoginScreen(navController: NavController) {
                     onClick = {
                         /*TODO: LOGIN FEATURE
                                 PIN Verification, if have PIN go to Routes.MASUKKAN_PIN*/
-                        Log.d("DEBUG", "Login")
-                        navController.navigate(Routes.PIN_GRAPH)
+                        Log.d("HariKu:LoginScreen", "Login")
+                        viewModel.onLoginClicked()
                     },
+                    enabled = !uiState.isLoading,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
@@ -123,12 +150,16 @@ fun LoginScreen(navController: NavController) {
                     ),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text(
-                        text = "Login",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.White
-                    )
+                    if (uiState.isLoading) {
+                        CircularProgressIndicator()
+                    } else {
+                        Text(
+                            text = "Login",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color.White
+                        )
+                    }
                 }
             }
 
@@ -139,7 +170,17 @@ fun LoginScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { },
+                onClick = {
+                    scope.launch {
+                        val tokenCredential = googleAuthUiClient.signIn()
+
+                        if (tokenCredential != null) {
+                            viewModel.onGoogleSignInSuccess(tokenCredential.idToken)
+                        } else {
+                            viewModel.onGoogleSignInFailed("Login Google dibatalkan atau gagal.")
+                        }
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp)
@@ -188,7 +229,7 @@ fun LoginScreen(navController: NavController) {
                         .padding(0.dp)
                         .clickable {
                             Log.d("DEBUG", "Daftar")
-                            navController.navigate(Routes.REGISTER)
+                            navController.navigate(Routes.Register.route)
                         }
                 )
             }
@@ -220,5 +261,8 @@ fun LoginScreen(navController: NavController) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun LoginScreenPreview() {
-    LoginScreen(rememberNavController())
+    LoginScreen(
+        navController = rememberNavController(),
+        viewModel = viewModel()
+    )
 }

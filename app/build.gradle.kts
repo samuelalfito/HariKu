@@ -1,9 +1,13 @@
+import org.jetbrains.kotlin.gradle.utils.loadPropertyFromResources
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-
     alias(libs.plugins.google.services)
+    alias(libs.plugins.ksp)
+    id("androidx.room")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
 }
 
 android {
@@ -41,9 +45,14 @@ android {
     buildFeatures {
         compose = true
     }
+    
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 }
 
 dependencies {
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -57,6 +66,8 @@ dependencies {
     implementation(libs.androidx.compose.material.icons)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.compose.runtime.livedata)
+    implementation(libs.googleid)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -69,4 +80,28 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
+    
+    //Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    
+    //Koin
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.androidx.navigation)
+    
+    //View Pager
+    implementation("com.google.accompanist:accompanist-pager:0.32.0")
+    
+    //Material3 Icon
+    implementation("androidx.compose.material:material-icons-extended:1.5.0")
+    implementation("androidx.compose.material3:material3:1.1.0")
+    
+    //Kotlinx Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
+    //Coil
+    implementation(libs.coil.compose)
 }

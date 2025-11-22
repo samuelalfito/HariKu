@@ -15,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,11 +24,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.hariku.R
 import com.hariku.core.ui.components.Routes
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(
+    navController: NavController,
+    viewModel: ProfileScreenViewModel = koinViewModel()
+) {
     Scaffold(
         topBar = {
             Box(
@@ -44,7 +51,7 @@ fun ProfileScreen(navController: NavController) {
                         .padding(start = 16.dp)
                         .size(28.dp)
                         .clickable {
-                            navController.popBackStack(route = Routes.HOME, inclusive = false)
+                            navController.popBackStack(route = Routes.Home.route, inclusive = false)
                         }
                 )
                 Text(
@@ -75,11 +82,21 @@ fun ProfileScreen(navController: NavController) {
                         .padding(vertical = 24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Box(
+                    AsyncImage(
+                        model = viewModel.currentUser?.photoUrl, //URI/URL foto profil
+                        contentDescription = "Foto Profil",
+
                         modifier = Modifier
                             .size(80.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFFF3B57B))
+                            .clip(CircleShape),
+
+                        contentScale = ContentScale.Crop,
+
+                        // placeholder warna polos
+                        placeholder = ColorPainter(Color(0xFFF3B57B)),
+
+                        // Placeholder kalo error
+                        error = ColorPainter(Color(0xFFF3B57B))
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
@@ -89,7 +106,7 @@ fun ProfileScreen(navController: NavController) {
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "Izora",
+                            text = viewModel.currentUser?.name ?: "{NAME NOT SET}",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFF242424)
@@ -103,7 +120,7 @@ fun ProfileScreen(navController: NavController) {
                     }
 
                     Text(
-                        text = "izoratalia@gmail.com",
+                        text = viewModel.currentUser?.email ?: "{EMAIL NOT SET}",
                         fontSize = 14.sp,
                         color = Color(0xFF6B4E3D)
                     )
@@ -137,7 +154,16 @@ fun ProfileScreen(navController: NavController) {
                 iconRes = R.drawable.keluar,
                 text = "Keluar",
                 textColor = Color(0xFFD98585),
-                disableRipple = true
+                disableRipple = true,
+                onClick = {
+                    viewModel.onLogoutClicked()
+
+                    navController.navigate(Routes.AuthGraph.route) {
+                        popUpTo(Routes.Home.route) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
     }
@@ -149,7 +175,8 @@ fun ProfileMenuItem(
     text: String,
     textColor: Color = Color(0xFF242424),
     isToggle: Boolean = false,
-    disableRipple: Boolean = false
+    disableRipple: Boolean = false,
+    onClick: () -> Unit = {}
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -162,7 +189,9 @@ fun ProfileMenuItem(
             .clickable(
                 interactionSource = interactionSource,
                 indication = if (disableRipple) null else LocalIndication.current
-            ) { }
+            ) {
+                onClick()
+            }
     ) {
         Row(
             modifier = Modifier

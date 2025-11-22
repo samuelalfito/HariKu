@@ -15,34 +15,37 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hariku.feature_home.presentation.HomeScreen
 import com.hariku.feature_journal.presentation.JournalScreen
+import com.hariku.feature_statistic.presentation.components.CalendarView
 
 @Composable
 fun MainScaffold(parentNavController: NavHostController) {
     val bottomNavController = rememberNavController()
     val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    
+
     val bottomNavRoutes = listOf(
-        Routes.HOME,
-        Routes.CHATBOT,
-        Routes.JOURNAL,
-        Routes.STATISTIC
+        Routes.Home.route,
+        Routes.Chatbot.route,
+        Routes.Journal.route,
+        Routes.Statistic.route
     )
-    val selectedIndex = bottomNavRoutes.indexOf(currentRoute).takeIf { it >= 0 } ?: 0
-    
+    val selectedIndex = bottomNavRoutes.indexOfFirst { it == currentRoute }.takeIf { it >= 0 } ?: 0
+
     Scaffold(
         bottomBar = {
             BottomNavBar(
                 selectedIndex = selectedIndex,
                 onItemSelected = { index ->
-                    val route = bottomNavRoutes[index]
-                    if (route != currentRoute) {
-                        bottomNavController.navigate(route) {
-                            popUpTo(Routes.HOME) {
-                                saveState = true
+                    if (index in bottomNavRoutes.indices) {
+                        val route = bottomNavRoutes[index]
+                        if (route != currentRoute) {
+                            bottomNavController.navigate(route) {
+                                popUpTo(Routes.Home.route) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
                         }
                     }
                 }
@@ -51,21 +54,21 @@ fun MainScaffold(parentNavController: NavHostController) {
     ) { innerPadding ->
         NavHost(
             navController = bottomNavController,
-            startDestination = Routes.HOME,
+            startDestination = Routes.Home.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(Routes.HOME) {
+            composable(Routes.Home.route) {
                 HomeScreen(navController = parentNavController)
             }
-            composable(Routes.CHATBOT) {
+            composable(Routes.Chatbot.route) {
                 ChatScreen(navController = parentNavController)
             }
-            composable(Routes.JOURNAL) {
-                JournalScreen()
+            composable(Routes.Journal.route) {
+                JournalScreen(navController = parentNavController)
             }
-            composable(Routes.STATISTIC) {
+            composable(Routes.Statistic.route) {
                 Box {
-                    Text("Statistic Screen Coming Soon") /*TODO: Statistic Screen*/
+                    CalendarView()
                 }
             }
         }

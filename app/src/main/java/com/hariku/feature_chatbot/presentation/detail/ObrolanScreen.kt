@@ -2,7 +2,6 @@ import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,10 +18,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Divider
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -42,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hariku.R
+import com.hariku.core.ui.components.FloatingActButton
 import com.hariku.core.ui.components.Routes
 
 data class ChatSession(
@@ -67,18 +62,12 @@ fun ChatScreen(navController: NavController) {
         containerColor = Color(0xFFF9F9F9),
         topBar = { ChatTopBar() },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { },
-                shape = RoundedCornerShape(50.dp),
-                containerColor = Color(0xFFD9A188),
-                modifier = Modifier.size(72.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_tambah_obrolan),
-                    contentDescription = "Tambah Obrolan",
-                    modifier = Modifier.size(72.dp)
-                )
-            }
+            FloatingActButton(
+                label = "Create New Chat",
+                onClick = {
+                    navController.navigate(Routes.CustomizeNewCat.route)
+                }
+            )
         }
     ) { paddingValues ->
         LazyColumn(
@@ -89,13 +78,13 @@ fun ChatScreen(navController: NavController) {
         ) {
             items(mockChatList) { session ->
                 ChatItem(
-                    todo = { /*TODO: Navigate to chat detail*/
+                    todo = {
                         Log.d("DEBUG", "Chat Detail")
-                        navController.navigate(Routes.DETAIL_CHATBOT_PLACEHOLDER)
+                        navController.navigate(Routes.DetailChatbot.createRoute(session.id.toString()))
                     },
                     session = session
                 )
-                Divider(
+                androidx.compose.material3.HorizontalDivider(
                     color = Color.LightGray.copy(alpha = 0.5f),
                     thickness = 1.dp,
                     modifier = Modifier.padding(horizontal = 16.dp)
@@ -232,4 +221,3 @@ fun ChatScreenPreview() {
         ChatScreen(rememberNavController())
     }
 }
-

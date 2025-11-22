@@ -1,23 +1,97 @@
 package com.hariku.core.ui.components
 
-object Routes {
-    const val AUTH_GRAPH = "auth_graph"
-    const val LOGIN = "login"
-    const val REGISTER = "register"
+import kotlinx.serialization.Serializable
 
-    const val SPLASH = "splash"
-    const val ONBOARDING = "onboarding"
+@Serializable
+sealed class Routes(val route: String) {
+    @Serializable
+    object AuthGraph : Routes("auth_graph")
+    @Serializable
+    object Login : Routes("login")
+    @Serializable
+    object Register : Routes("register")
 
-    const val PIN_GRAPH = "pin_graph"
-    const val TETAPKAN_PIN = "tetapkan_pin"
-    const val KONFIRMASI_PIN = "konfirmasi_pin"
-    const val MASUKKAN_PIN = "masukkan_pin"
+    @Serializable
+    object Splash : Routes("splash")
+    @Serializable
+    object Onboarding : Routes("onboarding")
 
-    const val MAIN_APP_GRAPH = "main_app_graph"
-    const val HOME = "home"
-    const val CHATBOT = "chatbot"
-    const val DETAIL_CHATBOT_PLACEHOLDER = "detail_chatbot_PLACEHOLDER"
-    const val JOURNAL = "journal"
-    const val STATISTIC = "statistic"
-    const val PROFILE = "profile"
+    @Serializable
+    object PinGraph : Routes("pin_graph")
+    @Serializable
+    object TetapkanPin : Routes("tetapkan_pin")
+    @Serializable
+    object KonfirmasiPin : Routes("konfirmasi_pin")
+    @Serializable
+    object MasukkanPin : Routes("masukkan_pin")
+
+    @Serializable
+    object MainAppGraph : Routes("main_app_graph")
+    @Serializable
+    object Home : Routes("home")
+
+    @Serializable
+    object Chatbot : Routes("chatbot")
+    @Serializable
+    data class DetailChatbot(val chatbotId: String) : Routes("detail_chatbot/{chatbotId}") {
+        companion object {
+            fun createRoute(chatbotId: String) = "detail_chatbot/$chatbotId"
+        }
+    }
+    @Serializable
+    object CustomizeCat : Routes("customize_cat")
+    @Serializable
+    object CustomizeNewCat : Routes("customize_new_cat")
+    @Serializable
+    object CustomizePersonalCat : Routes("customize_personal_cat")
+
+    @Serializable
+    object Journal : Routes("journal")
+    @Serializable
+    data class JournalDetail(val journalId: String) : Routes("journal_detail/{journalId}") {
+        companion object {
+            fun createRoute(journalId: String) = "journal_detail/$journalId"
+        }
+    }
+    @Serializable
+    object CreateJournal : Routes("create_journal")
+    @Serializable
+    object CreateNotePrompt : Routes("create_prompt_note")
+    @Serializable
+    object CreateNotePromptCompleted : Routes("create_prompt_note_completed")
+    @Serializable
+    object CreateNote : Routes("create_note")
+
+    @Serializable
+    object Statistic : Routes("statistic")
+    @Serializable
+    object Profile : Routes("profile")
+
+    @Serializable
+    object SosGraph : Routes("sos")
+    @Serializable
+    object SosProfessional : Routes("sos_professional")
+
+    @Serializable
+    object Meditation : Routes("meditation")
+    @Serializable
+    object MeditationMusic : Routes("meditation_music")
+    @Serializable
+    object MeditationCompleted : Routes("meditation_completed")
+
+    @Serializable
+    object Senses : Routes("senses")
+    @Serializable
+    object SensesCompleted : Routes("senses_completed")
+
+    @Serializable
+    object Article : Routes("article")
+    @Serializable
+    object ArticleList : Routes("article_list")
+    @Serializable
+    data class ArticleDetail(val articleId: String) : Routes("article_detail/{articleId}") {
+        companion object {
+            fun createRoute(articleId: String) = "article_detail/$articleId"
+        }
+    }
 }

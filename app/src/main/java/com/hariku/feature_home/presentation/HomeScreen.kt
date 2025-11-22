@@ -40,9 +40,14 @@ import com.hariku.core.ui.components.Routes
 import com.hariku.feature_home.presentation.components.ActivityCard
 import com.hariku.feature_home.presentation.components.ChatCard
 import com.hariku.feature_home.presentation.components.MoodCard
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun HomeScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    moodViewModel: MoodViewModel = koinViewModel()
+) {
     Box(
         modifier = modifier.fillMaxSize()
     ) {
@@ -75,7 +80,7 @@ fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
                                 .size(32.dp)
                                 .clickable(
                                     onClick = {
-                                        navController.navigate(Routes.PROFILE)
+                                        navController.navigate(Routes.Profile.route)
                                     }
                                 )
                         )
@@ -90,7 +95,9 @@ fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
-                        onClick = {},
+                        onClick = {
+                            navController.navigate(Routes.SosGraph.route)
+                        },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF8A7A)),
                         shape = RoundedCornerShape(16.dp)
                     ) {
@@ -108,7 +115,7 @@ fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    MoodCard()
+                    MoodCard(viewModel = moodViewModel)
                     Card(
                         shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.cardColors(containerColor = Color(0xFF71a77a)),
@@ -116,7 +123,12 @@ fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
                             .fillMaxWidth()
                             .padding(horizontal = 24.dp)
                     ) {
-                        Box {
+                        Box(
+                            modifier = Modifier
+                                .clickable{
+                                    navController.navigate(Routes.CreateNotePrompt.route)
+                                }
+                        ) {
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth(),
@@ -143,7 +155,6 @@ fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
                                     fontSize = 15.sp
                                 )
                             }
-                            Spacer(modifier = Modifier.width(8.dp))
                         }
                     }
                     Column(modifier = Modifier.padding(horizontal = 24.dp)) {
@@ -157,7 +168,11 @@ fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
                             title = "HariKu",
                             message = "Halo! Aku Hariku, siap membantumu...",
                             date = "29/05",
-                            unreadCount = 2
+                            unreadCount = 2,
+                            onClick = {
+                                // Navigate directly to Chatbot Detail Screen (it will be implemented later)
+                                navController.navigate(Routes.DetailChatbot.createRoute("HariKu"))
+                            }
                         )
                     }
                     Column(modifier = Modifier.padding(horizontal = 24.dp)) {
@@ -175,19 +190,28 @@ fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
                             ActivityCard(
                                 "Panduan Meditasi",
                                 R.drawable.img_home_meditation,
-                                backgroundColor = Color(0xFFa0cfe7)
+                                backgroundColor = Color(0xFFa0cfe7),
+                                onClick = {
+                                    navController.navigate(Routes.Meditation.route)
+                                }
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             ActivityCard(
                                 "Latihan 5 Panca Indra",
                                 R.drawable.img_home_senses,
-                                backgroundColor = Color(0xFFfff0e5)
+                                backgroundColor = Color(0xFFfff0e5),
+                                onClick = {
+                                    navController.navigate(Routes.Senses.route)
+                                }
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             ActivityCard(
                                 "Artikel Pilihan",
                                 R.drawable.img_home_article,
-                                backgroundColor = Color(0xFFcbe1fc)
+                                backgroundColor = Color(0xFFcbe1fc),
+                                onClick = {
+                                    navController.navigate(Routes.Article.route)
+                                }
                             )
                         }
                     }

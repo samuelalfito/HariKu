@@ -1,6 +1,5 @@
 package com.hariku.feature_chatbot.presentation.detail
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,7 +38,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,7 +66,7 @@ val mockMessageList = listOf(
 )
 
 @Composable
-fun ChatDetailScreen(navController: NavController) {
+fun ChatDetailScreen(navController: NavController, chatbotId: String) {
     var messageText by remember { mutableStateOf("") }
 
     Scaffold(
@@ -310,6 +308,6 @@ fun ChatDetailInputBar(text: String, onTextChanged: (String) -> Unit) {
 @Composable
 fun ChatDetailScreenPreview() {
     MaterialTheme {
-        ChatDetailScreen(rememberNavController())
+        ChatDetailScreen(rememberNavController(), "0")
     }
 }

@@ -2,6 +2,7 @@ package com.hariku.feature_article.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,16 +20,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
+import com.hariku.core.ui.theme.HariKuTheme
 import com.hariku.feature_article.domain.model.Article
 
 @Composable
-fun ArticleCard(article: Article) {
+fun ArticleCard(
+    article: Article,
+    modifier: Modifier = Modifier
+) {
     Card(
-        modifier = Modifier
-            .width(200.dp)
+        modifier = modifier
             .height(240.dp)
             .clickable { },
         shape = RoundedCornerShape(12.dp),
@@ -37,33 +42,49 @@ fun ArticleCard(article: Article) {
     ) {
         Column {
             Image(
-                painter = painterResource(id = R.drawable.cat),
+                painter = painterResource(id = article.imageRes),
                 contentDescription = article.title,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(140.dp),
+                    .height(150.dp),
                 contentScale = ContentScale.Crop
             )
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(12.dp)
+                    .padding(12.dp),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
                     text = article.title,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp,
                     color = Color(0xFF333333),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = "${article.category} • ${article.readTime}",
-                    fontSize = 10.sp,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
                     color = Color(0xFF9F9F9F)
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun ArticleCardPreview() {
+    HariKuTheme {
+        val sample = Article(
+            id = 1,
+            title = "Kendalikan Kekhawatiranmu",
+            category = "Kecemasan",
+            readTime = "5 Menit",
+            imageRes = R.drawable.cat
+        )
+        ArticleCard(article = sample, modifier = Modifier.width(250.dp))
     }
 }
