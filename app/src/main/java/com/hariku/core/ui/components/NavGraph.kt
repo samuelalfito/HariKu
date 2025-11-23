@@ -33,6 +33,7 @@ import com.hariku.feature_sense.presentation.SenseComplete
 import com.hariku.feature_sense.presentation.SensesStep1Screen
 import com.hariku.feature_sos.presentation.SosProfessionalScreen
 import com.hariku.feature_sos.presentation.SosScreen
+import com.hariku.feature_statistic.presentation.StatisticScreen
 import com.hariku.feature_statistic.presentation.components.CalendarView
 
 @Composable
@@ -66,7 +67,7 @@ fun NavGraph(navController: NavHostController) {
         composable(Routes.CreateNotePrompt.route) { CreateNotePromptScreen(navController) }
         composable(Routes.CreateNotePromptCompleted.route) { CreateNotePromptDoneScreen(navController) }
         composable(Routes.CreateNote.route) { CreateNoteScreen(navController) }
-        composable(Routes.Statistic.route) { CalendarView() }
+        composable(Routes.Statistic.route) { StatisticScreen() }
         composable(Routes.Profile.route) { ProfileScreen(navController) }
         composable(Routes.SosGraph.route) { SosScreen(navController) }
         composable(Routes.SosProfessional.route) { SosProfessionalScreen(navController) }

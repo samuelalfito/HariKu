@@ -15,6 +15,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hariku.feature_home.presentation.HomeScreen
 import com.hariku.feature_journal.presentation.JournalScreen
+import com.hariku.feature_statistic.presentation.StatisticScreen
 import com.hariku.feature_statistic.presentation.components.CalendarView
 
 @Composable
@@ -67,9 +68,7 @@ fun MainScaffold(parentNavController: NavHostController) {
                 JournalScreen(navController = parentNavController)
             }
             composable(Routes.Statistic.route) {
-                Box {
-                    CalendarView()
-                }
+                StatisticScreen()
             }
         }
     }
