@@ -4,16 +4,36 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
@@ -29,13 +49,18 @@ fun ThreePointSlider(
     startLabel: String,
     endLabel: String
 ) {
-    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-        val totalWidthPx = constraints.maxWidth.toFloat()
-        val density = LocalDensity.current
-        val thumbSize = 24.dp
-        val thumbPx = with(density) { thumbSize.toPx() }
-        val trackStartPx = thumbPx / 2f
-        val trackEndPx = totalWidthPx - thumbPx / 2f
+    var totalWidthPx by remember { mutableStateOf(0f) }
+    val density = LocalDensity.current
+    val thumbSize = 24.dp
+    val thumbPx = with(density) { thumbSize.toPx() }
+    val trackStartPx = thumbPx / 2f
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .onSizeChanged { totalWidthPx = it.width.toFloat() }
+    ) {
+        val trackEndPx = if (totalWidthPx > 0f) totalWidthPx - thumbPx / 2f else 0f
         val trackWidthPx = (trackEndPx - trackStartPx).coerceAtLeast(1f)
 
         Column {
@@ -43,7 +68,7 @@ fun ThreePointSlider(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
-                    .pointerInput(Unit) {
+                    .pointerInput(totalWidthPx) {
                         detectDragGestures(
                             onDragStart = { offset ->
                                 val x = offset.x.coerceIn(trackStartPx, trackEndPx)
@@ -115,8 +140,6 @@ fun ThreePointSlider(
                         .align(Alignment.Center)
                 )
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

@@ -3,6 +3,7 @@ package com.hariku.di
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.hariku.feature_auth.di.authModule
+import com.hariku.feature_chatbot.di.chatbotModule
 import com.hariku.feature_home.di.homeModule
 import com.hariku.feature_meditation.di.meditationModule
 import com.hariku.feature_onboarding.di.onboardingModule
@@ -26,5 +27,6 @@ val appModule = listOf(
     homeModule,
     onboardingModule,
     profileModule,
+    chatbotModule,
     meditationModule
 )
