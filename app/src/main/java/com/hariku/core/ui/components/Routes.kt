@@ -79,9 +79,17 @@ sealed class Routes(val route: String) {
     @Serializable
     object Meditation : Routes("meditation")
     @Serializable
-    object MeditationMusic : Routes("meditation_music")
+    data class MeditationMusic(val songId: String) : Routes("meditation_music/{songId}") {
+        companion object {
+            fun createRoute(songId: String) = "meditation_music/$songId"
+        }
+    }
     @Serializable
-    object MeditationCompleted : Routes("meditation_completed")
+    data class MeditationCompleted(val songId: String) : Routes("meditation_completed/{songId}") {
+        companion object {
+            fun createRoute(songId: String) = "meditation_completed/$songId"
+        }
+    }
 
     @Serializable
     object Senses : Routes("senses")
