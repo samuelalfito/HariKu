@@ -29,8 +29,7 @@ import com.hariku.feature_onboarding.presentation.OnboardingScreen
 import com.hariku.feature_onboarding.presentation.SplashScreen
 import com.hariku.feature_pin.presentation.FillPinScreen
 import com.hariku.feature_profile.presentation.ProfileScreen
-import com.hariku.feature_sense.presentation.SenseComplete
-import com.hariku.feature_sense.presentation.SensesStep1Screen
+import com.hariku.feature_sense.presentation.SensesScreen
 import com.hariku.feature_sos.presentation.SosProfessionalScreen
 import com.hariku.feature_sos.presentation.SosScreen
 import com.hariku.feature_statistic.presentation.components.CalendarView
@@ -77,8 +76,7 @@ fun NavGraph(navController: NavHostController) {
         composable(Routes.Meditation.route) { MeditationScreen() }
         composable(Routes.MeditationMusic.route) { MeditationSongScreen() }
         composable(Routes.MeditationCompleted.route) { MeditationSongCompletedScreen() }
-        composable(Routes.Senses.route) { SensesStep1Screen() }
-        composable(Routes.SensesCompleted.route) { SenseComplete() }
+        composable(Routes.Senses.route) { SensesScreen(navController) }
         composable(Routes.Article.route) { ArticleScreen() }
         composable(Routes.ArticleList.route) { KecemaasanScreen() }
         composable("article_detail/{articleId}") { backStackEntry ->
