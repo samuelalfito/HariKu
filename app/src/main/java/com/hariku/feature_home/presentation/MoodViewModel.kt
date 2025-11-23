@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hariku.feature_auth.domain.model.AuthUser
+import com.hariku.feature_auth.domain.usecase.GetCurrentUserUseCase
 import com.hariku.feature_home.domain.model.MoodModel
 import com.hariku.feature_home.domain.usecase.GetTodayMoodUseCase
 import com.hariku.feature_home.domain.usecase.SaveMoodUseCase
@@ -16,11 +18,16 @@ import java.util.UUID
 
 class MoodViewModel(
     private val saveMoodUseCase: SaveMoodUseCase,
-    private val getTodayMoodUseCase: GetTodayMoodUseCase
+    private val getTodayMoodUseCase: GetTodayMoodUseCase,
+    private val getCurrentUserUseCase: GetCurrentUserUseCase // USE CASE BARU untuk ngambil user
 ) : ViewModel() {
 
     var uiState by mutableStateOf(MoodUiState())
         private set
+
+    fun getCurrentUser(): AuthUser? { // CONTOH: getCurrentUser().uid
+        return getCurrentUserUseCase()
+    }
 
     fun loadTodayMood(userId: String) {
         viewModelScope.launch {

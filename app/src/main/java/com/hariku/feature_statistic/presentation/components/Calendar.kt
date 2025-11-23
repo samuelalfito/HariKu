@@ -1,5 +1,11 @@
 package com.hariku.feature_statistic.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,13 +19,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,7 +43,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
+import com.hariku.feature_statistic.domain.model.CalendarDay
 import java.util.Calendar
+import java.util.Locale
 
 enum class Mood(val iconRes: Int, val color: Color) {
     SENANG(R.drawable.ic_emote_senang, Color(0xFFFFD481)),
@@ -48,65 +61,73 @@ enum class Mood(val iconRes: Int, val color: Color) {
     NONE(R.drawable.ic_cross, Color(0xFF9F9F9F))
 }
 
-val dayNames = listOf("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")
+private val dayNames = listOf("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")
+
+private val dividerColor = Color.LightGray.copy(alpha = 0.5f)
+private val chevronColor = Color(0xFFBF794E)
+private val headerBgColor = Color(0xFFF5F5F5)
+private val dayNameColor = Color(0xFF9E9E9E)
 
 @Composable
 fun CalendarView() {
-    var calendar by remember { mutableStateOf(Calendar.getInstance()) }
-    var isExpanded by remember { mutableStateOf(true) }
-    val year = calendar.get(Calendar.YEAR)
-    val month = calendar.get(Calendar.MONTH)
-    val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-    val firstDayOfWeek = Calendar.getInstance().apply {
-        set(Calendar.YEAR, year)
-        set(Calendar.MONTH, month)
-        set(Calendar.DAY_OF_MONTH, 1)
-    }.get(Calendar.DAY_OF_WEEK) - 1
-    
-    val moodMap = remember {
-        mutableMapOf<Int, Mood>().apply {
-            put(1, Mood.SENANG)
-            put(2, Mood.BIASA)
-            put(3, Mood.MARAH)
-            put(4, Mood.SENANG)
-            put(5, Mood.KECEWA)
-            put(6, Mood.SEDIH)
-            put(7, Mood.SEDIH)
-            put(8, Mood.SENANG)
-            put(9, Mood.SENANG)
-            put(10, Mood.CEMAS)
-            put(11, Mood.SEDIH)
-            put(12, Mood.BIASA)
-            put(13, Mood.KECEWA)
-            put(14, Mood.CEMAS)
-            put(15, Mood.SEDIH)
-            put(16, Mood.KECEWA)
-            put(17, Mood.NONE)
-            put(18, Mood.MARAH)
-            put(19, Mood.BIASA)
-            put(20, Mood.MARAH)
-            put(21, Mood.CEMAS)
-            put(22, Mood.BIASA)
-            put(23, Mood.SENANG)
-            put(24, Mood.KECEWA)
-            put(25, Mood.KECEWA)
-            put(26, Mood.CEMAS)
-            put(27, Mood.SENANG)
-            put(28, Mood.BIASA)
-            put(29, Mood.SENANG)
-            put(30, Mood.BIASA)
+    var currentYear by remember { mutableIntStateOf(Calendar.getInstance().get(Calendar.YEAR)) }
+    var currentMonth by remember { mutableIntStateOf(Calendar.getInstance().get(Calendar.MONTH)) }
+    var expanded by remember { mutableStateOf(true) }
+
+    val calendarData by remember(currentYear, currentMonth) {
+        derivedStateOf {
+            val calendar = Calendar.getInstance().apply {
+                set(Calendar.YEAR, currentYear)
+                set(Calendar.MONTH, currentMonth)
+                set(Calendar.DAY_OF_MONTH, 1)
+            }
+            val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+            val firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1
+            val monthName = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH) ?: ""
+            Triple(daysInMonth, firstDayOfWeek, monthName)
         }
     }
-    
+    val (daysInMonth, firstDayOfWeek, monthName) = calendarData
+
+    val moodMap = remember {
+        mapOf(
+            1 to Mood.SENANG, 2 to Mood.BIASA, 3 to Mood.MARAH, 4 to Mood.SENANG,
+            5 to Mood.KECEWA, 6 to Mood.SEDIH, 7 to Mood.SEDIH, 8 to Mood.SENANG,
+            9 to Mood.SENANG, 10 to Mood.CEMAS, 11 to Mood.SEDIH, 12 to Mood.BIASA,
+            13 to Mood.KECEWA, 14 to Mood.CEMAS, 15 to Mood.SEDIH, 16 to Mood.KECEWA,
+            17 to Mood.NONE, 18 to Mood.MARAH, 19 to Mood.BIASA, 20 to Mood.MARAH,
+            21 to Mood.CEMAS, 22 to Mood.BIASA, 23 to Mood.SENANG, 24 to Mood.KECEWA,
+            25 to Mood.KECEWA, 26 to Mood.CEMAS, 27 to Mood.SENANG, 28 to Mood.BIASA,
+            29 to Mood.SENANG, 30 to Mood.BIASA
+        )
+    }
+
+    val calendarCells = remember(daysInMonth, firstDayOfWeek, moodMap) {
+        val cells = mutableListOf<CalendarDay>()
+        repeat(firstDayOfWeek) { cells.add(CalendarDay(day = 0, mood = Mood.NONE, isEmpty = true)) }
+        for (day in 1..daysInMonth) {
+            cells.add(CalendarDay(day = day, mood = moodMap[day] ?: Mood.NONE))
+        }
+        val totalCells = cells.size
+        val remainder = totalCells % 7
+        if (remainder != 0) {
+            repeat(7 - remainder) { cells.add(CalendarDay(day = 0, mood = Mood.NONE, isEmpty = true)) }
+        }
+        cells
+    }
+
     Card(
-        modifier = Modifier,
-        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .clickable { expanded = !expanded }
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp, vertical = 20.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -115,119 +136,102 @@ fun CalendarView() {
                     fontSize = 17.sp,
                     color = Color.Black
                 )
-                IconButton(onClick = { isExpanded = !isExpanded }) {
-                    Icon(
-                        painter = painterResource(
-                            if (isExpanded) R.drawable.ic_chevron_up
-                            else R.drawable.ic_chevron_down
-                        ),
-                        contentDescription = if (isExpanded) "Sembunyikan" else "Tampilkan",
-                        tint = Color(0xFF9E9E9E)
-                    )
-                }
-            }
-            
-            if (isExpanded) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(Color(0xFFE0E0E0))
+                Icon(
+                    imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    contentDescription = "Toggle",
+                    tint = Color.Gray
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-                
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xFFF5F5F5), RoundedCornerShape(12.dp))
-                        .padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_chevron_left),
-                        contentDescription = "Bulan sebelumnya",
-                        tint = Color(0xFFBF794E),
+            }
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 24.dp),
+                thickness = 1.dp,
+                color = dividerColor
+            )
+            AnimatedVisibility(
+                visible = expanded,
+                enter = fadeIn() + expandVertically(animationSpec = tween(300)),
+                exit = fadeOut() + shrinkVertically(animationSpec = tween(300))
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
                         modifier = Modifier
-                            .size(24.dp)
-                            .clickable {
-                                calendar = Calendar
-                                    .getInstance()
-                                    .apply {
-                                        set(Calendar.YEAR, year)
-                                        set(Calendar.MONTH, month - 1)
+                            .fillMaxWidth()
+                            .background(headerBgColor, RoundedCornerShape(12.dp))
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_chevron_left),
+                            contentDescription = "Bulan sebelumnya",
+                            tint = chevronColor,
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clickable {
+                                    if (currentMonth == 0) {
+                                        currentMonth = 11
+                                        currentYear--
+                                    } else {
+                                        currentMonth--
                                     }
-                            }
-                    )
-                    Text(
-                        text = "${
-                            calendar.getDisplayName(
-                                Calendar.MONTH,
-                                Calendar.LONG,
-                                java.util.Locale.ENGLISH
-                            )
-                        } $year",
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 18.sp,
-                        color = Color.Black
-                    )
-                    Icon(
-                        painter = painterResource(R.drawable.ic_chevron_right),
-                        contentDescription = "Bulan berikutnya",
-                        tint = Color(0xFFBF794E),
-                        modifier = Modifier
-                            .size(24.dp)
-                            .clickable {
-                                calendar = Calendar
-                                    .getInstance()
-                                    .apply {
-                                        set(Calendar.YEAR, year)
-                                        set(Calendar.MONTH, month + 1)
-                                    }
-                            }
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    dayNames.forEach { day ->
+                                }
+                        )
                         Text(
-                            text = day,
-                            color = Color(0xFF9E9E9E),
+                            text = "$monthName $currentYear",
                             fontWeight = FontWeight.SemiBold,
-                            fontSize = 12.sp,
-                            modifier = Modifier.weight(1f),
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            fontSize = 18.sp,
+                            color = Color.Black
+                        )
+                        Icon(
+                            painter = painterResource(R.drawable.ic_chevron_right),
+                            contentDescription = "Bulan berikutnya",
+                            tint = chevronColor,
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clickable {
+                                    if (currentMonth == 11) {
+                                        currentMonth = 0
+                                        currentYear++
+                                    } else {
+                                        currentMonth++
+                                    }
+                                }
                         )
                     }
-                }
-                Spacer(modifier = Modifier.height(12.dp))
-                
-                val totalCells = daysInMonth + firstDayOfWeek
-                val rows = (totalCells + 6) / 7
-                
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    var day = 1
-                    for (row in 0 until rows) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly
-                        ) {
-                            for (col in 0..6) {
-                                val cellIndex = row * 7 + col
-                                Box(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .aspectRatio(0.8f)
-                                        .padding(2.dp)
-                                ) {
-                                    if (cellIndex >= firstDayOfWeek && day <= daysInMonth) {
-                                        val mood = moodMap[day] ?: Mood.NONE
-                                        CalendarDayCell(day = day, mood = mood)
-                                        day++
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        dayNames.forEach { day ->
+                            Text(
+                                text = day,
+                                fontSize = 12.sp,
+                                color = dayNameColor,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    val rows = calendarCells.chunked(7)
+                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        rows.forEach { week ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(2.dp)
+                            ) {
+                                week.forEach { cell ->
+                                    Box(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .aspectRatio(0.8f)
+                                    ) {
+                                        if (!cell.isEmpty) {
+                                            CalendarDayCell(
+                                                day = cell.day,
+                                                mood = cell.mood
+                                            )
+                                        }
                                     }
                                 }
                             }
