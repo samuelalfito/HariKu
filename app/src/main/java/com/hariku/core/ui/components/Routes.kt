@@ -43,7 +43,11 @@ sealed class Routes(val route: String) {
     @Serializable
     object CustomizeNewCat : Routes("customize_new_cat")
     @Serializable
-    object CustomizePersonalCat : Routes("customize_personal_cat")
+    data class CustomizePersonalCat(val name: String, val avatarResId: Int) : Routes("customize_personal_cat/{name}/{avatarResId}") {
+        companion object {
+            fun createRoute(name: String, avatarResId: Int) = "customize_personal_cat/$name/$avatarResId"
+        }
+    }
 
     @Serializable
     object Journal : Routes("journal")
@@ -75,14 +79,20 @@ sealed class Routes(val route: String) {
     @Serializable
     object Meditation : Routes("meditation")
     @Serializable
-    object MeditationMusic : Routes("meditation_music")
+    data class MeditationMusic(val songId: String) : Routes("meditation_music/{songId}") {
+        companion object {
+            fun createRoute(songId: String) = "meditation_music/$songId"
+        }
+    }
     @Serializable
-    object MeditationCompleted : Routes("meditation_completed")
+    data class MeditationCompleted(val songId: String) : Routes("meditation_completed/{songId}") {
+        companion object {
+            fun createRoute(songId: String) = "meditation_completed/$songId"
+        }
+    }
 
     @Serializable
     object Senses : Routes("senses")
-    @Serializable
-    object SensesCompleted : Routes("senses_completed")
 
     @Serializable
     object Article : Routes("article")
