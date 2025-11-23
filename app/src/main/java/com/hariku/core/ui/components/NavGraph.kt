@@ -1,6 +1,5 @@
 package com.hariku.core.ui.components
 
-import ChatScreen
 import PinScreenFull
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -12,10 +11,11 @@ import com.hariku.feature_article.presentation.ArticleScreen
 import com.hariku.feature_article.presentation.KecemaasanScreen
 import com.hariku.feature_auth.presentation.login.LoginScreen
 import com.hariku.feature_auth.presentation.register.RegisterScreen
+import com.hariku.feature_chatbot.presentation.ChatbotScreen
 import com.hariku.feature_chatbot.presentation.customize.CustomizeCatScreen
 import com.hariku.feature_chatbot.presentation.customize.CustomizeNewCatScreen
 import com.hariku.feature_chatbot.presentation.customize.CustomizePersonalCatScreen
-import com.hariku.feature_chatbot.presentation.detail.ChatDetailScreen
+import com.hariku.feature_chatbot.presentation.detail.ChatbotDetailScreen
 import com.hariku.feature_journal.presentation.JournalScreen
 import com.hariku.feature_journal.presentation.create.journal.CreateJournalScreen
 import com.hariku.feature_journal.presentation.create.note.CreateNoteScreen
@@ -49,14 +49,18 @@ fun NavGraph(navController: NavHostController) {
             composable(Routes.MasukkanPin.route) { FillPinScreen(navController) }
         }
         composable(Routes.Home.route) { MainScaffold(parentNavController = navController) }
-        composable(Routes.Chatbot.route) { ChatScreen(navController) }
+        composable(Routes.Chatbot.route) { ChatbotScreen(navController) }
         composable("detail_chatbot/{chatbotId}") { backStackEntry ->
             val chatbotId = backStackEntry.arguments?.getString("chatbotId") ?: ""
-            ChatDetailScreen(navController, chatbotId)
+            ChatbotDetailScreen(navController, chatbotId)
         }
         composable(Routes.CustomizeCat.route) { CustomizeCatScreen(navController) }
         composable(Routes.CustomizeNewCat.route) { CustomizeNewCatScreen(navController) }
-        composable(Routes.CustomizePersonalCat.route) { CustomizePersonalCatScreen(navController) }
+        composable("customize_personal_cat/{name}/{avatarResId}") { backStackEntry ->
+            val name = backStackEntry.arguments?.getString("name") ?: ""
+            val avatarResId = backStackEntry.arguments?.getString("avatarResId")?.toIntOrNull() ?: 0
+            CustomizePersonalCatScreen(navController, name, avatarResId)
+        }
         composable(Routes.Journal.route) { JournalScreen(navController) }
         composable("journal_detail/{journalId}") { backStackEntry ->
             val journalId = backStackEntry.arguments?.getString("journalId") ?: ""
