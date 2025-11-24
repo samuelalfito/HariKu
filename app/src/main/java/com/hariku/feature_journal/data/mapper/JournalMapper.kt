@@ -18,7 +18,7 @@ object JournalMapper {
             StickerElementMapper.fromFirestoreMap(it)
         } ?: emptyList()
 
-//        Log.d(tag, "Loaded journal colors: ${(data["backgroundColor"] as Int).toString()}")
+        Log.d(tag, "Loaded journal: ${textElementsList[0].text} ${textElementsList[0].offsetY}")
 
         return Journal(
             id = documentId, //Id nya dari nama dokumen

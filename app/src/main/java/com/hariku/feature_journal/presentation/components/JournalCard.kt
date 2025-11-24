@@ -101,7 +101,7 @@ data class JournalPreviewData(
         TextElement(
             id=0,
             text = "STRESS",
-            offsetX = 100f,
+            offsetX = 100f.toFloat(),
             offsetY = 100f
         ),
         TextElement(
