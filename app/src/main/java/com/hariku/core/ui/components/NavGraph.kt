@@ -19,7 +19,7 @@ import com.hariku.feature_chatbot.presentation.detail.ChatbotDetailScreen
 import com.hariku.feature_journal.presentation.JournalScreen
 import com.hariku.feature_journal.presentation.create.journal.CreateJournalScreen
 import com.hariku.feature_journal.presentation.create.note.CreateNoteScreen
-import com.hariku.feature_journal.presentation.create.prompt.CreateNotePromptDoneScreen
+import com.hariku.feature_journal.presentation.create.prompt.CreateNotePromptCompletedScreen
 import com.hariku.feature_journal.presentation.create.prompt.CreateNotePromptScreen
 import com.hariku.feature_journal.presentation.detail.JournalDetailScreen
 import com.hariku.feature_meditation.presentation.MeditationScreen
@@ -68,7 +68,7 @@ fun NavGraph(navController: NavHostController) {
         }
         composable(Routes.CreateJournal.route) { CreateJournalScreen() }
         composable(Routes.CreateNotePrompt.route) { CreateNotePromptScreen(navController) }
-        composable(Routes.CreateNotePromptCompleted.route) { CreateNotePromptDoneScreen(navController) }
+        composable(Routes.CreateNotePromptCompleted.route) { CreateNotePromptCompletedScreen(navController) }
         composable(Routes.CreateNote.route) { CreateNoteScreen(navController) }
         composable(Routes.Statistic.route) { StatisticScreen() }
         composable(Routes.Profile.route) { ProfileScreen(navController) }

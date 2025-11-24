@@ -40,7 +40,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.hariku.R
 import com.hariku.core.ui.components.FloatingActButton
 import com.hariku.core.ui.components.Routes
 import com.hariku.feature_journal.domain.model.Journal
@@ -101,7 +100,7 @@ fun JournalScreen(
                                 .padding(0.dp)
                                 .clickable {
                                     addState.value = false
-                                    navController.navigate(Routes.CreateNote.route)
+                                    navController.navigate(Routes.CreateNotePrompt.route)
                                 }
                                 .padding(8.dp),
                             contentAlignment = Alignment.Center
