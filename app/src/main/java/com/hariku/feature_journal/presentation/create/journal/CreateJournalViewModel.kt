@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import com.hariku.feature_journal.domain.model.StickerElement
 import com.hariku.feature_journal.domain.model.TextElement
+import com.hariku.feature_journal.domain.usecase.JournalUseCases
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -11,7 +12,9 @@ enum class BottomTab {
     TEXT, BACKGROUND, STICKER
 }
 
-class CreateJournalViewModel : ViewModel() {
+class CreateJournalViewModel(
+    private val useCases: JournalUseCases
+) : ViewModel() {
     private val _selectedTab = MutableStateFlow(BottomTab.TEXT)
     val selectedTab: StateFlow<BottomTab> = _selectedTab
 
@@ -48,6 +51,9 @@ class CreateJournalViewModel : ViewModel() {
     fun setSelectedStickerIndex(index: Int?) {
         _selectedStickerIndex.value = index
     }
-    // Tambahkan fungsi event handler lain sesuai kebutuhan
+
+    fun saveJournal(){
+
+    }
 }
 

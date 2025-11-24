@@ -1,14 +1,21 @@
 package com.hariku.feature_journal.domain.usecase
 
+import com.hariku.feature_journal.domain.model.Journal
 import com.hariku.feature_journal.domain.repository.JournalRepository
-import com.hariku.feature_journal.domain.model.JournalEntry
 
-class SaveJournalUseCase(private val repository: JournalRepository) {
-    suspend operator fun invoke(journal: JournalEntry): Long {
-        // tambahan bisa disini, misal: validasi title tidak boleh kosong tambahin di sini.
-        if (journal.title.isBlank()) {
-            throw IllegalArgumentException("Judul jurnal tidak boleh kosong.")
+class SaveJournalUseCase(
+    private val repository: JournalRepository
+) {
+    /**
+     * Menyimpan atau MEMPERBARUI objek Journal ke penyimpanan.
+     * @param journal Objek Journal yang akan disimpan.
+     */
+    suspend operator fun invoke(journal: Journal) {
+        // tambahan bisa disini misalnya memastikan ID dan userId ada sebelum menyimpan
+        if (journal.id.isBlank() || journal.userId.isBlank()) {
+            throw IllegalArgumentException("Journal ID and User ID cannot be blank.")
         }
-        return repository.saveJournal(journal)
+
+        repository.saveJournal(journal)
     }
 }

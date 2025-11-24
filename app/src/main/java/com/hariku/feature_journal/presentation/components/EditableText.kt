@@ -46,11 +46,11 @@ import kotlin.math.roundToInt
 fun EditableText(
     textElement: TextElement,
     isSelected: Boolean,
-    onDrag: (Offset) -> Unit,
-    onClick: () -> Unit,
-    onTextChange: (String) -> Unit,
-    onDelete: () -> Unit,
-    onScaleChange: (Float) -> Unit,
+    onDrag: (Offset) -> Unit = {},
+    onClick: () -> Unit = {},
+    onTextChange: (String) -> Unit = {},
+    onDelete: () -> Unit = {},
+    onScaleChange: (Float) -> Unit = {},
 ) {
     var offsetX by remember { mutableFloatStateOf(textElement.offsetX) }
     var offsetY by remember { mutableFloatStateOf(textElement.offsetY) }
