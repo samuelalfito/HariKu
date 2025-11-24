@@ -1,5 +1,6 @@
 package com.hariku.feature_journal.data.mapper
 
+import androidx.compose.ui.graphics.Color
 import com.hariku.feature_journal.domain.model.Journal
 
 object JournalMapper {
@@ -17,6 +18,7 @@ object JournalMapper {
             userId = data["userId"] as String,
             title = data["title"] as String,
             date = data["date"] as String,
+            backgroundColor = Color(data["backgroundColor"] as Long), // GANTI
             textElements = textElementsList,
             stickerElements = stickerElementsList
         )
@@ -27,6 +29,7 @@ object JournalMapper {
             "userId" to journal.userId,
             "title" to journal.title,
             "date" to journal.date,
+            "backgroundColor" to journal.backgroundColor.value, // GANTI
             "textElements" to journal.textElements.map { TextElementMapper.toFirestoreMap(it) },
             "stickerElements" to journal.stickerElements.map { StickerElementMapper.toFirestoreMap(it) }
         )

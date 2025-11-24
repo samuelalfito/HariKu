@@ -52,23 +52,16 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun JournalScreen(
     navController: NavController,
-//    viewModel: JournalViewModel = koinViewModel()
+    viewModel: JournalViewModel = koinViewModel()
 ) {
     var searchQuery by remember { mutableStateOf("") }
-//    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     
-//    val journals = remember(uiState.journals) {
-//        uiState.journals.map { entry ->
-//            Journal(
-//                title = entry.title,
-//                bgRes = entry.bgRes
-//            )
-//        }
-//    }
-    val journals = listOf(
-        JournalPreviewData(),
-        JournalPreviewData(backgroundColor = Color.Red)
-    )
+    val journals by remember { mutableStateOf(uiState.journals) }
+//    val journals = listOf(
+//        JournalPreviewData(),
+//        JournalPreviewData(backgroundColor = Color.Red)
+//    )
     
     val addState = remember { mutableStateOf(false) }
     val fabRotation = if (addState.value) 45f else 0f
@@ -159,7 +152,7 @@ fun JournalScreen(
             )
             Spacer(modifier = Modifier.height(32.dp))
 
-            if (/*uiState.isLoading*/false) {
+            if (uiState.isLoading) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -175,7 +168,7 @@ fun JournalScreen(
                     }
                 }
             }
-            else if (/*uiState.error != null*/false) {
+            else if (uiState.error != null) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
