@@ -1,6 +1,7 @@
 package com.hariku.feature_journal.domain.repository
 
 import com.hariku.feature_journal.domain.model.Journal
+import kotlinx.coroutines.flow.Flow
 
 interface JournalRepository {
 
@@ -11,7 +12,7 @@ interface JournalRepository {
     /**
      * Mengambil semua jurnal milik pengguna yang sedang login.
      */
-    suspend fun getAllJournals(): List<Journal>
+    fun getAllJournals(): Flow<List<Journal>>
 
     /**
      * Mengambil semua jurnal milik pengguna tertentu

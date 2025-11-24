@@ -2,6 +2,7 @@ package com.hariku.feature_journal.di
 
 import com.hariku.feature_journal.data.remote.JournalRemoteDataSource
 import com.hariku.feature_journal.data.repository.JournalRepositoryImpl
+import com.hariku.feature_journal.domain.repository.JournalRepository
 import com.hariku.feature_journal.domain.usecase.DeleteJournalUseCase
 import com.hariku.feature_journal.domain.usecase.GetAllJournalsUseCase
 import com.hariku.feature_journal.domain.usecase.JournalUseCases
@@ -32,7 +33,7 @@ val journalModule = module {
     // --- Mapper ---
 
     // --- Repository ---
-    single { JournalRepositoryImpl(remoteDataSource = get()) }
+    single<JournalRepository> { JournalRepositoryImpl(remoteDataSource = get()) }
 
     // --- Use Cases ---
     factory { GetAllJournalsUseCase(repository = get()) }
@@ -59,7 +60,8 @@ val journalModule = module {
 
     viewModel {
         CreateJournalViewModel(
-            useCases = get()
+            useCases = get(),
+            getCurrentUserUseCase = get()
         )
     }
 }

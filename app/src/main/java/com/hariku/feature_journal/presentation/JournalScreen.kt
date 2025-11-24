@@ -200,7 +200,7 @@ fun JournalScreen(
                     }
                 }
             }
-            else if (journals.isEmpty() && searchQuery.isEmpty()) {
+            else if (journals.isEmpty() && searchQuery.isBlank()) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

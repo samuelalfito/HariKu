@@ -5,12 +5,18 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.hariku.feature_journal.data.mapper.JournalMapper
 import com.hariku.feature_journal.domain.model.Journal
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 class JournalRemoteDataSource(
     private val firestore: FirebaseFirestore,
     private val auth: FirebaseAuth
 ) {
+
+    val tag = "JournalRemoteDataSource: "
+
     private fun getJournalsSubcollection() = firestore
         .collection("Users")
         .document(getCurrentUser()?.uid ?: throw IllegalStateException("User not logged in"))
@@ -40,6 +46,42 @@ class JournalRemoteDataSource(
             } else {
                 null
             }
+        }
+    }
+
+    fun getAllJournalsFlow(): Flow<List<Journal>> = callbackFlow {
+
+        // 1. Dapatkan referensi ke subkoleksi Journals
+        val collectionRef = getJournalsSubcollection()
+
+        // 2. Tambahkan Snapshot Listener
+        // Listener ini akan dipanggil pertama kali dan setiap kali ada perubahan
+        val subscription = collectionRef
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    // Jika ada error, kirim error ke Flow
+                    close(error)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null) {
+                    // Mapping data dari QuerySnapshot ke List<Journal>
+                    val journals = snapshot.documents.mapNotNull { documentSnapshot ->
+                        val data = documentSnapshot.data
+                        if (data != null) {
+                            JournalMapper.fromFirestoreJournal(documentSnapshot.id, data)
+                        } else {
+                            null
+                        }
+                    }
+                    // Kirim hasil List<Journal> ke Flow
+                    trySend(journals)
+                }
+            }
+
+        // 3. Hentikan listener ketika Flow berhenti dikumpulkan (dibatalkan)
+        awaitClose {
+            subscription.remove()
         }
     }
 

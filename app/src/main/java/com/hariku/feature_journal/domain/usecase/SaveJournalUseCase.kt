@@ -12,8 +12,8 @@ class SaveJournalUseCase(
      */
     suspend operator fun invoke(journal: Journal) {
         // tambahan bisa disini misalnya memastikan ID dan userId ada sebelum menyimpan
-        if (journal.id.isBlank() || journal.userId.isBlank()) {
-            throw IllegalArgumentException("Journal ID and User ID cannot be blank.")
+        if (journal.userId.isBlank()) {
+            throw IllegalArgumentException("User ID cannot be blank.")
         }
 
         repository.saveJournal(journal)

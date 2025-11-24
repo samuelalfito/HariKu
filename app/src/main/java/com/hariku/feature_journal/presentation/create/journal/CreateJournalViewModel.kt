@@ -1,20 +1,32 @@
 package com.hariku.feature_journal.presentation.create.journal
 
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.hariku.feature_auth.domain.usecase.GetCurrentUserUseCase
+import com.hariku.feature_journal.domain.model.Journal
 import com.hariku.feature_journal.domain.model.StickerElement
 import com.hariku.feature_journal.domain.model.TextElement
 import com.hariku.feature_journal.domain.usecase.JournalUseCases
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 enum class BottomTab {
     TEXT, BACKGROUND, STICKER
 }
 
 class CreateJournalViewModel(
-    private val useCases: JournalUseCases
+    private val useCases: JournalUseCases,
+    private val getCurrentUserUseCase: GetCurrentUserUseCase
 ) : ViewModel() {
+
+    val tag = "CreateJournalViewModel: "
+    val currentUser = getCurrentUserUseCase()
     private val _selectedTab = MutableStateFlow(BottomTab.TEXT)
     val selectedTab: StateFlow<BottomTab> = _selectedTab
 
@@ -41,6 +53,9 @@ class CreateJournalViewModel(
     }
     fun setTextElements(elements: List<TextElement>) {
         _textElements.value = elements
+        if(!elements.isEmpty()){
+            Log.d(tag, "setTextElements, OffsetX: ${elements[0].offsetX} OffsetY: ${elements[0].offsetY}")
+        }
     }
     fun setStickerElements(elements: List<StickerElement>) {
         _stickerElements.value = elements
@@ -52,8 +67,31 @@ class CreateJournalViewModel(
         _selectedStickerIndex.value = index
     }
 
-    fun saveJournal(){
+    fun saveJournal() = viewModelScope.launch {
+        val currentUserId = currentUser!!.uid
 
+        val newJournalId = "" // Karna baru, idnya kosong nanti dibuat di repo
+
+        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
+        var title = ""
+        textElements.value.forEach { title+=(" "+it.text) }
+
+        val journal = Journal(
+            id = newJournalId,
+            userId = currentUserId,
+            title = title,
+            date = currentDate,
+            textElements = _textElements.value,
+            stickerElements = _stickerElements.value,
+            backgroundColor = _notebookBackground.value
+        )
+
+        try {
+            useCases.saveJournal(journal) // Panggil Use Case
+        } catch (e: Exception) {
+            Log.e(tag, "Error saving journal: ${e.message}")
+        }
     }
 }
 

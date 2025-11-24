@@ -18,10 +18,10 @@ object StickerElementMapper {
         return StickerElement(
             id = data["id"] as Long,
             emoji = data["emoji"] as String,
-            offsetX = data["offsetX"] as Float,
-            offsetY = data["offsetY"] as Float,
-            scale = data["scale"] as Float,
-            rotation = data["rotation"] as Float
+            offsetX = (data["offsetX"] as Double).toFloat(),
+            offsetY = (data["offsetY"] as Double).toFloat(),
+            scale = (data["scale"] as Double).toFloat(),
+            rotation = (data["rotation"] as Double).toFloat()
         )
     }
 }

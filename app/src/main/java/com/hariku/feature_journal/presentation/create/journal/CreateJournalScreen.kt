@@ -55,13 +55,14 @@ import com.hariku.feature_journal.presentation.components.StickerTab
 import com.hariku.feature_journal.presentation.components.TabButton
 import com.hariku.feature_journal.presentation.components.TextTab
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateJournalScreen(
     onNavigateBack: () -> Unit = {},
     onSave: () -> Unit = {},
-    viewModel: CreateJournalViewModel = viewModel()
+    viewModel: CreateJournalViewModel = koinViewModel()
 ) {
     val notebookBackground by viewModel.notebookBackground.collectAsState()
     val textElements by viewModel.textElements.collectAsState()
@@ -94,7 +95,7 @@ fun CreateJournalScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = onSave) {
+                    IconButton(onClick = {viewModel.saveJournal()}) {
                         Icon(
                             imageVector = Icons.Default.Check,
                             contentDescription = "Save",
