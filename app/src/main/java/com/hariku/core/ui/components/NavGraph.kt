@@ -33,7 +33,6 @@ import com.hariku.feature_sense.presentation.SensesScreen
 import com.hariku.feature_sos.presentation.SosProfessionalScreen
 import com.hariku.feature_sos.presentation.SosScreen
 import com.hariku.feature_statistic.presentation.StatisticScreen
-import com.hariku.feature_statistic.presentation.components.CalendarView
 
 @Composable
 fun NavGraph(navController: NavHostController) {
@@ -66,7 +65,7 @@ fun NavGraph(navController: NavHostController) {
             val journalId = backStackEntry.arguments?.getString("journalId") ?: ""
             JournalDetailScreen(navController, journalId)
         }
-        composable(Routes.CreateJournal.route) { CreateJournalScreen() }
+        composable(Routes.CreateJournal.route) { CreateJournalScreen(navController) }
         composable(Routes.CreateNotePrompt.route) { CreateNotePromptScreen(navController) }
         composable(Routes.CreateNotePromptCompleted.route) { CreateNotePromptDoneScreen(navController) }
         composable(Routes.CreateNote.route) { CreateNoteScreen(navController) }

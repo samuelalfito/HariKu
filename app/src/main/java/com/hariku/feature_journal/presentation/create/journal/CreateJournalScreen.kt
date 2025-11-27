@@ -37,13 +37,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.hariku.feature_journal.domain.model.StickerElement
@@ -60,19 +61,18 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateJournalScreen(
-    onNavigateBack: () -> Unit = {},
-    onSave: () -> Unit = {},
-    viewModel: CreateJournalViewModel = koinViewModel()
+    navController: NavController,
+    viewModel: CreateJournalViewModel = koinViewModel(),
 ) {
     val notebookBackground by viewModel.notebookBackground.collectAsState()
     val textElements by viewModel.textElements.collectAsState()
     val stickerElements by viewModel.stickerElements.collectAsState()
     val selectedTextIndex by viewModel.selectedTextIndex.collectAsState()
     val selectedStickerIndex by viewModel.selectedStickerIndex.collectAsState()
-
+    
     val pagerState = rememberPagerState(initialPage = 0)
     val coroutineScope = rememberCoroutineScope()
-
+    
     Scaffold(
         topBar = {
             TopAppBar(
@@ -86,7 +86,7 @@ fun CreateJournalScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
@@ -95,7 +95,10 @@ fun CreateJournalScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = {viewModel.saveJournal()}) {
+                    IconButton(onClick = {
+                        viewModel.saveJournal()
+                        navController.popBackStack()
+                    }) {
                         Icon(
                             imageVector = Icons.Default.Check,
                             contentDescription = "Save",
@@ -195,7 +198,7 @@ fun CreateJournalScreen(
                     }
                 )
             }
-
+            
             // Tab Selection
             Row(
                 modifier = Modifier
@@ -235,8 +238,7 @@ fun CreateJournalScreen(
                     }
                 )
             }
-
-            // Bottom Content with HorizontalPager
+            
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -273,10 +275,12 @@ fun CreateJournalScreen(
                                 }
                             }
                         )
+                        
                         1 -> BackgroundTab(
                             selectedColor = notebookBackground,
                             onColorSelected = { viewModel.setNotebookBackground(it) }
                         )
+                        
                         2 -> StickerTab(
                             onStickerSelected = { sticker ->
                                 val newSticker = StickerElement(
@@ -311,7 +315,7 @@ fun NotebookCanvas(
     onTextClick: (Int) -> Unit,
     onStickerClick: (Int) -> Unit,
     onTextDelete: (Int) -> Unit,
-    onStickerDelete: (Int) -> Unit
+    onStickerDelete: (Int) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -336,7 +340,7 @@ fun NotebookCanvas(
                 )
             }
         }
-
+        
         // Notebook background
         Box(
             modifier = Modifier
@@ -363,7 +367,7 @@ fun NotebookCanvas(
                     }
                 )
             }
-
+            
             // Sticker elements
             stickerElements.forEachIndexed { index, element ->
                 DraggableSticker(
@@ -389,5 +393,5 @@ fun NotebookCanvas(
 @Preview
 @Composable
 private fun CreateJournalScreenPreview() {
-    CreateJournalScreen()
+    CreateJournalScreen(navController = NavController(LocalContext.current))
 }
