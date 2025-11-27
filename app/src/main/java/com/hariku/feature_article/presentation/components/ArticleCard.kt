@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.hariku.R
 import com.hariku.core.ui.theme.HariKuTheme
 import com.hariku.feature_article.domain.model.Article
@@ -30,25 +31,38 @@ import com.hariku.feature_article.domain.model.Article
 @Composable
 fun ArticleCard(
     article: Article,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
 ) {
     Card(
         modifier = modifier
             .height(240.dp)
-            .clickable { },
+            .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Column {
-            Image(
-                painter = painterResource(id = article.imageRes),
-                contentDescription = article.title,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp),
-                contentScale = ContentScale.Crop
-            )
+            if (article.imageUrl.isNotEmpty()) {
+                AsyncImage(
+                    model = article.imageUrl,
+                    contentDescription = article.title,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp),
+                    contentScale = ContentScale.Crop,
+                    error = painterResource(id = R.drawable.cat)
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.cat),
+                    contentDescription = article.title,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp),
+                    contentScale = ContentScale.Crop
+                )
+            }
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -79,11 +93,14 @@ fun ArticleCard(
 private fun ArticleCardPreview() {
     HariKuTheme {
         val sample = Article(
-            id = 1,
+            id = "1",
             title = "Kendalikan Kekhawatiranmu",
             category = "Kecemasan",
             readTime = "5 Menit",
-            imageRes = R.drawable.cat
+            imageUrl = "",
+            content = "Sample content",
+            uploadedAt = System.currentTimeMillis(),
+            author = "Anonymous"
         )
         ArticleCard(article = sample, modifier = Modifier.width(250.dp))
     }

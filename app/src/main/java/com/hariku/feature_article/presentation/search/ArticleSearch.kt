@@ -26,23 +26,43 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hariku.R
 import com.hariku.feature_article.domain.model.Article
+import com.hariku.feature_article.domain.model.ArticleCategory
+import com.hariku.feature_article.presentation.ArticleUiState
 import com.hariku.feature_article.presentation.ArticleViewModel
-import com.hariku.feature_article.presentation.categories
 import com.hariku.feature_article.presentation.components.ArticleCard
 import com.hariku.feature_article.presentation.components.CategoryCard
-import com.hariku.feature_article.presentation.sampleArticles
 
 @Composable
 fun SearchEmpty(
-    contentPadding: PaddingValues = PaddingValues()
+    contentPadding: PaddingValues = PaddingValues(),
+    onArticleClick: (String) -> Unit = {},
+    onCategoryClick: (String) -> Unit = {},
+    viewModel: ArticleViewModel
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+    val articles = when (val state = uiState) {
+        is ArticleUiState.Success -> state.articles
+        else -> emptyList()
+    }
+    
+    val categories = articles
+        .map { it.category }
+        .distinct()
+        .map { categoryName ->
+            val imageRes = getCategoryImageRes(categoryName) ?: R.drawable.cat
+            ArticleCategory(name = categoryName, imageRes = imageRes)
+        }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -73,8 +93,12 @@ fun SearchEmpty(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(vertical = 8.dp)
                 ) {
-                    items(sampleArticles) { article ->
-                        ArticleCard(article = article, modifier = Modifier.width(250.dp))
+                    items(articles.take(5)) { article ->
+                        ArticleCard(
+                            article = article,
+                            modifier = Modifier.width(250.dp),
+                            onClick = { onArticleClick(article.id) }
+                        )
                     }
                 }
             }
@@ -100,8 +124,12 @@ fun SearchEmpty(
                         .heightIn(max = 520.dp),
                     userScrollEnabled = false
                 ) {
-                    items(categories) { imageRes ->
-                        CategoryCard(imageRes)
+                    items(categories) { category ->
+                        CategoryCard(
+                            imageRes = category.imageRes,
+                            categoryName = category.name,
+                            onClick = { onCategoryClick(category.name) }
+                        )
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -110,18 +138,35 @@ fun SearchEmpty(
     }
 }
 
+private fun getCategoryImageRes(category: String): Int? {
+    return when (category.lowercase()) {
+        "stres" -> R.drawable.ic_kategori_stres
+        "kecemasan" -> R.drawable.ic_kategori_kecemasan
+        "motivasi diri" -> R.drawable.ic_kategori_motivasi_diri
+        "tidur" -> R.drawable.ic_kategori_tidur
+        "depresi" -> R.drawable.ic_kategori_depresi
+        "kesadaran penuh" -> R.drawable.ic_kategori_kesadaran_penuh
+        "strategi coping" -> R.drawable.ic_kategori_strategi_coping
+        "hubungan" -> R.drawable.ic_kategori_hubungan
+        else -> null
+    }
+}
+
 @Composable
 fun SearchResult(
     filteredArticles: List<Article>,
+    filteredCategories: List<ArticleCategory>,
     viewModel: ArticleViewModel,
-    contentPadding: PaddingValues = PaddingValues()
+    contentPadding: PaddingValues = PaddingValues(),
+    onArticleClick: (String) -> Unit = {},
+    onCategoryClick: (String) -> Unit = {}
 ) {
     Box(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = contentPadding
         ) {
-            if (filteredArticles.isEmpty()) {
+            if (filteredCategories.isEmpty() && filteredArticles.isEmpty()) {
                 item {
                     Box(
                         modifier = Modifier
@@ -169,9 +214,59 @@ fun SearchResult(
                     }
                 }
             } else {
-                items(filteredArticles) { article ->
-                    Spacer(modifier = Modifier.height(24.dp))
-                    ArticleCard(article = article, modifier = Modifier.fillMaxWidth())
+                if (filteredCategories.isNotEmpty()) {
+                    item {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "Kategori",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF333333)
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+                    
+                    item {
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(max = 300.dp),
+                            userScrollEnabled = false
+                        ) {
+                            items(filteredCategories) { category ->
+                                CategoryCard(
+                                    imageRes = category.imageRes,
+                                    categoryName = category.name,
+                                    onClick = { onCategoryClick(category.name) }
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                }
+                
+                if (filteredArticles.isNotEmpty()) {
+                    item {
+                        Text(
+                            text = "Artikel",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF333333)
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+                    
+                    items(filteredArticles) { article ->
+                        ArticleCard(
+                            article = article,
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = { onArticleClick(article.id) }
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
                 }
             }
         }
