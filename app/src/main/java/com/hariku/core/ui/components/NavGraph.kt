@@ -65,7 +65,7 @@ fun NavGraph(navController: NavHostController) {
             val journalId = backStackEntry.arguments?.getString("journalId") ?: ""
             JournalDetailScreen(navController, journalId)
         }
-        composable(Routes.CreateJournal.route) { CreateJournalScreen() }
+        composable(Routes.CreateJournal.route) { CreateJournalScreen(navController) }
         composable(Routes.CreateNotePrompt.route) { CreateNotePromptScreen(navController) }
         composable(Routes.CreateNotePromptCompleted.route) { CreateNotePromptCompletedScreen(navController) }
         composable(Routes.CreateNote.route) { CreateNoteScreen(navController) }

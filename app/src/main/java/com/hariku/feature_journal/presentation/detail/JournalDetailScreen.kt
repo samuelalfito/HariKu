@@ -139,11 +139,11 @@ fun BookViewContent(data: JournalData) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        JournalCard(
-            title = "STRES",
-            bgRes = R.drawable.img_pink_bg,
-            onClick = { /* Tidak ada aksi pada tampilan buku */ }
-        )
+//        JournalCard(
+//            title = "STRES",
+//            bgRes = R.drawable.img_pink_bg,
+//            onClick = { /* Tidak ada aksi pada tampilan buku */ }
+//        )
         
         JournalListCard(
             data = data,

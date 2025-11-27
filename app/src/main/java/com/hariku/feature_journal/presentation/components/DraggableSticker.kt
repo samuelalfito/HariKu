@@ -39,11 +39,11 @@ import kotlin.math.roundToInt
 fun DraggableSticker(
     stickerElement: StickerElement,
     isSelected: Boolean,
-    onDrag: (Offset) -> Unit,
-    onClick: () -> Unit,
-    onDelete: () -> Unit,
-    onScaleChange: (Float) -> Unit,
-    onRotationChange: (Float) -> Unit
+    onDrag: (Offset) -> Unit = {},
+    onClick: () -> Unit = {},
+    onDelete: () -> Unit = {},
+    onScaleChange: (Float) -> Unit = {},
+    onRotationChange: (Float) -> Unit = {}
 ) {
     var offsetX by remember { mutableFloatStateOf(stickerElement.offsetX) }
     var offsetY by remember { mutableFloatStateOf(stickerElement.offsetY) }
