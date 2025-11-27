@@ -6,6 +6,7 @@ import com.hariku.feature_article.di.articleModule
 import com.hariku.feature_auth.di.authModule
 import com.hariku.feature_chatbot.di.chatbotModule
 import com.hariku.feature_home.di.homeModule
+import com.hariku.feature_journal.di.journalModule
 import com.hariku.feature_meditation.di.meditationModule
 import com.hariku.feature_onboarding.di.onboardingModule
 import com.hariku.feature_pin.di.pinModule
@@ -28,6 +29,7 @@ val appModule = listOf(
     homeModule,
     onboardingModule,
     profileModule,
+    journalModule,
     chatbotModule,
     meditationModule,
     articleModule
