@@ -1,11 +1,12 @@
 package com.hariku.feature_article.domain.model
 
 data class Article(
-    val id: Int,
+    val id: String,
     val title: String,
     val category: String,
-    val readTime: String,
-    val imageRes: Int,
+    val content: String,
+    val imageUrl: String,
+    val uploadedAt: Long,
     val author: String = "Anonymous",
-    val content: String = ""
+    val readTime: String = "5 Menit"
 )
