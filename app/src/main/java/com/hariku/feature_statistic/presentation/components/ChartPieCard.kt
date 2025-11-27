@@ -38,16 +38,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.feature_statistic.domain.model.ChartData
+import com.hariku.feature_statistic.domain.model.SentimentData
 
 
 @Composable
-fun ChartPieCard() {
+fun ChartPieCard(
+    sentimentData: SentimentData = SentimentData(0f, 0f, 0f)
+) {
     var expanded by remember { mutableStateOf(true) }
     
     val colorNegative = Color(0xFFF0A096)
     val colorPositive = Color(0xFFAEE3EB)
     val colorNeutral = Color(0xFFEBCBA6)
     
+    val chartDataList = listOf(
+        ChartData("Negatif", sentimentData.negative, colorNegative, "${sentimentData.negative.toInt()}%"),
+        ChartData("Positif", sentimentData.positive, colorPositive, "${sentimentData.positive.toInt()}%"),
+        ChartData("Netral", sentimentData.neutral, colorNeutral, "${sentimentData.neutral.toInt()}%")
+    )
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
@@ -96,11 +105,7 @@ fun ChartPieCard() {
                     Box(modifier = Modifier.weight(1.2f), contentAlignment = Alignment.Center) {
                         ChartPie(
                             modifier = Modifier.size(180.dp),
-                            data = listOf(
-                                ChartData("Negatif", 41f, colorNegative, "41%"),
-                                ChartData("Positif", 38f, colorPositive, "38%"),
-                                ChartData("Netral", 21f, colorNeutral, "21%")
-                            )
+                            data = chartDataList
                         )
                     }
                     

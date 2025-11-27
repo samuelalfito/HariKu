@@ -9,6 +9,7 @@ import com.hariku.feature_meditation.di.meditationModule
 import com.hariku.feature_onboarding.di.onboardingModule
 import com.hariku.feature_pin.di.pinModule
 import com.hariku.feature_profile.di.profileModule
+import com.hariku.feature_statistic.di.statisticModule
 import org.koin.dsl.module
 
 val appModule = listOf(
@@ -28,5 +29,6 @@ val appModule = listOf(
     onboardingModule,
     profileModule,
     chatbotModule,
-    meditationModule
+    meditationModule,
+    statisticModule
 )

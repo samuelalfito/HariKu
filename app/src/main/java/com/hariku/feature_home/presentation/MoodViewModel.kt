@@ -63,7 +63,7 @@ class MoodViewModel(
                 val mood = MoodModel(
                     id = UUID.randomUUID().toString(),
                     userId = userId,
-                    moodType = moodType,
+                    moodType = moodType, // Keep Title Case format like "Senang", "Sedih"
                     date = today,
                     timestamp = System.currentTimeMillis()
                 )

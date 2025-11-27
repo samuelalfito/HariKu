@@ -42,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
+import com.hariku.feature_statistic.domain.model.MoodStatItem
 
 val StatOrangeBg = Color(0xFFFFE0B2)
 val StatGreenBg = Color(0xFFC8E6C9)
@@ -49,12 +50,40 @@ val StatYellowBg = Color(0xFFFFF9C4)
 val StatBlueBg = Color(0xFFBBDEFB)
 
 @Composable
-fun StatisticsMood() {
+fun StatisticsMood(
+    moodStatistics: List<MoodStatItem> = emptyList()
+) {
     var expanded by remember { mutableStateOf(true) }
     val rotationState by animateFloatAsState(
         targetValue = if (expanded) 180f else 0f, label = "arrow_rotation"
     )
     
+    // Helper function to get mood icon
+    fun getMoodIcon(moodType: String): Int {
+        return when (moodType) {
+            "Senang" -> R.drawable.ic_emote_senang
+            "Semangat" -> R.drawable.ic_emote_semangat
+            "Biasa" -> R.drawable.ic_emote_biasa
+            "Sedih" -> R.drawable.ic_emote_sedih
+            "Marah" -> R.drawable.ic_emote_marah
+            "Takut" -> R.drawable.ic_emote_takut
+            "Cemas" -> R.drawable.ic_emote_cemas
+            "Kecewa" -> R.drawable.ic_emote_kecewa
+            "Lelah" -> R.drawable.ic_emote_lelah
+            "Hampa" -> R.drawable.ic_emote_hampa
+            else -> R.drawable.ic_emote_biasa
+        }
+    }
+
+    // Helper function to get mood background color
+    fun getMoodBgColor(index: Int): Color {
+        val colors = listOf(StatOrangeBg, StatGreenBg, StatYellowBg, StatBlueBg)
+        return colors[index % colors.size]
+    }
+
+    // Take top 4 moods
+    val topMoods = moodStatistics.take(4)
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -102,30 +131,24 @@ fun StatisticsMood() {
                         .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    StatisticRowItem(
-                        image = R.drawable.ic_emote_senang,
-                        iconBg = StatOrangeBg,
-                        label = "Semangat",
-                        percentage = "25%"
-                    )
-                    StatisticRowItem(
-                        image = R.drawable.ic_emote_senang,
-                        iconBg = StatGreenBg,
-                        label = "Lemas",
-                        percentage = "38%"
-                    )
-                    StatisticRowItem(
-                        image = R.drawable.ic_emote_senang,
-                        iconBg = StatYellowBg,
-                        label = "Senang",
-                        percentage = "12%"
-                    )
-                    StatisticRowItem(
-                        image = R.drawable.ic_emote_senang,
-                        iconBg = StatBlueBg,
-                        label = "Sedih",
-                        percentage = "8%"
-                    )
+                    if (topMoods.isEmpty()) {
+                        Text(
+                            text = "Belum ada data mood",
+                            fontSize = 14.sp,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    } else {
+                        topMoods.forEachIndexed { index, moodStat ->
+                            StatisticRowItem(
+                                image = getMoodIcon(moodStat.moodType),
+                                iconBg = getMoodBgColor(index),
+                                label = moodStat.moodType,
+                                count = moodStat.count,
+                                percentage = "${moodStat.percentage.toInt()}%"
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -137,6 +160,7 @@ fun StatisticRowItem(
     image: Int,
     iconBg: Color,
     label: String,
+    count: Int = 0,
     percentage: String
 ) {
     Box(
@@ -168,7 +192,7 @@ fun StatisticRowItem(
                     fontWeight = FontWeight.Medium
                 )
                 Text(
-                    text = "6/28",
+                    text = "$count kali",
                     fontSize = 12.sp
                 )
             }

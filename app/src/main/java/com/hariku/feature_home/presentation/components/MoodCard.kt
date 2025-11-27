@@ -31,19 +31,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.FirebaseAuth
 import com.hariku.R
 import com.hariku.feature_home.presentation.MoodViewModel
 import kotlinx.coroutines.delay
 
 @Composable
 fun MoodCard(
-    viewModel: MoodViewModel,
-    userId: String = "userId" // TODO: Replace with actual userId from Firebase Auth
+    viewModel: MoodViewModel
 ) {
     val uiState = viewModel.uiState
 
+    // Get actual userId from Firebase Auth
+    val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
     LaunchedEffect(userId) {
-        viewModel.loadTodayMood(userId)
+        if (userId.isNotEmpty()) {
+            viewModel.loadTodayMood(userId)
+        }
     }
 
     // Auto-dismiss messages after 3 seconds
