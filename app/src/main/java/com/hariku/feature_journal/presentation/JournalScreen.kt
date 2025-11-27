@@ -119,7 +119,7 @@ fun JournalScreen(
                                 .padding(0.dp)
                                 .clickable {
                                     addState.value = false
-                                    navController.navigate(Routes.CreateNote.route)
+                                    navController.navigate(Routes.CreateNotePrompt.route)
                                 }
                                 .padding(8.dp),
                             contentAlignment = Alignment.Center
