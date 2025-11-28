@@ -2,8 +2,6 @@ package com.hariku.feature_journal.presentation.create.prompt
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,8 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,12 +20,11 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,7 +49,12 @@ fun CreateNotePromptCompletedScreen(
     viewModel: CreateNotePromptCompletedViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState
-    
+
+    LaunchedEffect(Unit) {
+        // Clear if user revisits screen so stale data isn’t reused
+        viewModel.clearSelection()
+    }
+
     Scaffold(
         containerColor = Color(0xFFF6F6F6),
         topBar = {
@@ -69,7 +69,10 @@ fun CreateNotePromptCompletedScreen(
                     .padding(top = 8.dp, bottom = 24.dp, start = 16.dp, end = 16.dp)
             ) {
                 OutlinedButton(
-                    onClick = { navController.navigate(Routes.CreateNote.route) },
+                    onClick = {
+                        viewModel.clearSelection()
+                        navController.navigate(Routes.CreateNote.route)
+                    },
                     colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Transparent),
                     enabled = !uiState.isLoading,
                     shape = RoundedCornerShape(12.dp),
@@ -186,7 +189,13 @@ fun CreateNotePromptCompletedScreen(
                                     isSelected = suggestion.isSelected,
                                     onClick = {
                                         viewModel.selectPrompt(suggestion.id)
-                                        navController.navigate(Routes.CreateNote.route)
+                                        val selectedTitle = viewModel.selectedPromptTitle()
+                                        val route = if (!selectedTitle.isNullOrBlank()) {
+                                            Routes.CreateNote.withPrefillTitle(selectedTitle)
+                                        } else {
+                                            Routes.CreateNote.route
+                                        }
+                                        navController.navigate(route)
                                     }
                                 )
                             }

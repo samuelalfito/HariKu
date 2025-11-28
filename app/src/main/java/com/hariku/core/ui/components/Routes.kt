@@ -1,5 +1,6 @@
 package com.hariku.core.ui.components
 
+import android.net.Uri
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -64,7 +65,12 @@ sealed class Routes(val route: String) {
     @Serializable
     object CreateNotePromptCompleted : Routes("create_prompt_note_completed")
     @Serializable
-    object CreateNote : Routes("create_note")
+    object CreateNote : Routes("create_note") {
+        fun withPrefillTitle(title: String): String {
+            val encoded = Uri.encode(title)
+            return "$route?prefillTitle=$encoded"
+        }
+    }
 
     @Serializable
     object Statistic : Routes("statistic")

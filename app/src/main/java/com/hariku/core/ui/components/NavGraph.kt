@@ -3,9 +3,11 @@ package com.hariku.core.ui.components
 import PinScreenFull
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
+import androidx.navigation.compose.navigation
+import androidx.navigation.navArgument
 import com.hariku.feature_article.presentation.ArticleDetailScreen
 import com.hariku.feature_article.presentation.ArticleListScreen
 import com.hariku.feature_article.presentation.ArticleScreen
@@ -47,7 +49,18 @@ fun NavGraph(navController: NavHostController) {
             composable(Routes.TetapkanPin.route) { PinScreenFull(navController) }
             composable(Routes.MasukkanPin.route) { FillPinScreen(navController) }
         }
-        composable(Routes.Home.route) { MainScaffold(parentNavController = navController) }
+        composable(
+            route = "home?tabIndex={tabIndex}",
+            arguments = listOf(
+                navArgument("tabIndex") {
+                    type = NavType.IntType
+                    defaultValue = 0
+                }
+            )
+        ) { backStackEntry ->
+            val tabIndex = backStackEntry.arguments?.getInt("tabIndex") ?: 0
+            MainScaffold(parentNavController = navController, initialTabIndex = tabIndex)
+        }
         composable(Routes.Chatbot.route) { ChatbotScreen(navController) }
         composable("detail_chatbot/{chatbotId}") { backStackEntry ->
             val chatbotId = backStackEntry.arguments?.getString("chatbotId") ?: ""
@@ -68,7 +81,19 @@ fun NavGraph(navController: NavHostController) {
         composable(Routes.CreateJournal.route) { CreateJournalScreen(navController) }
         composable(Routes.CreateNotePrompt.route) { CreateNotePromptScreen(navController) }
         composable(Routes.CreateNotePromptCompleted.route) { CreateNotePromptCompletedScreen(navController) }
-        composable(Routes.CreateNote.route) { CreateNoteScreen(navController) }
+        composable(
+            route = "${Routes.CreateNote.route}?prefillTitle={prefillTitle}",
+            arguments = listOf(
+                navArgument("prefillTitle") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                    nullable = true
+                }
+            )
+        ) { backStackEntry ->
+            val prefillTitle = backStackEntry.arguments?.getString("prefillTitle")
+            CreateNoteScreen(navController, prefillTitle)
+        }
         composable(Routes.Statistic.route) { StatisticScreen(navController) }
         composable(Routes.Profile.route) { ProfileScreen(navController) }
         composable(Routes.SosGraph.route) { SosScreen(navController) }
