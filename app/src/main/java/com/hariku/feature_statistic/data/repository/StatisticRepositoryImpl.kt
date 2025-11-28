@@ -15,10 +15,8 @@ class StatisticRepositoryImpl(
 ) : StatisticRepository {
 
     override suspend fun getStatisticData(userId: String, year: Int, month: Int): StatisticData {
-        // Get all moods for the user
         val allMoods = moodDao.getAllMoods(userId)
 
-        // Filter moods for the specific month
         val monthMoods = allMoods.filter { mood ->
             val calendar = Calendar.getInstance().apply {
                 timeInMillis = mood.timestamp
@@ -26,21 +24,25 @@ class StatisticRepositoryImpl(
             calendar.get(Calendar.YEAR) == year && calendar.get(Calendar.MONTH) == month
         }
 
-        // Create calendar mood data (day -> moodType)
-        val calendarMoodData = monthMoods.associate { mood ->
-            val calendar = Calendar.getInstance().apply {
-                timeInMillis = mood.timestamp
+        val calendarMoodData = monthMoods
+            .groupBy { mood ->
+                val calendar = Calendar.getInstance().apply {
+                    timeInMillis = mood.timestamp
+                }
+                calendar.get(Calendar.DAY_OF_MONTH)
             }
-            calendar.get(Calendar.DAY_OF_MONTH) to mood.moodType
-        }
+            .mapValues { (_, moodsForDay) ->
+                moodsForDay
+                    .groupingBy { it.moodType }
+                    .eachCount()
+                    .maxByOrNull { it.value }?.key ?: ""
+            }
+            .filterValues { it.isNotEmpty() }
 
-        // Calculate sentiment data based on mood types
         val sentimentData = calculateSentimentData(monthMoods.map { it.moodType })
 
-        // Calculate mood statistics
         val moodStatistics = calculateMoodStatistics(monthMoods.map { it.moodType })
 
-        // Calculate weekly sentiments (normalized to uppercase)
         val weeklySentiments = calculateWeeklySentiments(monthMoods, year, month)
 
         return StatisticData(
@@ -108,7 +110,6 @@ class StatisticRepositoryImpl(
         val negativeMoods = listOf("Sedih", "Marah", "Takut", "Cemas", "Kecewa", "Lelah", "Hampa")
         val neutralMoods = listOf("Biasa")
 
-        // Group moods by weeks
         var weekStart = calendar.get(Calendar.DAY_OF_MONTH)
         while (weekStart <= calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) {
             val weekEnd = minOf(weekStart + 6, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
@@ -142,8 +143,6 @@ class StatisticRepositoryImpl(
 
             weekStart = weekEnd + 1
         }
-
         return weeklySentiments
     }
 }
-

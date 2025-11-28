@@ -45,7 +45,7 @@ fun CalendarDayCell(day: Int, mood: Mood) {
             Image(
                 painter = painterResource(mood.iconRes),
                 contentDescription = null,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(256.dp)
             )
         }
 
@@ -61,7 +61,8 @@ fun CalendarDayCell(day: Int, mood: Mood) {
             fontWeight = FontWeight.SemiBold,
             fontSize = 11.sp,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(vertical = 2.dp),
+            lineHeight = 11.sp,
+            modifier = Modifier.fillMaxWidth().background(Color.White),
             maxLines = 1
         )
     }

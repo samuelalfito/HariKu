@@ -14,9 +14,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -41,13 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hariku.R
 import com.hariku.feature_statistic.domain.model.MoodStatItem
-
-val StatOrangeBg = Color(0xFFFFE0B2)
-val StatGreenBg = Color(0xFFC8E6C9)
-val StatYellowBg = Color(0xFFFFF9C4)
-val StatBlueBg = Color(0xFFBBDEFB)
 
 @Composable
 fun StatisticsMood(
@@ -58,30 +52,22 @@ fun StatisticsMood(
         targetValue = if (expanded) 180f else 0f, label = "arrow_rotation"
     )
     
-    // Helper function to get mood icon
-    fun getMoodIcon(moodType: String): Int {
+    fun getMoodFromString(moodType: String): Mood {
         return when (moodType) {
-            "Senang" -> R.drawable.ic_emote_senang
-            "Semangat" -> R.drawable.ic_emote_semangat
-            "Biasa" -> R.drawable.ic_emote_biasa
-            "Sedih" -> R.drawable.ic_emote_sedih
-            "Marah" -> R.drawable.ic_emote_marah
-            "Takut" -> R.drawable.ic_emote_takut
-            "Cemas" -> R.drawable.ic_emote_cemas
-            "Kecewa" -> R.drawable.ic_emote_kecewa
-            "Lelah" -> R.drawable.ic_emote_lelah
-            "Hampa" -> R.drawable.ic_emote_hampa
-            else -> R.drawable.ic_emote_biasa
+            "Senang" -> Mood.SENANG
+            "Semangat" -> Mood.SEMANGAT
+            "Biasa" -> Mood.BIASA
+            "Sedih" -> Mood.SEDIH
+            "Marah" -> Mood.MARAH
+            "Takut" -> Mood.TAKUT
+            "Cemas" -> Mood.CEMAS
+            "Kecewa" -> Mood.KECEWA
+            "Lelah" -> Mood.LELAH
+            "Hampa" -> Mood.HAMPA
+            else -> Mood.NONE
         }
     }
 
-    // Helper function to get mood background color
-    fun getMoodBgColor(index: Int): Color {
-        val colors = listOf(StatOrangeBg, StatGreenBg, StatYellowBg, StatBlueBg)
-        return colors[index % colors.size]
-    }
-
-    // Take top 4 moods
     val topMoods = moodStatistics.take(4)
 
     Card(
@@ -139,10 +125,10 @@ fun StatisticsMood(
                             modifier = Modifier.padding(16.dp)
                         )
                     } else {
-                        topMoods.forEachIndexed { index, moodStat ->
+                        topMoods.forEach { moodStat ->
+                            val mood = getMoodFromString(moodStat.moodType)
                             StatisticRowItem(
-                                image = getMoodIcon(moodStat.moodType),
-                                iconBg = getMoodBgColor(index),
+                                mood = mood,
                                 label = moodStat.moodType,
                                 count = moodStat.count,
                                 percentage = "${moodStat.percentage.toInt()}%"
@@ -157,8 +143,7 @@ fun StatisticsMood(
 
 @Composable
 fun StatisticRowItem(
-    image: Int,
-    iconBg: Color,
+    mood: Mood,
     label: String,
     count: Int = 0,
     percentage: String
@@ -167,7 +152,7 @@ fun StatisticRowItem(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
-            .background(iconBg),
+            .background(mood.color),
         contentAlignment = Alignment.Center
     ) {
         Row(
@@ -177,9 +162,9 @@ fun StatisticRowItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(image),
+                painter = painterResource(mood.iconRes),
                 contentDescription = label,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.fillMaxHeight()
             )
             Spacer(modifier = Modifier.width(16.dp))
             

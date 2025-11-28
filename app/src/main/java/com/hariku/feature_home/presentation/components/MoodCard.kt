@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -22,6 +21,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -38,27 +41,36 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun MoodCard(
-    viewModel: MoodViewModel
+    viewModel: MoodViewModel,
 ) {
     val uiState = viewModel.uiState
-
+    
     // Get actual userId from Firebase Auth
     val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-
+    
     LaunchedEffect(userId) {
         if (userId.isNotEmpty()) {
             viewModel.loadTodayMood(userId)
         }
     }
-
-    // Auto-dismiss messages after 3 seconds
-    LaunchedEffect(uiState.error, uiState.successMessage) {
-        if (uiState.error != null || uiState.successMessage != null) {
+    
+    LaunchedEffect(uiState.successMessage) {
+        if (uiState.successMessage != null) {
             delay(3000)
             viewModel.clearMessages()
         }
     }
-
+    
+    var remainingSeconds by remember { mutableIntStateOf(0) }
+    
+    LaunchedEffect(uiState.lastMoodTimestamp) {
+        while (true) {
+            remainingSeconds = viewModel.getRemainingCooldownSeconds()
+            if (remainingSeconds <= 0) break
+            delay(1000)
+        }
+    }
+    
     Card(
         shape = RoundedCornerShape(24.dp),
         modifier = Modifier
@@ -70,16 +82,27 @@ fun MoodCard(
         Column(
             modifier = Modifier.padding(20.dp)
         ) {
+            val isInCooldown = remainingSeconds > 0
+            val minutes = remainingSeconds / 60
+            val seconds = remainingSeconds % 60
+            
             Text(
-                text = if (uiState.todayMood != null) "Mood Hari Ini: ${uiState.todayMood.moodType}" else "Bagaimana Suasana Hatimu Hari Ini?",
+                text = if (uiState.todayMood != null) {
+                    "Mood Terakhir: ${uiState.todayMood.moodType}"
+                } else {
+                    "Bagaimana Suasana Hatimu Hari Ini?"
+                },
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                color = if (uiState.todayMood != null) Color(0xFF71a77a) else Color.Black
+                color = when {
+                    uiState.todayMood != null -> Color(0xFF71a77a)
+                    else -> Color.Black
+                }
             )
             
-            if (uiState.error != null) {
+            if (uiState.error != null && !isInCooldown) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = uiState.error,
@@ -99,9 +122,9 @@ fun MoodCard(
                     textAlign = TextAlign.Center
                 )
             }
-
+            
             Spacer(modifier = Modifier.height(16.dp))
-
+            
             if (uiState.isLoading) {
                 Box(
                     modifier = Modifier.fillMaxWidth(),
@@ -122,9 +145,9 @@ fun MoodCard(
                     Mood("Hampa", R.drawable.ic_emote_hampa),
                     Mood("Semangat", R.drawable.ic_emote_semangat)
                 )
-
-                val isDisabled = uiState.todayMood != null
-
+                
+                val isDisabled = isInCooldown || uiState.isSaving
+                
                 Column {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -164,6 +187,15 @@ fun MoodCard(
                         }
                     }
                 }
+                if (isInCooldown) {
+                    Text(
+                        text = "Tunggu ${minutes}m ${seconds}s untuk submit lagi",
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        color = Color(0xFFFF8A7A)
+                    )
+                }
             }
         }
     }
@@ -175,12 +207,11 @@ private fun MoodItem(
     isSelected: Boolean,
     isDisabled: Boolean,
     isSaving: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .width(56.dp)
             .alpha(if (isDisabled && !isSelected) 0.4f else 1f)
             .clickable(enabled = !isDisabled && !isSaving, onClick = onClick)
     ) {
@@ -190,15 +221,15 @@ private fun MoodItem(
             if (isSelected) {
                 Box(
                     modifier = Modifier
-                        .size(32.dp)
+                        .size(44.dp)
                         .background(Color(0xFF71a77a).copy(alpha = 0.2f), CircleShape)
-                        .border(2.dp, Color(0xFF71a77a), CircleShape)
+                        .border(3.dp, Color(0xFF71a77a), CircleShape)
                 )
             }
             Image(
                 painter = painterResource(id = mood.iconRes),
                 contentDescription = mood.label,
-                modifier = Modifier.size(28.dp)
+                modifier = Modifier.size(38.dp)
             )
         }
         Spacer(modifier = Modifier.height(4.dp))

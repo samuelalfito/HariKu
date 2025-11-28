@@ -5,8 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hariku.feature_auth.domain.model.AuthUser
-import com.hariku.feature_auth.domain.usecase.GetCurrentUserUseCase
 import com.hariku.feature_home.domain.model.MoodModel
 import com.hariku.feature_home.domain.usecase.GetTodayMoodUseCase
 import com.hariku.feature_home.domain.usecase.SaveMoodUseCase
@@ -18,16 +16,11 @@ import java.util.UUID
 
 class MoodViewModel(
     private val saveMoodUseCase: SaveMoodUseCase,
-    private val getTodayMoodUseCase: GetTodayMoodUseCase,
-    private val getCurrentUserUseCase: GetCurrentUserUseCase // USE CASE BARU untuk ngambil user
+    private val getTodayMoodUseCase: GetTodayMoodUseCase
 ) : ViewModel() {
 
     var uiState by mutableStateOf(MoodUiState())
         private set
-
-    fun getCurrentUser(): AuthUser? { // CONTOH: getCurrentUser().uid
-        return getCurrentUserUseCase()
-    }
 
     fun loadTodayMood(userId: String) {
         viewModelScope.launch {
@@ -37,7 +30,8 @@ class MoodViewModel(
                 uiState = uiState.copy(
                     todayMood = todayMood,
                     isLoading = false,
-                    selectedMoodType = todayMood?.moodType
+                    selectedMoodType = todayMood?.moodType,
+                    lastMoodTimestamp = todayMood?.timestamp
                 )
             } catch (e: Exception) {
                 uiState = uiState.copy(
@@ -51,9 +45,11 @@ class MoodViewModel(
     fun saveMood(userId: String, moodType: String) {
         viewModelScope.launch {
             try {
-                // Check if already submitted today
-                if (uiState.todayMood != null) {
-                    uiState = uiState.copy(error = "Kamu sudah submit mood hari ini!")
+                val currentTime = System.currentTimeMillis()
+                val lastMoodTime = uiState.lastMoodTimestamp
+                val fiveMinutesInMillis = 5 * 60 * 1000
+                
+                if (lastMoodTime != null && (currentTime - lastMoodTime) < fiveMinutesInMillis) {
                     return@launch
                 }
 
@@ -63,22 +59,23 @@ class MoodViewModel(
                 val mood = MoodModel(
                     id = UUID.randomUUID().toString(),
                     userId = userId,
-                    moodType = moodType, // Keep Title Case format like "Senang", "Sedih"
+                    moodType = moodType,
                     date = today,
-                    timestamp = System.currentTimeMillis()
+                    timestamp = currentTime
                 )
 
                 val result = saveMoodUseCase(mood)
                 
-                if (result.isSuccess) {
-                    uiState = uiState.copy(
+                uiState = if (result.isSuccess) {
+                    uiState.copy(
                         isSaving = false,
                         todayMood = mood,
                         selectedMoodType = moodType,
-                        successMessage = "Mood berhasil disimpan! 🎉"
+                        lastMoodTimestamp = currentTime,
+                        successMessage = "Mood berhasil disimpan!"
                     )
                 } else {
-                    uiState = uiState.copy(
+                    uiState.copy(
                         isSaving = false,
                         error = "Gagal menyimpan mood"
                     )
@@ -95,6 +92,14 @@ class MoodViewModel(
     fun clearMessages() {
         uiState = uiState.copy(error = null, successMessage = null)
     }
+
+    fun getRemainingCooldownSeconds(): Int {
+        val lastMoodTime = uiState.lastMoodTimestamp ?: return 0
+        val currentTime = System.currentTimeMillis()
+        val fiveMinutesInMillis = 5 * 60 * 1000
+        val remaining = fiveMinutesInMillis - (currentTime - lastMoodTime)
+        return if (remaining > 0) (remaining / 1000).toInt() else 0
+    }
 }
 
 data class MoodUiState(
@@ -102,6 +107,7 @@ data class MoodUiState(
     val isSaving: Boolean = false,
     val todayMood: MoodModel? = null,
     val selectedMoodType: String? = null,
+    val lastMoodTimestamp: Long? = null,
     val error: String? = null,
     val successMessage: String? = null
 )

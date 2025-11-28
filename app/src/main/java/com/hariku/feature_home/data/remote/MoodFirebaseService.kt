@@ -39,6 +39,7 @@ class MoodFirebaseService(
                 .document(userId)
                 .collection("userMoods")
                 .whereEqualTo("date", date)
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .limit(1)
                 .get()
                 .await()
@@ -83,4 +84,3 @@ class MoodFirebaseService(
         }
     }
 }
-
