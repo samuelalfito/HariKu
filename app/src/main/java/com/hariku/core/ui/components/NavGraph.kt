@@ -7,8 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.hariku.feature_article.presentation.ArticleDetailScreen
+import com.hariku.feature_article.presentation.ArticleListScreen
 import com.hariku.feature_article.presentation.ArticleScreen
-import com.hariku.feature_article.presentation.KecemaasanScreen
 import com.hariku.feature_auth.presentation.login.LoginScreen
 import com.hariku.feature_auth.presentation.register.RegisterScreen
 import com.hariku.feature_chatbot.presentation.ChatbotScreen
@@ -19,7 +19,7 @@ import com.hariku.feature_chatbot.presentation.detail.ChatbotDetailScreen
 import com.hariku.feature_journal.presentation.JournalScreen
 import com.hariku.feature_journal.presentation.create.journal.CreateJournalScreen
 import com.hariku.feature_journal.presentation.create.note.CreateNoteScreen
-import com.hariku.feature_journal.presentation.create.prompt.CreateNotePromptDoneScreen
+import com.hariku.feature_journal.presentation.create.prompt.CreateNotePromptCompletedScreen
 import com.hariku.feature_journal.presentation.create.prompt.CreateNotePromptScreen
 import com.hariku.feature_journal.presentation.detail.JournalDetailScreen
 import com.hariku.feature_meditation.presentation.MeditationScreen
@@ -33,7 +33,6 @@ import com.hariku.feature_sense.presentation.SensesScreen
 import com.hariku.feature_sos.presentation.SosProfessionalScreen
 import com.hariku.feature_sos.presentation.SosScreen
 import com.hariku.feature_statistic.presentation.StatisticScreen
-import com.hariku.feature_statistic.presentation.components.CalendarView
 
 @Composable
 fun NavGraph(navController: NavHostController) {
@@ -66,9 +65,9 @@ fun NavGraph(navController: NavHostController) {
             val journalId = backStackEntry.arguments?.getString("journalId") ?: ""
             JournalDetailScreen(navController, journalId)
         }
-        composable(Routes.CreateJournal.route) { CreateJournalScreen() }
+        composable(Routes.CreateJournal.route) { CreateJournalScreen(navController) }
         composable(Routes.CreateNotePrompt.route) { CreateNotePromptScreen(navController) }
-        composable(Routes.CreateNotePromptCompleted.route) { CreateNotePromptDoneScreen(navController) }
+        composable(Routes.CreateNotePromptCompleted.route) { CreateNotePromptCompletedScreen(navController) }
         composable(Routes.CreateNote.route) { CreateNoteScreen(navController) }
         composable(Routes.Statistic.route) { StatisticScreen() }
         composable(Routes.Profile.route) { ProfileScreen(navController) }
@@ -111,11 +110,32 @@ fun NavGraph(navController: NavHostController) {
             )
         }
         composable(Routes.Senses.route) { SensesScreen(navController) }
-        composable(Routes.Article.route) { ArticleScreen() }
-        composable(Routes.ArticleList.route) { KecemaasanScreen() }
+        composable(Routes.Article.route) {
+            ArticleScreen(
+                onArticleClick = { articleId ->
+                    navController.navigate("article_detail/$articleId")
+                },
+                onCategoryClick = { category ->
+                    navController.navigate("article_list/$category")
+                }
+            )
+        }
+        composable("article_list/{category}") { backStackEntry ->
+            val category = backStackEntry.arguments?.getString("category") ?: ""
+            ArticleListScreen(
+                category = category,
+                onBackClick = { navController.navigateUp() },
+                onArticleClick = { articleId ->
+                    navController.navigate("article_detail/$articleId")
+                }
+            )
+        }
         composable("article_detail/{articleId}") { backStackEntry ->
             val articleId = backStackEntry.arguments?.getString("articleId") ?: ""
-            ArticleDetailScreen(articleIndex = articleId.toInt())
+            ArticleDetailScreen(
+                articleId = articleId,
+                onBackClick = { navController.navigateUp() }
+            )
         }
     }
 }

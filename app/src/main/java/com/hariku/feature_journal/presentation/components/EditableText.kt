@@ -46,35 +46,49 @@ import kotlin.math.roundToInt
 fun EditableText(
     textElement: TextElement,
     isSelected: Boolean,
-    onDrag: (Offset) -> Unit,
-    onClick: () -> Unit,
-    onTextChange: (String) -> Unit,
-    onDelete: () -> Unit,
-    onScaleChange: (Float) -> Unit,
+    onDrag: (Offset) -> Unit = {},
+    onClick: () -> Unit = {},
+    onTextChange: (String) -> Unit = {},
+    onDelete: () -> Unit = {},
+    onScaleChange: (Float) -> Unit = {},
 ) {
-    var offsetX by remember { mutableFloatStateOf(textElement.offsetX) }
-    var offsetY by remember { mutableFloatStateOf(textElement.offsetY) }
-    var scale by remember { mutableFloatStateOf(textElement.scale) }
+//    var offsetX by remember { mutableFloatStateOf(textElement.offsetX) }
+//    var offsetY by remember { mutableFloatStateOf(textElement.offsetY) }
+//    var scale by remember { mutableFloatStateOf(textElement.scale) }
     
-    LaunchedEffect(textElement.offsetX, textElement.offsetY, textElement.scale) {
-        offsetX = textElement.offsetX
-        offsetY = textElement.offsetY
-        scale = textElement.scale
-    }
+//    LaunchedEffect(textElement.offsetX, textElement.offsetY, textElement.scale) {
+//        offsetX = textElement.offsetX
+//        offsetY = textElement.offsetY
+//        scale = textElement.scale
+//    }
     
+//    val transformState = rememberTransformableState { zoomChange, offsetChange, _ ->
+//        if (isSelected) {
+//            scale = (scale * zoomChange).coerceIn(0.5f, 3f)
+//            offsetX += offsetChange.x
+//            offsetY += offsetChange.y
+//            onDrag(Offset(offsetX, offsetY))
+//            onScaleChange(scale)
+//        }
+//    }
+
     val transformState = rememberTransformableState { zoomChange, offsetChange, _ ->
         if (isSelected) {
-            scale = (scale * zoomChange).coerceIn(0.5f, 3f)
-            offsetX += offsetChange.x
-            offsetY += offsetChange.y
-            onDrag(Offset(offsetX, offsetY))
-            onScaleChange(scale)
+            // Hitung skala baru dan kirim ke ViewModel
+            val newScale = (textElement.scale * zoomChange).coerceIn(0.5f, 3f)
+            onScaleChange(newScale)
+
+            // Hitung posisi baru dan kirim ke ViewModel
+            val newOffsetX = textElement.offsetX + offsetChange.x
+            val newOffsetY = textElement.offsetY + offsetChange.y
+            onDrag(Offset(newOffsetX, newOffsetY))
         }
     }
     
     Box(
         modifier = Modifier
-            .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
+//            .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
+            .offset { IntOffset(textElement.offsetX.roundToInt(), textElement.offsetY.roundToInt()) }
             .zIndex(if (isSelected) 10f else 1f)) {
         // Delete button when selected
         if (isSelected) {
@@ -83,8 +97,12 @@ fun EditableText(
                 value = textElement.text,
                 onValueChange = onTextChange,
                 modifier = Modifier
+//                    .graphicsLayer(
+//                        scaleX = scale, scaleY = scale
+//                    )
                     .graphicsLayer(
-                        scaleX = scale, scaleY = scale
+                        scaleX = textElement.scale,
+                        scaleY = textElement.scale
                     )
                     .then(
                         Modifier.transformable(state = transformState)
@@ -149,8 +167,12 @@ fun EditableText(
                 textDecoration = if (textElement.isUnderlined) TextDecoration.Underline
                 else TextDecoration.None,
                 modifier = Modifier
+//                    .graphicsLayer(
+//                        scaleX = scale, scaleY = scale
+//                    )
                     .graphicsLayer(
-                        scaleX = scale, scaleY = scale
+                        scaleX = textElement.scale,
+                        scaleY = textElement.scale
                     )
                     .pointerInput(Unit) {
                         detectTapGestures(

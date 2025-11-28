@@ -18,6 +18,7 @@ import com.hariku.R
 fun SearchBar(value: String, onValueChange: (String) -> Unit, placeholder: String) {
     OutlinedTextField(
         value = value,
+        singleLine = true,
         onValueChange = { onValueChange(it) },
         placeholder = { Text(placeholder, color = Color(0xFFBDBDBD)) },
         leadingIcon = {
@@ -30,7 +31,7 @@ fun SearchBar(value: String, onValueChange: (String) -> Unit, placeholder: Strin
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(8.dp),
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedContainerColor = Color(0xFFf2f2f2),
             focusedContainerColor = Color(0xFFfaf3ee),

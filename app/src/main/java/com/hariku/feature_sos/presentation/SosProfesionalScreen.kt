@@ -1,9 +1,11 @@
 package com.hariku.feature_sos.presentation
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,26 +32,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.hariku.R
-
+import com.hariku.feature_sos.presentation.components.HotlineButton
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.net.toUri
 
 @Composable
 fun SosProfessionalScreen(navController: NavController) {
     Scaffold(
         containerColor = Color(0xFFFFFFFF),
-        topBar = { SosProTopBar(navController) },
-        bottomBar = { SosProHomeIndicator() }
+        topBar = { SosProTopBar(navController) }
     ) { paddingValues ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            contentAlignment = Alignment.Center,
         ) {
             Spacer(modifier = Modifier.height(130.dp))
 
@@ -102,7 +103,7 @@ fun SosProfessionalScreen(navController: NavController) {
 fun HotlineButton(
     title: String,
     prefix: String,
-    hotline: String
+    hotline: String,
 ) {
     val hotlineColor = Color(0xFFB55D6C)
     val textHotlineColor = Color.Black
@@ -131,7 +132,12 @@ fun HotlineButton(
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 buildAnnotatedString {
-                    withStyle(style = SpanStyle(color = Color.Black, fontSize = 16.sp, fontWeight = FontWeight.Bold)) {
+                    withStyle(style = SpanStyle(
+                        color = Color.Black,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    ) {
                         append(prefix)
                     }
                     withStyle(style = SpanStyle(
@@ -155,6 +161,8 @@ fun SosProTopBar(navController: NavController) {
             .fillMaxWidth()
             .background(Color.Transparent)
     ) {
+        val context = LocalContext.current
+        
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -166,26 +174,68 @@ fun SosProTopBar(navController: NavController) {
             }) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_back_arrow),
-                    contentDescription = "Kembali",
-                    modifier = Modifier.size(70.dp)
+                    contentDescription = "Back"
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 45.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically)
+            ) {
+                Text(
+                    text = "Memiliki bantuan yang tepat pada waktu yang tepat dapat membantumu kembali lebih kuat.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.Black,
+                    textAlign = TextAlign.Center
+                )
+                
+                Text(
+                    text = "Jika kamu memerlukan bantuan atau seseorang untuk diajak bicara, berikut adalah daftar hotline",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.Black,
+                    textAlign = TextAlign.Center
+                )
+                
+                HotlineButton(
+                    title = "Hotline Pemerintah",
+                    prefix = "Hotline 24 jam: ",
+                    hotline = "119",
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_DIAL)
+                        intent.data = "tel:119".toUri()
+                        context.startActivity(intent)
+                    }
+                )
+                
+                HotlineButton(
+                    title = "Kementrian Kesehatan",
+                    prefix = "Hotline: ",
+                    hotline = "500-454",
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_DIAL)
+                        intent.data = "tel:500454".toUri()
+                        context.startActivity(intent)
+                    }
+                )
+                
+                HotlineButton(
+                    title = "Save Yourselves Indonesia (Jakarta)",
+                    prefix = "Hotline: ",
+                    hotline = "082124326459",
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_DIAL)
+                        intent.data = "tel:082124326459".toUri()
+                        context.startActivity(intent)
+                    }
                 )
             }
         }
     }
 }
 
-@Composable
-fun SosProHomeIndicator() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 16.dp, top = 8.dp),
-        contentAlignment = Alignment.Center
-    ) {
-    }
-}
-
-@Preview(showBackground = true, widthDp = 430, heightDp = 932)
+@Preview
 @Composable
 fun SosProfessionalScreenPreview() {
     MaterialTheme {

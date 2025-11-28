@@ -1,25 +1,30 @@
 package com.hariku.feature_article.presentation
 
-import android.annotation.SuppressLint
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.hariku.R
-import com.hariku.core.ui.theme.HariKuTheme
-import com.hariku.feature_article.domain.model.Article
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.hariku.feature_article.presentation.components.ArticleTopBar
 import com.hariku.feature_article.presentation.search.SearchEmpty
 import com.hariku.feature_article.presentation.search.SearchResult
+import org.koin.androidx.compose.koinViewModel
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ArticleScreen(viewModel: ArticleViewModel = viewModel()) {
+fun ArticleScreen(
+    viewModel: ArticleViewModel = koinViewModel(),
+    onArticleClick: (String) -> Unit = {},
+    onCategoryClick: (String) -> Unit = {}
+) {
     val searchQuery by viewModel.searchQuery
+    val uiState by viewModel.uiState.collectAsState()
     val filteredArticles = viewModel.filteredArticles
 
     Scaffold(
@@ -31,54 +36,45 @@ fun ArticleScreen(viewModel: ArticleViewModel = viewModel()) {
         },
         containerColor = MaterialTheme.colorScheme.background,
     ) { padding ->
-        if (searchQuery.isBlank()) {
-            SearchEmpty(contentPadding = padding)
-        } else {
-            SearchResult(filteredArticles, viewModel, contentPadding = padding)
+        when (uiState) {
+            is ArticleUiState.Loading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = Color(0xFFC97D50))
+                }
+            }
+            is ArticleUiState.Error -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = (uiState as ArticleUiState.Error).message,
+                        color = Color.Red
+                    )
+                }
+            }
+            is ArticleUiState.Success -> {
+                if (searchQuery.isBlank()) {
+                    SearchEmpty(
+                        contentPadding = padding,
+                        onArticleClick = onArticleClick,
+                        onCategoryClick = onCategoryClick,
+                        viewModel = viewModel
+                    )
+                } else {
+                    SearchResult(
+                        filteredArticles = filteredArticles,
+                        filteredCategories = viewModel.filteredCategories,
+                        viewModel = viewModel,
+                        contentPadding = padding,
+                        onArticleClick = onArticleClick,
+                        onCategoryClick = onCategoryClick
+                    )
+                }
+            }
         }
-    }
-}
-
-val sampleArticles = listOf(
-    Article(
-        id = 1,
-        title = "Kendalikan Kekhawatiranmu!",
-        category = "Kecemasan",
-        readTime = "5 Menit",
-        imageRes = R.drawable.cat
-    ),
-    Article(
-        id = 2,
-        title = "5 Hal yang Dapat Membantu Kecemasanmu!",
-        category = "Depresi",
-        readTime = "5 Menit",
-        imageRes = R.drawable.cat
-    ),
-    Article(
-        id = 3,
-        title = "Cara Mengatasi Stres di Tempat Kerja",
-        category = "Stres",
-        readTime = "7 Menit",
-        imageRes = R.drawable.cat
-    )
-)
-
-val categories = listOf(
-    R.drawable.ic_kategori_stres,
-    R.drawable.ic_kategori_kecemasan,
-    R.drawable.ic_kategori_motivasi_diri,
-    R.drawable.ic_kategori_tidur,
-    R.drawable.ic_kategori_depresi,
-    R.drawable.ic_kategori_kesadaran_penuh,
-    R.drawable.ic_kategori_strategi_coping,
-    R.drawable.ic_kategori_hubungan
-)
-
-@Preview
-@Composable
-private fun ArticleScreenPreview() {
-    HariKuTheme {
-        val previewViewModel = ArticleViewModel().apply { setArticles(sampleArticles) }
-        ArticleScreen(viewModel = previewViewModel)
     }
 }
