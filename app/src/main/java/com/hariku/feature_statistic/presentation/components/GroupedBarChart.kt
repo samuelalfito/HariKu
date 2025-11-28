@@ -105,7 +105,8 @@ fun GroupedBarChart(data: List<WeeklyData>) {
             val startX = paddingLeft + (index * groupWidth) + spacing
             
             fun drawBar(value: Float, order: Int, color: Color) {
-                val barHeight = (value / yAxisMax) * chartHeight
+                val calculatedHeight = (value / yAxisMax) * chartHeight
+                val barHeight = calculatedHeight.coerceIn(0f, chartHeight)
                 val barLeft = startX + (order * barWidth)
                 
                 drawRect(

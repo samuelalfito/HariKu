@@ -19,13 +19,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun CalendarDayCell(day: Int, mood: Mood) {
     val bgColor = if (mood != Mood.NONE) mood.color else Color.Transparent
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -44,24 +45,34 @@ fun CalendarDayCell(day: Int, mood: Mood) {
             Image(
                 painter = painterResource(mood.iconRes),
                 contentDescription = null,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(256.dp)
             )
         }
-        
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .size(height = 1.dp, width = 0.dp)
                 .background(mood.color)
         )
-        
+
         Text(
             text = day.toString(),
             fontWeight = FontWeight.SemiBold,
             fontSize = 11.sp,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(vertical = 2.dp),
+            lineHeight = 11.sp,
+            modifier = Modifier.fillMaxWidth().background(Color.White),
             maxLines = 1
         )
     }
+}
+
+@Preview
+@Composable
+private fun CalendarDayCellPreview() {
+    CalendarDayCell(
+        day = 1,
+        mood = Mood.SENANG
+    )
 }

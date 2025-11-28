@@ -24,7 +24,7 @@ fun LegendItem(color: Color, label: String) {
                 .size(24.dp)
                 .background(color = color, shape = RoundedCornerShape(6.dp))
         )
-        Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(6.dp))
         Text(
             text = label,
             fontSize = 18.sp,

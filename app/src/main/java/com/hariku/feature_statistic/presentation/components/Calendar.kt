@@ -47,20 +47,6 @@ import com.hariku.feature_statistic.domain.model.CalendarDay
 import java.util.Calendar
 import java.util.Locale
 
-enum class Mood(val iconRes: Int, val color: Color) {
-    SENANG(R.drawable.ic_emote_senang, Color(0xFFFFD481)),
-    SEMANGAT(R.drawable.ic_emote_semangat, Color(0xFFFFCEA2)),
-    BIASA(R.drawable.ic_emote_biasa, Color(0xFFE9C9AC)),
-    SEDIH(R.drawable.ic_emote_sedih, Color(0xFFB0E6ED)),
-    MARAH(R.drawable.ic_emote_marah, Color(0xFFF1A69A)),
-    TAKUT(R.drawable.ic_emote_takut, Color(0xFFADDBB5)),
-    CEMAS(R.drawable.ic_emote_cemas, Color(0xFFD5C5F5)),
-    KECEWA(R.drawable.ic_emote_kecewa, Color(0xFFD1EDAE)),
-    LELAH(R.drawable.ic_emote_lelah, Color(0xFFE9CAEC)),
-    HAMPA(R.drawable.ic_emote_hampa, Color(0xFFDBE0DF)),
-    NONE(R.drawable.ic_cross, Color(0xFF9F9F9F))
-}
-
 private val dayNames = listOf("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")
 
 private val dividerColor = Color.LightGray.copy(alpha = 0.5f)
@@ -69,16 +55,37 @@ private val headerBgColor = Color(0xFFF5F5F5)
 private val dayNameColor = Color(0xFF9E9E9E)
 
 @Composable
-fun CalendarView() {
-    var currentYear by remember { mutableIntStateOf(Calendar.getInstance().get(Calendar.YEAR)) }
-    var currentMonth by remember { mutableIntStateOf(Calendar.getInstance().get(Calendar.MONTH)) }
+fun CalendarView(
+    moodData: Map<Int, String> = emptyMap(),
+    currentYear: Int = Calendar.getInstance().get(Calendar.YEAR),
+    currentMonth: Int = Calendar.getInstance().get(Calendar.MONTH),
+    onMonthChange: (year: Int, month: Int) -> Unit = { _, _ -> }
+) {
+    var year by remember(currentYear) { mutableIntStateOf(currentYear) }
+    var month by remember(currentMonth) { mutableIntStateOf(currentMonth) }
     var expanded by remember { mutableStateOf(true) }
 
-    val calendarData by remember(currentYear, currentMonth) {
+    fun getMoodFromString(moodType: String): Mood {
+        return when (moodType) {
+            "Senang" -> Mood.SENANG
+            "Semangat" -> Mood.SEMANGAT
+            "Biasa" -> Mood.BIASA
+            "Sedih" -> Mood.SEDIH
+            "Marah" -> Mood.MARAH
+            "Takut" -> Mood.TAKUT
+            "Cemas" -> Mood.CEMAS
+            "Kecewa" -> Mood.KECEWA
+            "Lelah" -> Mood.LELAH
+            "Hampa" -> Mood.HAMPA
+            else -> Mood.NONE
+        }
+    }
+
+    val calendarData by remember(year, month) {
         derivedStateOf {
             val calendar = Calendar.getInstance().apply {
-                set(Calendar.YEAR, currentYear)
-                set(Calendar.MONTH, currentMonth)
+                set(Calendar.YEAR, year)
+                set(Calendar.MONTH, month)
                 set(Calendar.DAY_OF_MONTH, 1)
             }
             val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
@@ -89,24 +96,12 @@ fun CalendarView() {
     }
     val (daysInMonth, firstDayOfWeek, monthName) = calendarData
 
-    val moodMap = remember {
-        mapOf(
-            1 to Mood.SENANG, 2 to Mood.BIASA, 3 to Mood.MARAH, 4 to Mood.SENANG,
-            5 to Mood.KECEWA, 6 to Mood.SEDIH, 7 to Mood.SEDIH, 8 to Mood.SENANG,
-            9 to Mood.SENANG, 10 to Mood.CEMAS, 11 to Mood.SEDIH, 12 to Mood.BIASA,
-            13 to Mood.KECEWA, 14 to Mood.CEMAS, 15 to Mood.SEDIH, 16 to Mood.KECEWA,
-            17 to Mood.NONE, 18 to Mood.MARAH, 19 to Mood.BIASA, 20 to Mood.MARAH,
-            21 to Mood.CEMAS, 22 to Mood.BIASA, 23 to Mood.SENANG, 24 to Mood.KECEWA,
-            25 to Mood.KECEWA, 26 to Mood.CEMAS, 27 to Mood.SENANG, 28 to Mood.BIASA,
-            29 to Mood.SENANG, 30 to Mood.BIASA
-        )
-    }
-
-    val calendarCells = remember(daysInMonth, firstDayOfWeek, moodMap) {
+    val calendarCells = remember(daysInMonth, firstDayOfWeek, moodData) {
         val cells = mutableListOf<CalendarDay>()
         repeat(firstDayOfWeek) { cells.add(CalendarDay(day = 0, mood = Mood.NONE, isEmpty = true)) }
         for (day in 1..daysInMonth) {
-            cells.add(CalendarDay(day = day, mood = moodMap[day] ?: Mood.NONE))
+            val mood = moodData[day]?.let { getMoodFromString(it) } ?: Mood.NONE
+            cells.add(CalendarDay(day = day, mood = mood))
         }
         val totalCells = cells.size
         val remainder = totalCells % 7
@@ -168,16 +163,17 @@ fun CalendarView() {
                             modifier = Modifier
                                 .size(24.dp)
                                 .clickable {
-                                    if (currentMonth == 0) {
-                                        currentMonth = 11
-                                        currentYear--
+                                    if (month == 0) {
+                                        month = 11
+                                        year--
                                     } else {
-                                        currentMonth--
+                                        month--
                                     }
+                                    onMonthChange(year, month)
                                 }
                         )
                         Text(
-                            text = "$monthName $currentYear",
+                            text = "$monthName $year",
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 18.sp,
                             color = Color.Black
@@ -189,12 +185,13 @@ fun CalendarView() {
                             modifier = Modifier
                                 .size(24.dp)
                                 .clickable {
-                                    if (currentMonth == 11) {
-                                        currentMonth = 0
-                                        currentYear++
+                                    if (month == 11) {
+                                        month = 0
+                                        year++
                                     } else {
-                                        currentMonth++
+                                        month++
                                     }
+                                    onMonthChange(year, month)
                                 }
                         )
                     }

@@ -1,6 +1,5 @@
 package com.hariku.core.ui.components
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -15,7 +14,6 @@ import com.hariku.feature_chatbot.presentation.ChatbotScreen
 import com.hariku.feature_home.presentation.HomeScreen
 import com.hariku.feature_journal.presentation.JournalScreen
 import com.hariku.feature_statistic.presentation.StatisticScreen
-import com.hariku.feature_statistic.presentation.components.CalendarView
 
 @Composable
 fun MainScaffold(parentNavController: NavHostController) {
@@ -67,7 +65,7 @@ fun MainScaffold(parentNavController: NavHostController) {
                 JournalScreen(navController = parentNavController)
             }
             composable(Routes.Statistic.route) {
-                StatisticScreen()
+                StatisticScreen(navController = parentNavController)
             }
         }
     }

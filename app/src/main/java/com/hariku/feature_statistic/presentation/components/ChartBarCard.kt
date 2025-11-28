@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hariku.feature_statistic.domain.model.WeeklySentiment
 
 val BarColorNegative = Color(0xFFF0A096)
 val BarColorPositive = Color(0xFFAEE3EB)
@@ -51,16 +52,20 @@ data class WeeklyData(
 )
 
 @Composable
-fun ChartBarCard() {
+fun ChartBarCard(
+    weeklySentiments: List<WeeklySentiment> = emptyList()
+) {
     var expanded by remember { mutableStateOf(true) }
     
-    val chartData = listOf(
-        WeeklyData("1 May", 15f, 36f, 45f),
-        WeeklyData("8 May", 36f, 20f, 24f),
-        WeeklyData("15 May", 5f, 40f, 45f),
-        WeeklyData("22 May", 40f, 20f, 20f)
-    )
-    
+    val chartData = weeklySentiments.map {
+        WeeklyData(
+            dateLabel = it.weekLabel,
+            negative = it.negative,
+            positive = it.positive,
+            neutral = it.neutral
+        )
+    }
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
@@ -102,23 +107,32 @@ fun ChartBarCard() {
             ) {
                 Column(modifier = Modifier.padding(24.dp)) {
                     
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp)
-                    ) {
-                        GroupedBarChart(data = chartData)
-                    }
-                    
-                    Spacer(modifier = Modifier.height(24.dp))
-                    
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        LegendItem(BarColorNegative, "Negatif")
-                        LegendItem(BarColorPositive, "Positif")
-                        LegendItem(BarColorNeutral, "Netral")
+                    if (chartData.isEmpty()) {
+                        Text(
+                            text = "Belum ada data sentimen mingguan",
+                            fontSize = 14.sp,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(300.dp)
+                        ) {
+                            GroupedBarChart(data = chartData)
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            LegendItem(BarColorNegative, "Negatif")
+                            LegendItem(BarColorPositive, "Positif")
+                            LegendItem(BarColorNeutral, "Netral")
+                        }
                     }
                 }
             }

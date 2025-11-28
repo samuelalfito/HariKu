@@ -69,7 +69,7 @@ fun NavGraph(navController: NavHostController) {
         composable(Routes.CreateNotePrompt.route) { CreateNotePromptScreen(navController) }
         composable(Routes.CreateNotePromptCompleted.route) { CreateNotePromptCompletedScreen(navController) }
         composable(Routes.CreateNote.route) { CreateNoteScreen(navController) }
-        composable(Routes.Statistic.route) { StatisticScreen() }
+        composable(Routes.Statistic.route) { StatisticScreen(navController) }
         composable(Routes.Profile.route) { ProfileScreen(navController) }
         composable(Routes.SosGraph.route) { SosScreen(navController) }
         composable(Routes.SosProfessional.route) { SosProfessionalScreen(navController) }

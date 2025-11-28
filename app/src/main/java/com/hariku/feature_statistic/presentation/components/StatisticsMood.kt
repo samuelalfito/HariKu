@@ -14,9 +14,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -41,20 +41,35 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hariku.R
-
-val StatOrangeBg = Color(0xFFFFE0B2)
-val StatGreenBg = Color(0xFFC8E6C9)
-val StatYellowBg = Color(0xFFFFF9C4)
-val StatBlueBg = Color(0xFFBBDEFB)
+import com.hariku.feature_statistic.domain.model.MoodStatItem
 
 @Composable
-fun StatisticsMood() {
+fun StatisticsMood(
+    moodStatistics: List<MoodStatItem> = emptyList()
+) {
     var expanded by remember { mutableStateOf(true) }
     val rotationState by animateFloatAsState(
         targetValue = if (expanded) 180f else 0f, label = "arrow_rotation"
     )
     
+    fun getMoodFromString(moodType: String): Mood {
+        return when (moodType) {
+            "Senang" -> Mood.SENANG
+            "Semangat" -> Mood.SEMANGAT
+            "Biasa" -> Mood.BIASA
+            "Sedih" -> Mood.SEDIH
+            "Marah" -> Mood.MARAH
+            "Takut" -> Mood.TAKUT
+            "Cemas" -> Mood.CEMAS
+            "Kecewa" -> Mood.KECEWA
+            "Lelah" -> Mood.LELAH
+            "Hampa" -> Mood.HAMPA
+            else -> Mood.NONE
+        }
+    }
+
+    val topMoods = moodStatistics.take(4)
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -102,30 +117,24 @@ fun StatisticsMood() {
                         .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    StatisticRowItem(
-                        image = R.drawable.ic_emote_senang,
-                        iconBg = StatOrangeBg,
-                        label = "Semangat",
-                        percentage = "25%"
-                    )
-                    StatisticRowItem(
-                        image = R.drawable.ic_emote_senang,
-                        iconBg = StatGreenBg,
-                        label = "Lemas",
-                        percentage = "38%"
-                    )
-                    StatisticRowItem(
-                        image = R.drawable.ic_emote_senang,
-                        iconBg = StatYellowBg,
-                        label = "Senang",
-                        percentage = "12%"
-                    )
-                    StatisticRowItem(
-                        image = R.drawable.ic_emote_senang,
-                        iconBg = StatBlueBg,
-                        label = "Sedih",
-                        percentage = "8%"
-                    )
+                    if (topMoods.isEmpty()) {
+                        Text(
+                            text = "Belum ada data mood",
+                            fontSize = 14.sp,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    } else {
+                        topMoods.forEach { moodStat ->
+                            val mood = getMoodFromString(moodStat.moodType)
+                            StatisticRowItem(
+                                mood = mood,
+                                label = moodStat.moodType,
+                                count = moodStat.count,
+                                percentage = "${moodStat.percentage.toInt()}%"
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -134,16 +143,16 @@ fun StatisticsMood() {
 
 @Composable
 fun StatisticRowItem(
-    image: Int,
-    iconBg: Color,
+    mood: Mood,
     label: String,
+    count: Int = 0,
     percentage: String
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
-            .background(iconBg),
+            .background(mood.color),
         contentAlignment = Alignment.Center
     ) {
         Row(
@@ -153,9 +162,9 @@ fun StatisticRowItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(image),
+                painter = painterResource(mood.iconRes),
                 contentDescription = label,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.fillMaxHeight()
             )
             Spacer(modifier = Modifier.width(16.dp))
             
@@ -168,7 +177,7 @@ fun StatisticRowItem(
                     fontWeight = FontWeight.Medium
                 )
                 Text(
-                    text = "6/28",
+                    text = "$count kali",
                     fontSize = 12.sp
                 )
             }
