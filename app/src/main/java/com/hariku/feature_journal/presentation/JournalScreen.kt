@@ -248,7 +248,12 @@ fun JournalScreen(
                             JournalCard(
                                 backgroundColor = journal.backgroundColor,
                                 textElements = journal.textElements,
-                                stickerElements = journal.stickerElements
+                                stickerElements = journal.stickerElements,
+                                onClick = {
+                                    navController.navigate(
+                                        Routes.JournalDetail.createRoute(journal.id)
+                                    )
+                                }
                             )
                         }
                     }

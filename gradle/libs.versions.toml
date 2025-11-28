@@ -26,6 +26,7 @@ lifecycleVersion = "2.6.1"
 navigationRuntimeKtx = "2.9.5"
 composeTesting = "1.0.0-alpha08"
 runtimeLivedata = "1.9.4"
+runtime = "1.9.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -73,6 +74,7 @@ koin-androidx-navigation = { module = "io.insert-koin:koin-androidx-navigation",
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil-compose" }
 
 androidx-compose-testing = { group = "androidx.xr.compose", name = "compose-testing", version.ref = "composeTesting" }
+androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "runtime" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

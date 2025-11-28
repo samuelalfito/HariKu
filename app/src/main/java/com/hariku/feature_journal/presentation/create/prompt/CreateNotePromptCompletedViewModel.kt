@@ -53,20 +53,31 @@ class CreateNotePromptCompletedViewModel(
             .launchIn(viewModelScope)
     }
     
-    fun selectPrompt(promptId: String) {
-        val response = _uiState.value.promptResponse ?: return
+    fun selectPrompt(promptId: String): String? {
+        val response = _uiState.value.promptResponse ?: return null
+        var selectedTitle: String? = null
         val updatedSuggestions = response.suggestions.map { suggestion ->
             if (suggestion.id == promptId) {
-                suggestion.copy(isSelected = !suggestion.isSelected)
+                val updated = suggestion.copy(isSelected = true)
+                selectedTitle = updated.text
+                updated
             } else {
                 suggestion.copy(isSelected = false)
             }
         }
-        
+
         _uiState.value = _uiState.value.copy(
             promptResponse = response.copy(suggestions = updatedSuggestions)
         )
+        sharedViewModel.setSelectedPromptTitle(selectedTitle)
+        return selectedTitle
     }
+
+    fun clearSelection() {
+        sharedViewModel.clearSelectedPromptTitle()
+    }
+    
+    fun selectedPromptTitle(): String? = sharedViewModel.selectedPromptTitle.value
 }
 
 data class CreateNotePromptCompletedUiState(

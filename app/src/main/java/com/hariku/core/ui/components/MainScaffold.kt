@@ -16,7 +16,10 @@ import com.hariku.feature_journal.presentation.JournalScreen
 import com.hariku.feature_statistic.presentation.StatisticScreen
 
 @Composable
-fun MainScaffold(parentNavController: NavHostController) {
+fun MainScaffold(
+    parentNavController: NavHostController,
+    initialTabIndex: Int = 0
+) {
     val bottomNavController = rememberNavController()
     val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -27,7 +30,11 @@ fun MainScaffold(parentNavController: NavHostController) {
         Routes.Journal.route,
         Routes.Statistic.route
     )
-    val selectedIndex = bottomNavRoutes.indexOfFirst { it == currentRoute }.takeIf { it >= 0 } ?: 0
+    
+    // Set initial route based on initialTabIndex
+    val startDestination = bottomNavRoutes.getOrNull(initialTabIndex) ?: Routes.Home.route
+    
+    val selectedIndex = bottomNavRoutes.indexOfFirst { it == currentRoute }.takeIf { it >= 0 } ?: initialTabIndex
 
     Scaffold(
         bottomBar = {
@@ -52,7 +59,7 @@ fun MainScaffold(parentNavController: NavHostController) {
     ) { innerPadding ->
         NavHost(
             navController = bottomNavController,
-            startDestination = Routes.Home.route,
+            startDestination = startDestination,
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Routes.Home.route) {
