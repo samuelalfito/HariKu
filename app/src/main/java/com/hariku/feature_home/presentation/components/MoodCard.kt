@@ -2,7 +2,6 @@ package com.hariku.feature_home.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,8 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -29,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -148,53 +146,42 @@ fun MoodCard(
                 
                 val isDisabled = isInCooldown || uiState.isSaving
                 
-                Column {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        moods.take(5).forEach { mood ->
-                            MoodItem(
-                                mood = mood,
-                                isSelected = uiState.selectedMoodType == mood.label,
-                                isDisabled = isDisabled,
-                                isSaving = uiState.isSaving,
-                                onClick = {
-                                    if (!isDisabled) {
-                                        viewModel.saveMood(userId, mood.label)
-                                    }
-                                }
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        moods.drop(5).forEach { mood ->
-                            MoodItem(
-                                mood = mood,
-                                isSelected = uiState.selectedMoodType == mood.label,
-                                isDisabled = isDisabled,
-                                isSaving = uiState.isSaving,
-                                onClick = {
-                                    if (!isDisabled) {
-                                        viewModel.saveMood(userId, mood.label)
-                                    }
-                                }
-                            )
-                        }
-                    }
-                }
                 if (isInCooldown) {
                     Text(
                         text = "Tunggu ${minutes}m ${seconds}s untuk submit lagi",
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Medium,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         color = Color(0xFFFF8A7A)
                     )
+                }
+                
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    moods.chunked(5).forEach { rowMoods ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            rowMoods.forEach { mood ->
+                                Box(modifier = Modifier.weight(1f)) {
+                                    MoodItem(
+                                        mood = mood,
+                                        isSelected = uiState.selectedMoodType == mood.label,
+                                        isDisabled = isDisabled,
+                                        isSaving = uiState.isSaving,
+                                        onClick = {
+                                            if (!isDisabled) {
+                                                viewModel.saveMood(userId, mood.label)
+                                            }
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -213,32 +200,25 @@ private fun MoodItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .alpha(if (isDisabled && !isSelected) 0.4f else 1f)
-            .clickable(enabled = !isDisabled && !isSaving, onClick = onClick)
-    ) {
-        Box(
-            contentAlignment = Alignment.Center
-        ) {
-            if (isSelected) {
-                Box(
-                    modifier = Modifier
-                        .size(44.dp)
-                        .background(Color(0xFF71a77a).copy(alpha = 0.2f), CircleShape)
-                        .border(3.dp, Color(0xFF71a77a), CircleShape)
-                )
-            }
-            Image(
-                painter = painterResource(id = mood.iconRes),
-                contentDescription = mood.label,
-                modifier = Modifier.size(38.dp)
+            .background(
+                color = if (isSelected) Color(0xFF71a77a) else Color.Transparent,
+                shape = RoundedCornerShape(12.dp)
             )
-        }
-        Spacer(modifier = Modifier.height(4.dp))
+            .clickable(enabled = !isDisabled && !isSaving, onClick = onClick)
+            .padding(8.dp)
+    ) {
+        Image(
+            painter = painterResource(id = mood.iconRes),
+            contentDescription = mood.label,
+            modifier = Modifier.size(38.dp)
+        )
+        Spacer(modifier = Modifier.height(6.dp))
         Text(
             text = mood.label,
-            fontSize = 12.sp,
+            fontSize = 11.sp,
             textAlign = TextAlign.Center,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-            color = if (isSelected) Color(0xFF71a77a) else Color.Black
+            color = if (isSelected) Color.White else Color.Black
         )
     }
 }
