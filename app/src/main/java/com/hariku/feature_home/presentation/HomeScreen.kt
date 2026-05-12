@@ -41,12 +41,16 @@ import com.hariku.feature_home.presentation.components.ActivityCard
 import com.hariku.feature_home.presentation.components.ChatCard
 import com.hariku.feature_home.presentation.components.MoodCard
 import org.koin.androidx.compose.koinViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun HomeScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    moodViewModel: MoodViewModel = koinViewModel()
+    moodViewModel: MoodViewModel = koinViewModel(),
+    homeViewModel: HomeViewModel = koinViewModel()
 ) {
     Box(
         modifier = modifier.fillMaxSize()
@@ -157,23 +161,33 @@ fun HomeScreen(
                             }
                         }
                     }
-                    Column(modifier = Modifier.padding(horizontal = 24.dp)) {
-                        Text(
-                            text = "Chat Terakhir",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                        ChatCard(
-                            title = "HariKu",
-                            message = "Halo! Aku Hariku, siap membantumu...",
-                            date = "29/05",
-                            unreadCount = 2,
-                            onClick = {
-                                // Navigate directly to Chatbot Detail Screen (it will be implemented later)
-                                navController.navigate(Routes.DetailChatbot.createRoute("HariKu"))
+                    // Chat Terakhir Section - Only show if there are chatbots
+                    if (homeViewModel.chatbotUiState.chatbots.isNotEmpty()) {
+                        Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+                            Text(
+                                text = "Chat Terakhir",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                            // Display max 2 chatbots
+                            homeViewModel.chatbotUiState.chatbots.take(2).forEachIndexed { index, chatbotWithHistory ->
+                                ChatCard(
+                                    title = chatbotWithHistory.chatbot.name,
+                                    message = chatbotWithHistory.lastMessage.ifEmpty { "No messages yet" },
+                                    date = formatTimestamp(chatbotWithHistory.lastMessageTime),
+                                    unreadCount = chatbotWithHistory.unreadCount,
+                                    avatarResId = if (chatbotWithHistory.chatbot.avatarResId != 0) chatbotWithHistory.chatbot.avatarResId else R.drawable.ic_launcher_foreground,
+                                    backgroundColor = if (index == 0) Color(0xFFF5CBA7) else Color(0xFFE6D4C3),
+                                    onClick = {
+                                        navController.navigate(Routes.DetailChatbot.createRoute(chatbotWithHistory.chatbot.id))
+                                    }
+                                )
+                                if (index < 1) {
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                }
                             }
-                        )
+                        }
                     }
                     Column(modifier = Modifier.padding(horizontal = 24.dp)) {
                         Text(
@@ -219,6 +233,18 @@ fun HomeScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun formatTimestamp(timestamp: Long): String {
+    if (timestamp == 0L) return "-"
+    return try {
+        val date = Date(timestamp)
+        val format = SimpleDateFormat("dd/MM", Locale.getDefault())
+        format.format(date)
+    } catch (e: Exception) {
+        "-"
     }
 }
 

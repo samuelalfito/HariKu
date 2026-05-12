@@ -9,9 +9,11 @@ import com.hariku.feature_home.data.repository.MoodRepositoryImpl
 import com.hariku.feature_home.domain.repository.MoodRepository
 import com.hariku.feature_home.domain.usecase.GetTodayMoodUseCase
 import com.hariku.feature_home.domain.usecase.SaveMoodUseCase
+import com.hariku.feature_home.presentation.HomeViewModel
 import com.hariku.feature_home.presentation.MoodViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -49,6 +51,13 @@ val homeModule = module {
     
     // ViewModel
     viewModelOf(::MoodViewModel)
+    
+    viewModel {
+        HomeViewModel(
+            getChatbotsWithHistoryUseCase = get(),
+            firebaseAuth = get()
+        )
+    }
 }
 
 

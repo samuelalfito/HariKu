@@ -1,5 +1,6 @@
-package com.hariku.feature_home.presentation.components
+﻿package com.hariku.feature_home.presentation.components
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,21 +13,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -42,138 +42,106 @@ fun MoodCard(
     viewModel: MoodViewModel,
 ) {
     val uiState = viewModel.uiState
-    
-    // Get actual userId from Firebase Auth
-    val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-    
+    val userId = FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
+    val context = LocalContext.current
+    val remainingSecondsState = remember { mutableIntStateOf(0) }
+    val remainingSeconds = remainingSecondsState.intValue
+    val isInCooldown = remainingSeconds > 0
     LaunchedEffect(userId) {
         if (userId.isNotEmpty()) {
             viewModel.loadTodayMood(userId)
         }
     }
-    
-    LaunchedEffect(uiState.successMessage) {
-        if (uiState.successMessage != null) {
-            delay(3000)
-            viewModel.clearMessages()
-        }
-    }
-    
-    var remainingSeconds by remember { mutableIntStateOf(0) }
-    
     LaunchedEffect(uiState.lastMoodTimestamp) {
         while (true) {
-            remainingSeconds = viewModel.getRemainingCooldownSeconds()
-            if (remainingSeconds <= 0) break
+            remainingSecondsState.intValue = viewModel.getRemainingCooldownSeconds()
+            if (remainingSecondsState.intValue <= 0) break
             delay(1000)
         }
     }
-    
-    Card(
-        shape = RoundedCornerShape(24.dp),
+    val toastMessage = when {
+        uiState.successMessage != null -> uiState.successMessage
+        uiState.error != null && !isInCooldown -> uiState.error
+        else -> null
+    }
+    LaunchedEffect(toastMessage) {
+        if (!toastMessage.isNullOrBlank()) {
+            Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+            viewModel.clearMessages()
+        }
+    }
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 24.dp),
-        elevation = CardDefaults.cardElevation(4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+            .padding(horizontal = 24.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(20.dp)
+        Card(
+            shape = RoundedCornerShape(24.dp),
+            modifier = Modifier.fillMaxWidth(),
+            elevation = CardDefaults.cardElevation(4.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
-            val isInCooldown = remainingSeconds > 0
-            val minutes = remainingSeconds / 60
-            val seconds = remainingSeconds % 60
-            
-            Text(
-                text = if (uiState.todayMood != null) {
-                    "Mood Terakhir: ${uiState.todayMood.moodType}"
-                } else {
-                    "Bagaimana Suasana Hatimu Hari Ini?"
-                },
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                color = when {
-                    uiState.todayMood != null -> Color(0xFF71a77a)
-                    else -> Color.Black
-                }
-            )
-            
-            if (uiState.error != null && !isInCooldown) {
-                Spacer(modifier = Modifier.height(8.dp))
+            Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 20.dp)) {
                 Text(
-                    text = uiState.error,
-                    fontSize = 12.sp,
-                    color = Color.Red,
+                    text = if (uiState.todayMood != null) {
+                        "Mood Terakhir: ${uiState.todayMood.moodType}"
+                    } else {
+                        "Bagaimana Suasana Hatimu Hari Ini?"
+                    },
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
                     modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    color = if (uiState.todayMood != null) Color(0xFF71A77A) else Color.Black
                 )
-            }
-            if (uiState.successMessage != null) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = uiState.successMessage,
-                    fontSize = 12.sp,
-                    color = Color(0xFF71a77a),
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
-            }
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            if (uiState.isLoading) {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(modifier = Modifier.size(32.dp))
-                }
-            } else {
-                val moods = listOf(
-                    Mood("Senang", R.drawable.ic_emote_senang),
-                    Mood("Biasa", R.drawable.ic_emote_biasa),
-                    Mood("Sedih", R.drawable.ic_emote_sedih),
-                    Mood("Marah", R.drawable.ic_emote_marah),
-                    Mood("Cemas", R.drawable.ic_emote_cemas),
-                    Mood("Lelah", R.drawable.ic_emote_lelah),
-                    Mood("Kecewa", R.drawable.ic_emote_kecewa),
-                    Mood("Takut", R.drawable.ic_emote_takut),
-                    Mood("Hampa", R.drawable.ic_emote_hampa),
-                    Mood("Semangat", R.drawable.ic_emote_semangat)
-                )
-                
-                val isDisabled = isInCooldown || uiState.isSaving
-                
-                if (isInCooldown) {
-                    Text(
-                        text = "Tunggu ${minutes}m ${seconds}s untuk submit lagi",
-                        fontWeight = FontWeight.Medium,
+                Spacer(modifier = Modifier.height(16.dp))
+                if (uiState.isLoading) {
+                    Box(
                         modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        color = Color(0xFFFF8A7A)
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(modifier = Modifier.size(32.dp))
+                    }
+                } else {
+                    val moods = listOf(
+                        Mood("Senang", R.drawable.ic_emote_senang),
+                        Mood("Biasa", R.drawable.ic_emote_biasa),
+                        Mood("Sedih", R.drawable.ic_emote_sedih),
+                        Mood("Marah", R.drawable.ic_emote_marah),
+                        Mood("Cemas", R.drawable.ic_emote_cemas),
+                        Mood("Lelah", R.drawable.ic_emote_lelah),
+                        Mood("Kecewa", R.drawable.ic_emote_kecewa),
+                        Mood("Takut", R.drawable.ic_emote_takut),
+                        Mood("Hampa", R.drawable.ic_emote_hampa),
+                        Mood("Semangat", R.drawable.ic_emote_semangat)
                     )
-                }
-                
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    moods.chunked(5).forEach { rowMoods ->
-                        Row(
+                    val disabled = isInCooldown || uiState.isSaving
+                    if (isInCooldown) {
+                        Text(
+                            text = "Tunggu ${remainingSeconds / 60}m ${remainingSeconds % 60}s untuk submit lagi",
+                            fontWeight = FontWeight.Medium,
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            rowMoods.forEach { mood ->
-                                Box(modifier = Modifier.weight(1f)) {
+                            textAlign = TextAlign.Center,
+                            color = Color(0xFFFF8A7A)
+                        )
+                    }
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        moods.chunked(5).forEach { rowMoods ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                rowMoods.forEach { mood ->
                                     MoodItem(
                                         mood = mood,
                                         isSelected = uiState.selectedMoodType == mood.label,
-                                        isDisabled = isDisabled,
+                                        isDisabled = disabled,
                                         isSaving = uiState.isSaving,
                                         onClick = {
-                                            if (!isDisabled) {
+                                            if (!disabled) {
                                                 viewModel.saveMood(userId, mood.label)
                                             }
                                         }
@@ -201,7 +169,7 @@ private fun MoodItem(
         modifier = Modifier
             .alpha(if (isDisabled && !isSelected) 0.4f else 1f)
             .background(
-                color = if (isSelected) Color(0xFF71a77a) else Color.Transparent,
+                color = if (isSelected) Color(0xFF71A77A) else Color.Transparent,
                 shape = RoundedCornerShape(12.dp)
             )
             .clickable(enabled = !isDisabled && !isSaving, onClick = onClick)

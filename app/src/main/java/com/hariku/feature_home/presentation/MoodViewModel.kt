@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hariku.feature_auth.domain.model.AuthUser
+import com.hariku.feature_auth.domain.usecase.GetCurrentUserUseCase
 import com.hariku.feature_home.domain.model.MoodModel
 import com.hariku.feature_home.domain.usecase.GetTodayMoodUseCase
 import com.hariku.feature_home.domain.usecase.SaveMoodUseCase
@@ -50,6 +52,7 @@ class MoodViewModel(
                 val fiveMinutesInMillis = 5 * 60 * 1000
                 
                 if (lastMoodTime != null && (currentTime - lastMoodTime) < fiveMinutesInMillis) {
+                    // Don't set error here, UI will show countdown timer
                     return@launch
                 }
 
@@ -91,6 +94,13 @@ class MoodViewModel(
 
     fun clearMessages() {
         uiState = uiState.copy(error = null, successMessage = null)
+    }
+
+    fun isInCooldown(): Boolean {
+        val lastMoodTime = uiState.lastMoodTimestamp ?: return false
+        val currentTime = System.currentTimeMillis()
+        val fiveMinutesInMillis = 5 * 60 * 1000
+        return (currentTime - lastMoodTime) < fiveMinutesInMillis
     }
 
     fun getRemainingCooldownSeconds(): Int {
