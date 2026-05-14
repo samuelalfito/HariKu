@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,12 +25,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
 
 @Composable
-fun ChatCard(title: String, message: String, date: String, unreadCount: Int, onClick: () -> Unit) {
+fun ChatCard(
+    title: String,
+    message: String,
+    date: String,
+    unreadCount: Int,
+    avatarResId: Int = R.drawable.ic_launcher_foreground,
+    backgroundColor: Color = Color(0xFFF5CBA7),
+    onClick: () -> Unit
+) {
     Card(
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier.fillMaxWidth().clickable{ onClick() },
@@ -44,14 +54,14 @@ fun ChatCard(title: String, message: String, date: String, unreadCount: Int, onC
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
-                    .background(Color(0xFFF5CBA7)),
+                    .background(backgroundColor),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    painter = painterResource(id = avatarResId),
                     contentDescription = null,
                     tint = Color.Unspecified,
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier.fillMaxSize()
                 )
             }
             Spacer(modifier = Modifier.width(12.dp))
@@ -64,6 +74,8 @@ fun ChatCard(title: String, message: String, date: String, unreadCount: Int, onC
                 Text(
                     text = message,
                     fontSize = 13.sp,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2,
                     color = Color(0xFFB57A4A)
                 )
             }
@@ -74,19 +86,22 @@ fun ChatCard(title: String, message: String, date: String, unreadCount: Int, onC
                     color = Color.Gray
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Box(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .clip(CircleShape)
-                        .background(Color(0xFFFF8A7A)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = unreadCount.toString(),
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                // Only show badge if unreadCount > 0
+                if (unreadCount > 0) {
+                    Box(
+                        modifier = Modifier
+                            .size(20.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFFFF8A7A)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = unreadCount.toString(),
+                            color = Color.White,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
         }

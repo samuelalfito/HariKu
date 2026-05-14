@@ -107,18 +107,18 @@ dependencies {
     implementation(libs.koin.androidx.navigation)
     
     //View Pager
-    implementation("com.google.accompanist:accompanist-pager:0.32.0")
+    implementation(libs.accompanist.pager)
     
     //Material3 Icon
-    implementation("androidx.compose.material:material-icons-extended:1.5.0")
-    implementation("androidx.compose.material3:material3:1.1.0")
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.compose.material3.v110)
     
     //Kotlinx Serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation(libs.kotlinx.serialization.json)
 
     //Coil
     implementation(libs.coil.compose)
     
     //Gemini AI
-    implementation("com.google.ai.client.generativeai:generativeai:0.1.2")
+    implementation(libs.google.generativeai)
 }
