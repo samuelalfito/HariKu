@@ -1,3 +1,5 @@
+package com.hariku.feature_pin.presentation
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,8 +39,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hariku.R
 import com.hariku.core.ui.components.Routes
+import com.hariku.core.ui.theme.AdaptiveColors
 import com.hariku.feature_pin.data.local.entity.Pin
-import com.hariku.feature_pin.presentation.PinScreenViewModel
 import org.koin.androidx.compose.koinViewModel
 
 private enum class Stage {
@@ -48,35 +50,27 @@ private enum class Stage {
 }
 
 @Composable
-fun PinScreenFull( /*TODO: Fitur ganti Pin (tunggu tombol ganti pin)*/
+fun PinScreenFull(
     navController: NavController,
     viewModel: PinScreenViewModel = koinViewModel()
 ) {
-    
     var pinValue by remember { mutableStateOf("") }
-    var createdPin by remember { mutableStateOf("") } //ADDED
-    var errorMessage by remember { mutableStateOf<String?>(null) } //ADDED
+    var createdPin by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
     var stage by remember { mutableStateOf(Stage.CREATE) }
 
     val pin: Pin? by viewModel.pin.observeAsState()
 
     val maxPinLength = 4
-    //val list = remember { mutableStateListOf<Int>() }
 
     if (pin != null) {
         stage = Stage.INPUT
     }
 
-    //Testing, buka komentar kalo mau ganti pin soalnya belum ada fitur ganti pin
-//    if(pin != null){
-//        viewModel.deletePin(pin = pin!!)
-//        stage = Stage.CREATE
-//    }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFFF7ECE3))
+            .background(color = AdaptiveColors.adaptiveBackground())
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -96,21 +90,14 @@ fun PinScreenFull( /*TODO: Fitur ganti Pin (tunggu tombol ganti pin)*/
                 ) {
                     Text(
                         text = when(stage){
-                            Stage.CREATE -> {
-                                "Lewati"
-                            }
-                            Stage.CONFIRM -> {
-                                ""
-                            }
-                            Stage.INPUT -> {
-                                ""
-                            }
+                            Stage.CREATE -> "Lewati"
+                            else -> ""
                         },
                         style = TextStyle(
                             fontSize = 16.sp,
                             fontFamily = FontFamily.Default,
                             fontWeight = FontWeight(600),
-                            color = Color(0xFF242424),
+                            color = AdaptiveColors.adaptiveText(),
                             textDecoration = TextDecoration.Underline,
                         ),
                         modifier = Modifier
@@ -128,21 +115,15 @@ fun PinScreenFull( /*TODO: Fitur ganti Pin (tunggu tombol ganti pin)*/
 
                 Text(
                     text = when(stage){
-                        Stage.CREATE -> {
-                            "Tetapkan Pin Keamanan"
-                        }
-                        Stage.CONFIRM -> {
-                            "Konfirmasi Pin"
-                        }
-                        Stage.INPUT -> {
-                            "Masukkan Pin"
-                        }
+                        Stage.CREATE -> "Tetapkan Pin Keamanan"
+                        Stage.CONFIRM -> "Konfirmasi Pin"
+                        Stage.INPUT -> "Masukkan Pin"
                     },
                     style = TextStyle(
                         fontSize = 24.sp,
                         fontFamily = FontFamily.Default,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF242424),
+                        color = AdaptiveColors.adaptiveText(),
                         textAlign = TextAlign.Center,
                     ),
                     modifier = Modifier.padding(horizontal = 40.dp)
@@ -152,28 +133,21 @@ fun PinScreenFull( /*TODO: Fitur ganti Pin (tunggu tombol ganti pin)*/
 
                 Text(
                     text = when(stage){
-                        Stage.CREATE -> {
-                            "Setiap membuka aplikasi, Urai akan meminta pin keamanan"
-                        }
-                        Stage.CONFIRM -> {
-                            ""
-                        }
-                        Stage.INPUT -> {
-                            ""
-                        }
+                        Stage.CREATE -> "Setiap membuka aplikasi, HariKu akan meminta pin keamanan"
+                        else -> ""
                     },
                     style = TextStyle(
                         fontSize = 14.sp,
                         lineHeight = 20.sp,
                         fontFamily = FontFamily.Default,
                         fontWeight = FontWeight.Normal,
-                        color = Color(0xFF242424),
+                        color = AdaptiveColors.adaptiveTextSecondary(),
                         textAlign = TextAlign.Center,
                     ),
                     modifier = Modifier.padding(horizontal = 60.dp)
                 )
 
-                if (errorMessage != null) { //ADDED
+                if (errorMessage != null) {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = errorMessage!!,
@@ -215,15 +189,11 @@ fun PinScreenFull( /*TODO: Fitur ganti Pin (tunggu tombol ganti pin)*/
                                 }
                                 Stage.CONFIRM -> {
                                     if (pinValue == createdPin) {
-                                        // SUCCESS: PINs match, navigate to home
-
                                         viewModel.addPin(pin = Pin(pin = createdPin))
-
                                         navController.navigate(Routes.Home.route) {
                                             popUpTo(0) { inclusive = true }
                                         }
                                     } else {
-                                        // FAILURE: PINs do not match, show error and reset
                                         errorMessage = "PIN tidak cocok. Silakan buat ulang."
                                         pinValue = ""
                                         createdPin = ""
@@ -237,11 +207,8 @@ fun PinScreenFull( /*TODO: Fitur ganti Pin (tunggu tombol ganti pin)*/
                                         }
                                     }
                                     else {
-                                        // FAILURE: PINs do not match, show error and reset
                                         errorMessage = "PIN tidak cocok."
                                         pinValue = ""
-                                        createdPin = ""
-                                        stage = Stage.CREATE
                                     }
                                 }
                             }
@@ -250,7 +217,7 @@ fun PinScreenFull( /*TODO: Fitur ganti Pin (tunggu tombol ganti pin)*/
                     onBackspaceClick = {
                         if (pinValue.isNotEmpty()) {
                             pinValue = pinValue.dropLast(1)
-                            errorMessage = null // Clear error on backspace
+                            errorMessage = null
                         }
                     }
                 )
@@ -280,7 +247,7 @@ fun PinDotsComposable(count: Int, filled: Int) {
         horizontalArrangement = Arrangement.spacedBy(34.dp),
     ) {
         repeat(count) { index ->
-            val color = if (index < filled) Color(0xFF242424) else Color(0xFFBEBEBE)
+            val color = if (index < filled) AdaptiveColors.adaptiveText() else AdaptiveColors.adaptiveDivider()
             Box(
                 modifier = Modifier
                     .size(15.dp)
@@ -325,7 +292,7 @@ fun NumpadComposable(
             Box(
                 modifier = Modifier
                     .size(buttonSize)
-                    .background(Color.White, CircleShape)
+                    .background(AdaptiveColors.adaptiveCardBackground(), CircleShape)
                     .clip(CircleShape)
                     .clickable { onBackspaceClick() },
                 contentAlignment = Alignment.Center
@@ -349,7 +316,7 @@ fun NumberButton(
     Box(
         modifier = Modifier
             .size(size)
-            .background(Color.White, CircleShape)
+            .background(AdaptiveColors.adaptiveCardBackground(), CircleShape)
             .clip(CircleShape)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
@@ -359,7 +326,7 @@ fun NumberButton(
             style = TextStyle(
                 fontSize = 38.sp,
                 fontWeight = FontWeight(500),
-                color = Color(0xFF242424),
+                color = AdaptiveColors.adaptiveText(),
             )
         )
     }

@@ -2,6 +2,7 @@ package com.hariku.feature_journal.presentation.create.prompt
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,6 +43,11 @@ import com.hariku.core.ui.components.CustomizeTopBar
 import com.hariku.core.ui.components.Routes
 import com.hariku.feature_journal.presentation.components.PromptItem
 import org.koin.androidx.compose.koinViewModel
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Blue20
+import com.hariku.core.ui.theme.Neutral100
+import com.hariku.core.ui.theme.Orange70
+import com.hariku.core.ui.theme.LocalThemeState
 
 @Composable
 fun CreateNotePromptCompletedScreen(
@@ -49,6 +55,7 @@ fun CreateNotePromptCompletedScreen(
     viewModel: CreateNotePromptCompletedViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState
+    val isDark = LocalThemeState.current.isDarkTheme
 
     LaunchedEffect(Unit) {
         // Clear if user revisits screen so stale data isn’t reused
@@ -56,7 +63,7 @@ fun CreateNotePromptCompletedScreen(
     }
 
     Scaffold(
-        containerColor = Color(0xFFF6F6F6),
+        containerColor = AdaptiveColors.adaptiveBackground(),
         topBar = {
             CustomizeTopBar(
                 title = "Buat Prompt AI",
@@ -76,7 +83,7 @@ fun CreateNotePromptCompletedScreen(
                     colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Transparent),
                     enabled = !uiState.isLoading,
                     shape = RoundedCornerShape(12.dp),
-                    border = BorderStroke(2.dp, Color(0xFFD88C5A)),
+                    border = BorderStroke(2.dp, Orange70),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp)
@@ -84,7 +91,7 @@ fun CreateNotePromptCompletedScreen(
                 ) {
                     Text(
                         "Lewati",
-                        color = Color(0xFFD88C5A),
+                        color = Orange70,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     )
@@ -104,14 +111,16 @@ fun CreateNotePromptCompletedScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = Color(0xFFD88C5A))
+                    CircularProgressIndicator(color = Orange70)
                 }
             } else if (uiState.promptResponse != null) {
                 val response = uiState.promptResponse!!
                 
                 Card(
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFF82b3bb)),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (isDark) Color(0xFF82B3BB).copy(alpha = 0.8f) else Blue20
+                    ),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(80.dp)
@@ -165,7 +174,7 @@ fun CreateNotePromptCompletedScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                    colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground())
                 ) {
                     Column(
                         Modifier.padding(20.dp)
@@ -174,7 +183,7 @@ fun CreateNotePromptCompletedScreen(
                             text = response.introduction,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 16.sp,
-                            color = Color(0xFF222222)
+                            color = AdaptiveColors.adaptiveText()
                         )
                         
                         Spacer(Modifier.height(12.dp))
@@ -209,7 +218,7 @@ fun CreateNotePromptCompletedScreen(
                 ) {
                     Text(
                         "Tidak ada prompt yang tersedia",
-                        color = Color(0xFF9E9E9E),
+                        color = AdaptiveColors.adaptiveTextSecondary(),
                         fontSize = 16.sp
                     )
                 }

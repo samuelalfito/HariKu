@@ -50,8 +50,11 @@ import java.text.SimpleDateFormat
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import com.hariku.core.ui.components.CustomizeTopBar
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Coral30
 import java.util.Date
 import java.util.Locale
+import com.hariku.core.ui.theme.Orange70
 
 @Composable
 fun JournalDetailScreen(
@@ -69,7 +72,7 @@ fun JournalDetailScreen(
     }
 
     Scaffold(
-        containerColor = Color(0xFFf2f2f2),
+        containerColor = AdaptiveColors.adaptiveBackground(),
         topBar = {
             CustomizeTopBar(
                 title = "Detail Journal",
@@ -89,7 +92,7 @@ fun JournalDetailScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 shape = RoundedCornerShape(14.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
+                colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
                 Row(modifier = Modifier.fillMaxWidth()) {
@@ -102,12 +105,12 @@ fun JournalDetailScreen(
                                     coroutineScope.launch { pagerState.scrollToPage(index) }
                                 },
                             colors = CardDefaults.cardColors(
-                                containerColor = if (selected) Color(0xFFc97d50) else Color.Transparent
+                                containerColor = if (selected) Coral30 else Color.Transparent
                             )
                         ) {
                             Text(
                                 text = title,
-                                color = if (selected) Color.White else Color(0xFF9E9E9E),
+                                color = if (selected) Color.White else AdaptiveColors.adaptiveTextSecondary(),
                                 fontWeight = FontWeight.SemiBold,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier
@@ -156,7 +159,7 @@ fun NotesListView(
                         .padding(32.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = Color(0xFFD88C5A))
+                    CircularProgressIndicator(color = Orange70)
                 }
             }
         } else if (uiState.notes.isEmpty()) {
@@ -169,7 +172,7 @@ fun NotesListView(
                 ) {
                     Text(
                         "Belum ada catatan",
-                        color = Color.Gray,
+                        color = AdaptiveColors.adaptiveTextSecondary(),
                         fontSize = 16.sp
                     )
                 }
@@ -199,7 +202,7 @@ fun NoteCard(
             .fillMaxWidth()
             .clickable { onClick() },
         shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
@@ -216,13 +219,13 @@ fun NoteCard(
                     text = note.title,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
-                    color = Color.Black,
+                    color = AdaptiveColors.adaptiveText(),
                     modifier = Modifier.weight(1f)
                 )
                 Text(
                     text = dateFormat.format(Date(note.dateTime)),
                     fontSize = 12.sp,
-                    color = Color.Gray
+                    color = AdaptiveColors.adaptiveTextSecondary()
                 )
             }
 
@@ -248,7 +251,7 @@ fun NoteCard(
                                     modifier = Modifier
                                         .size(80.dp)
                                         .background(
-                                            Color.LightGray,
+                                            AdaptiveColors.adaptiveDivider(),
                                             RoundedCornerShape(8.dp)
                                         )
                                 )
@@ -260,7 +263,7 @@ fun NoteCard(
                     Text(
                         text = note.content,
                         fontSize = 14.sp,
-                        color = Color.DarkGray,
+                        color = AdaptiveColors.adaptiveTextSecondary(),
                         lineHeight = 20.sp
                     )
                 }
@@ -280,7 +283,7 @@ fun BookView(uiState: JournalDetailUiState) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
+                colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 Column(
@@ -297,13 +300,13 @@ fun BookView(uiState: JournalDetailUiState) {
                             "Ringkasan Jurnal",
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
-                            color = Color(0xFF222222)
+                            color = AdaptiveColors.adaptiveText()
                         )
                         
                         if (uiState.isGeneratingOverview) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(20.dp),
-                                color = Color(0xFFD88C5A),
+                                color = Orange70,
                                 strokeWidth = 2.dp
                             )
                         }
@@ -311,7 +314,7 @@ fun BookView(uiState: JournalDetailUiState) {
 
                     Spacer(modifier = Modifier.height(12.dp))
                     
-                    HorizontalDivider(color = Color(0xFFE5E5E5), thickness = 1.dp)
+                    HorizontalDivider(color = AdaptiveColors.adaptiveDivider(), thickness = 1.dp)
                     
                     Spacer(modifier = Modifier.height(12.dp))
 
@@ -319,7 +322,7 @@ fun BookView(uiState: JournalDetailUiState) {
                         Text(
                             text = uiState.overview.overview,
                             fontSize = 14.sp,
-                            color = Color.DarkGray,
+                            color = AdaptiveColors.adaptiveTextSecondary(),
                             lineHeight = 22.sp
                         )
                         
@@ -328,21 +331,21 @@ fun BookView(uiState: JournalDetailUiState) {
                         Text(
                             text = "Berdasarkan ${uiState.overview.noteCount} catatan",
                             fontSize = 12.sp,
-                            color = Color.Gray,
+                            color = AdaptiveColors.adaptiveTextSecondary(),
                             fontStyle = FontStyle.Italic
                         )
                     } else if (uiState.notes.isEmpty()) {
                         Text(
                             "Belum ada catatan untuk diringkas",
                             fontSize = 14.sp,
-                            color = Color.Gray,
+                            color = AdaptiveColors.adaptiveTextSecondary(),
                             fontStyle = FontStyle.Italic
                         )
                     } else {
                         Text(
                             "Sedang menghasilkan ringkasan...",
                             fontSize = 14.sp,
-                            color = Color.Gray,
+                            color = AdaptiveColors.adaptiveTextSecondary(),
                             fontStyle = FontStyle.Italic
                         )
                     }

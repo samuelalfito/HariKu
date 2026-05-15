@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.hariku.core.ui.theme.Neutral75
 
 enum class BottomTab {
     TEXT, BACKGROUND, STICKER
@@ -30,7 +31,7 @@ class CreateJournalViewModel(
     private val _selectedTab = MutableStateFlow(BottomTab.TEXT)
     val selectedTab: StateFlow<BottomTab> = _selectedTab
     
-    private val _notebookBackground = MutableStateFlow(Color(0xFFAAAAAA))
+    private val _notebookBackground = MutableStateFlow(Neutral75)
     val notebookBackground: StateFlow<Color> = _notebookBackground
     
     private val _textElements = MutableStateFlow<List<TextElement>>(emptyList())

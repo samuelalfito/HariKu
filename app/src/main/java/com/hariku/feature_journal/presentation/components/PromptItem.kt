@@ -18,6 +18,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.LocalThemeState
+import com.hariku.core.ui.theme.Orange70
 
 @Composable
 fun PromptItem(
@@ -25,11 +28,19 @@ fun PromptItem(
     isSelected: Boolean,
     onClick: () -> Unit,
 ) {
+    val isDark = LocalThemeState.current.isDarkTheme
+    
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
-            .background(if (isSelected) Color(0xFFFFF3E0) else Color(0xFFF6F6F6))
+            .background(
+                if (isSelected) {
+                    if (isDark) Color(0xFF6F4E37) else Color(0xFFFFF3E0) // Orange20 or SpecialPeach
+                } else {
+                    AdaptiveColors.adaptiveDivider()
+                }
+            )
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -37,13 +48,13 @@ fun PromptItem(
         Text(
             text,
             fontSize = 15.sp,
-            color = Color(0xFF222222),
+            color = AdaptiveColors.adaptiveText(),
             modifier = Modifier.weight(1f)
         )
         Icon(
             painter = painterResource(id = R.drawable.ic_chevron_right),
             contentDescription = "Next",
-            tint = if (isSelected) Color(0xFFD88C5A) else Color(0xFF9E9E9E),
+            tint = if (isSelected) Orange70 else AdaptiveColors.adaptiveTextSecondary(),
             modifier = Modifier.size(20.dp)
         )
     }

@@ -16,6 +16,7 @@ import com.hariku.feature_article.presentation.components.ArticleTopBar
 import com.hariku.feature_article.presentation.search.SearchEmpty
 import com.hariku.feature_article.presentation.search.SearchResult
 import org.koin.androidx.compose.koinViewModel
+import com.hariku.core.ui.theme.Coral30
 
 @Composable
 fun ArticleScreen(
@@ -42,7 +43,7 @@ fun ArticleScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = Color(0xFFC97D50))
+                    CircularProgressIndicator(color = Coral30)
                 }
             }
             is ArticleUiState.Error -> {

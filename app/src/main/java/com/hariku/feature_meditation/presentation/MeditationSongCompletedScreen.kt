@@ -21,6 +21,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
 import org.koin.androidx.compose.koinViewModel
+import com.hariku.core.ui.theme.Coral50
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Neutral100
+import com.hariku.core.ui.theme.LocalThemeState
 
 @Composable
 fun MeditationSongCompletedScreen(
@@ -30,6 +34,7 @@ fun MeditationSongCompletedScreen(
     viewModel: MeditationSongViewModel = koinViewModel()
 ) {
     val state = viewModel.state
+    val isDark = LocalThemeState.current.isDarkTheme
     
     LaunchedEffect(songId) {
         if (state.song == null) {
@@ -37,21 +42,19 @@ fun MeditationSongCompletedScreen(
         }
     }
     
-    val primaryColor = Color(0xFFD17F4B)
-    val textDarkColor = Color(0xFF333333)
-    val blackColor = Color(0xFF000000)
+    val primaryColor = if (isDark) Color(0xFFD88C5A) else Coral50 // Orange70 in dark mode
     val buttonCornerRadius = 16.dp
     
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFD3D3D3))
+            .background(AdaptiveColors.adaptiveBackground())
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
-                .background(Color(0xFFFDFCFC))
+                .background(AdaptiveColors.adaptiveCardBackground())
                 .padding(top = 22.dp, bottom = 12.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -59,12 +62,12 @@ fun MeditationSongCompletedScreen(
                 text = state.song?.title ?: "Meditasi",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = textDarkColor
+                color = AdaptiveColors.adaptiveText()
             )
             Text(
                 text = state.song?.category ?: "Selesai",
                 fontSize = 12.sp,
-                color = Color.Gray
+                color = AdaptiveColors.adaptiveTextSecondary()
             )
         }
         
@@ -78,7 +81,7 @@ fun MeditationSongCompletedScreen(
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
+                colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
                 Column(
@@ -104,7 +107,7 @@ fun MeditationSongCompletedScreen(
                         text = "Selesai!",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = blackColor,
+                        color = AdaptiveColors.adaptiveText(),
                         textAlign = TextAlign.Center
                     )
                     
@@ -113,7 +116,7 @@ fun MeditationSongCompletedScreen(
                     Text(
                         text = "Satu langkah lebih dekat dalam mengatasi ${state.song?.category?.lowercase() ?: "masalah"}",
                         fontSize = 18.sp,
-                        color = textDarkColor,
+                        color = AdaptiveColors.adaptiveTextSecondary(),
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
@@ -132,7 +135,7 @@ fun MeditationSongCompletedScreen(
                             text = "Kembali ke Halaman Meditasi",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = Color.White
+                            color = Neutral100
                         )
                     }
                     
@@ -147,7 +150,7 @@ fun MeditationSongCompletedScreen(
                         border = BorderStroke(2.dp, primaryColor),
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = primaryColor,
-                            containerColor = Color.White
+                            containerColor = Color.Transparent
                         )
                     ) {
                         Text(

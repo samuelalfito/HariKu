@@ -26,6 +26,7 @@ import com.hariku.feature_chatbot.domain.model.ChatbotWithHistory
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.hariku.core.ui.theme.AdaptiveColors
 
 @Composable
 fun ChatItem(onClick: () -> Unit, chatbotWithHistory: ChatbotWithHistory) {
@@ -57,11 +58,12 @@ fun ChatItem(onClick: () -> Unit, chatbotWithHistory: ChatbotWithHistory) {
             Text(
                 text = chatbot.name,
                 fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                color = AdaptiveColors.adaptiveText()
             )
             Text(
                 text = chatbotWithHistory.lastMessage,
-                color = Color.Gray,
+                color = AdaptiveColors.adaptiveTextSecondary(),
                 fontSize = 14.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -74,7 +76,7 @@ fun ChatItem(onClick: () -> Unit, chatbotWithHistory: ChatbotWithHistory) {
         ) {
             Text(
                 text = formattedDate,
-                color = Color.Gray,
+                color = AdaptiveColors.adaptiveTextSecondary(),
                 fontSize = 12.sp
             )
             if (chatbotWithHistory.unreadCount > 0) {

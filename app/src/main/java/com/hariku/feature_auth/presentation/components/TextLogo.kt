@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hariku.core.ui.theme.Coral30
 
 @Composable
 fun TextLogo(borderPreview: Boolean = false) {
@@ -28,6 +29,6 @@ fun TextLogo(borderPreview: Boolean = false) {
         textAlign = TextAlign.Center,
         modifier = Modifier
             .fillMaxWidth(),
-        color = Color(0xFFC97D50)
+        color = Coral30
     )
 }

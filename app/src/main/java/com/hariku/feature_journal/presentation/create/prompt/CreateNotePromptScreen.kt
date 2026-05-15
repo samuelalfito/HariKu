@@ -46,6 +46,9 @@ import com.hariku.R
 import com.hariku.core.ui.components.CustomizeTopBar
 import com.hariku.core.ui.components.Routes
 import org.koin.androidx.compose.koinViewModel
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Orange70
+import com.hariku.core.ui.theme.LocalThemeState
 
 @Composable
 fun CreateNotePromptScreen(
@@ -53,9 +56,10 @@ fun CreateNotePromptScreen(
     viewModel: CreateNotePromptViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState
+    val isDark = LocalThemeState.current.isDarkTheme
     
     Scaffold(
-        containerColor = Color(0xFFF9E6D1),
+        containerColor = AdaptiveColors.adaptiveBackground(),
         topBar = {
             CustomizeTopBar(
                 title = "Buat Prompt AI",
@@ -74,7 +78,10 @@ fun CreateNotePromptScreen(
                             }
                         )
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD88C5A)),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Orange70,
+                        contentColor = Color.White
+                    ),
                     enabled = !uiState.isLoading,
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
@@ -89,7 +96,6 @@ fun CreateNotePromptScreen(
                     } else {
                         Text(
                             "Lanjut",
-                            color = Color.White,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp
                         )
@@ -98,10 +104,13 @@ fun CreateNotePromptScreen(
                 Spacer(Modifier.height(12.dp))
                 OutlinedButton(
                     onClick = { navController.navigate(Routes.CreateNote.route) },
-                    colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Transparent),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Orange70
+                    ),
                     enabled = !uiState.isLoading,
                     shape = RoundedCornerShape(12.dp),
-                    border = BorderStroke(2.dp, Color(0xFFD88C5A)),
+                    border = BorderStroke(2.dp, Orange70),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp)
@@ -109,7 +118,6 @@ fun CreateNotePromptScreen(
                 ) {
                     Text(
                         "Lewati",
-                        color = Color(0xFFD88C5A),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     )
@@ -126,7 +134,9 @@ fun CreateNotePromptScreen(
         ) {
             Card(
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF433230)),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (isDark) Color(0xFF222222) else Color(0xFF433230) // Neutral20 or BgDarkAlt2
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp)
@@ -151,7 +161,7 @@ fun CreateNotePromptScreen(
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_light_source_1),
-                            contentDescription = "Arrow Right",
+                            contentDescription = "Light Source",
                             modifier = Modifier.fillMaxHeight()
                         )
                         Image(
@@ -168,7 +178,7 @@ fun CreateNotePromptScreen(
             Card(
                 shape = RoundedCornerShape(20.dp),
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground())
             ) {
                 Column(
                     Modifier.padding(20.dp)
@@ -177,7 +187,7 @@ fun CreateNotePromptScreen(
                         "Bagaimana Perasaanmu?",
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp,
-                        color = Color(0xFF222222)
+                        color = AdaptiveColors.adaptiveText()
                     )
                     Spacer(Modifier.height(12.dp))
                     LazyVerticalGrid(
@@ -192,15 +202,15 @@ fun CreateNotePromptScreen(
                                     .padding(vertical = 2.dp)
                                     .clip(RoundedCornerShape(12.dp))
                                     .background(
-                                        if (isSelected) Color(0xFFD88C5A)
-                                        else Color(0xFFF9E6D1)
+                                        if (isSelected) Orange70
+                                        else if (isDark) Color(0xFF2D2D3A) else Color(0xFFF9E6D1) // Neutral30 or SpecialWarmYellow
                                     )
                                     .clickable { viewModel.toggleFeeling(feeling) }
                                     .padding(horizontal = 12.dp, vertical = 8.dp)
                             ) {
                                 Text(
                                     feeling,
-                                    color = if (isSelected) Color.White else Color.Black,
+                                    color = if (isSelected) Color.White else AdaptiveColors.adaptiveText(),
                                     fontSize = 14.sp
                                 )
                             }
@@ -212,7 +222,7 @@ fun CreateNotePromptScreen(
             Card(
                 shape = RoundedCornerShape(20.dp),
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground())
             ) {
                 TextField(
                     value = uiState.customFeeling,
@@ -220,7 +230,7 @@ fun CreateNotePromptScreen(
                     placeholder = {
                         Text(
                             "Tulis di sini apabila ada perasaan lain yang ingin kamu tambahkan....",
-                            color = Color(0xFFBDBDBD)
+                            color = AdaptiveColors.adaptiveTextSecondary()
                         )
                     },
                     modifier = Modifier
@@ -233,7 +243,9 @@ fun CreateNotePromptScreen(
                         disabledContainerColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent
+                        disabledIndicatorColor = Color.Transparent,
+                        focusedTextColor = AdaptiveColors.adaptiveText(),
+                        unfocusedTextColor = AdaptiveColors.adaptiveText()
                     )
                 )
             }

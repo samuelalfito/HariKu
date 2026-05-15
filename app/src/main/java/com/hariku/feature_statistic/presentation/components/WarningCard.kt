@@ -23,6 +23,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.SpecialDarkRose
 
 @Composable
 fun WarningCard(){
@@ -30,7 +32,7 @@ fun WarningCard(){
         modifier = Modifier
             .fillMaxWidth()
             .clip(CardDefaults.shape),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ){
         Box(
@@ -43,7 +45,7 @@ fun WarningCard(){
                 contentDescription = "Warning Card Logo",
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .absoluteOffset(x = -128.dp, y = -128.dp),
+                    .absoluteOffset(x = (-128).dp, y = (-128).dp),
                 alpha = 0.7f
             )
             Column(
@@ -54,7 +56,7 @@ fun WarningCard(){
             ) {
                 Text(
                     text = "PERINGATAN!",
-                    color = Color.Black,
+                    color = AdaptiveColors.adaptiveText(),
                     textAlign = TextAlign.Center,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.ExtraBold,
@@ -67,7 +69,7 @@ fun WarningCard(){
 
                         withStyle(
                             style = SpanStyle(
-                                color = Color(0xffB82B55),
+                                color = SpecialDarkRose,
                                 fontWeight = FontWeight.Bold
                             )
                         ){
@@ -78,7 +80,7 @@ fun WarningCard(){
 
                         withStyle(
                             style = SpanStyle(
-                                color = Color(0xffB82B55),
+                                color = SpecialDarkRose,
                                 fontWeight = FontWeight.Bold
                             )
                         ){
@@ -89,7 +91,7 @@ fun WarningCard(){
 
                         withStyle(
                             style = SpanStyle(
-                                color = Color(0xffB82B55),
+                                color = SpecialDarkRose,
                                 fontWeight = FontWeight.Bold
                             )
                         ){
@@ -98,27 +100,19 @@ fun WarningCard(){
 
                         withStyle(
                             style = SpanStyle(
-//                                color = Color(0xffB82B55),
                                 fontWeight = FontWeight.Bold
                             )
                         ){
-                            append(". Banyak yang peduli dan siap membantumu")
+                            append(". Banyak yang peduli dan siap membantumu ")
                         }
 
                         append("mengatasi kesulitan yang kamu hadapi.")
                     },
-//                        "Kami mendeteksi adanya beberapa kalimat yang " +
-//                            "mengindikasikan potensi adanya perasaan ingin " +
-//                            "menyakiti diri. Ini sangat serius dan perlu ditangani " +
-//                            "oleh profesional. Ingatlah untuk menjaga kesehatan mental. " +
-//                            "Jangan ragu mencari dukungan dari orang lain. " +
-//                            "Banyak yang peduli dan siap membantumu mengatasi kesulitan " +
-//                            "yang kamu hadapi.",
-                    color = Color.Black,
+                    color = AdaptiveColors.adaptiveText(),
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.W400,
                     fontSize = 16.sp,
-                    modifier = Modifier.padding(horizontal = 12.dp)
+                    modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 24.dp)
                 )
             }
         }

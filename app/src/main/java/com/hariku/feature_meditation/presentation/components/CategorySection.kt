@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hariku.core.ui.theme.AdaptiveColors
 
 @Composable
 fun CategorySection(
@@ -26,14 +27,14 @@ fun CategorySection(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .background(Color(0xFFEFEFEF), RoundedCornerShape(12.dp))
+            .background(AdaptiveColors.adaptiveCardBackground(), RoundedCornerShape(12.dp))
             .padding(vertical = 12.dp)
     ) {
         Text(
             text = title,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF242424),
+            color = AdaptiveColors.adaptiveText(),
             modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
         )
         

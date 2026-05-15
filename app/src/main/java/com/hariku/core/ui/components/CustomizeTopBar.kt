@@ -1,6 +1,5 @@
 package com.hariku.core.ui.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
-import androidx.compose.material3.MaterialTheme
+import com.hariku.core.ui.theme.AdaptiveColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,7 +32,7 @@ fun CustomizeTopBar(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(bottomStart = 15.dp, bottomEnd = 15.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground())
     ) {
         CenterAlignedTopAppBar(
             title = {
@@ -41,7 +40,7 @@ fun CustomizeTopBar(
                     text = title,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = AdaptiveColors.adaptiveText()
                 )
             },
             navigationIcon = {
@@ -49,17 +48,17 @@ fun CustomizeTopBar(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_back_arrow),
                         contentDescription = "Back",
-                        tint = MaterialTheme.colorScheme.onSurface
+                        tint = AdaptiveColors.adaptiveText()
                     )
                 }
             },
             actions = { isActions() },
             modifier = Modifier.statusBarsPadding(),
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-                titleContentColor = MaterialTheme.colorScheme.onSurface,
-                actionIconContentColor = MaterialTheme.colorScheme.onSurface
+                containerColor = Color.Transparent,
+                navigationIconContentColor = AdaptiveColors.adaptiveText(),
+                titleContentColor = AdaptiveColors.adaptiveText(),
+                actionIconContentColor = AdaptiveColors.adaptiveText()
             ),
         )
     }

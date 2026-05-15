@@ -18,6 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hariku.core.ui.theme.Coral100
+import com.hariku.core.ui.theme.Coral40
+import com.hariku.core.ui.theme.Green40
 
 @Composable
 fun StickerTab(onStickerSelected: (String) -> Unit) {
@@ -39,7 +42,7 @@ fun StickerTab(onStickerSelected: (String) -> Unit) {
             item {
                 StickerPack(
                     title = "Activity Illustrations Sticker Pack",
-                    backgroundColor = Color(0xFFFFB3D9),
+                    backgroundColor = Coral100,
                     stickers = listOf("⏰", "⏰"),
                     onStickerClick = onStickerSelected
                 )
@@ -47,7 +50,7 @@ fun StickerTab(onStickerSelected: (String) -> Unit) {
             item {
                 StickerPack(
                     title = "Tasha The Bear Stickers",
-                    backgroundColor = Color(0xFF9FD6A8),
+                    backgroundColor = Green40,
                     stickers = emptyList(),
                     onStickerClick = onStickerSelected
                 )
@@ -63,15 +66,15 @@ fun StickerTab(onStickerSelected: (String) -> Unit) {
                 .fillMaxWidth()
                 .height(56.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFCF6D49)
+                containerColor = Coral40,
+                contentColor = Color.White
             ),
             shape = RoundedCornerShape(12.dp)
         ) {
             Text(
                 text = "Tambah Sticker Gambar",
                 fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.White
+                fontWeight = FontWeight.SemiBold
             )
         }
     }

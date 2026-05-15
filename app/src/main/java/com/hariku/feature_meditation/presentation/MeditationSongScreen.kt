@@ -22,6 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
 import org.koin.androidx.compose.koinViewModel
+import com.hariku.core.ui.theme.Coral50
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Neutral100
+import com.hariku.core.ui.theme.Coral90
+import com.hariku.core.ui.theme.LocalThemeState
+import com.hariku.core.ui.theme.SpecialWarmBeige
 
 @Composable
 fun MeditationSongScreen(
@@ -32,6 +38,7 @@ fun MeditationSongScreen(
 ) {
     val context = LocalContext.current
     val state = viewModel.state
+    val isDark = LocalThemeState.current.isDarkTheme
     
     LaunchedEffect(songId) {
         viewModel.loadSong(songId)
@@ -60,20 +67,20 @@ fun MeditationSongScreen(
     when {
         state.isLoading -> {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().background(AdaptiveColors.adaptiveBackground()),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(color = Coral90)
             }
         }
         state.error != null -> {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().background(AdaptiveColors.adaptiveBackground()),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = state.error,
-                    color = Color.Red,
+                    color = Coral90,
                     modifier = Modifier.padding(16.dp)
                 )
             }
@@ -89,13 +96,13 @@ fun MeditationSongScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xFFD3D3D3))
+                    .background(AdaptiveColors.adaptiveBackground())
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
-                        .background(Color(0xFFFDFCFC))
+                        .background(AdaptiveColors.adaptiveCardBackground())
                         .padding(top = 22.dp, bottom = 12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -103,12 +110,12 @@ fun MeditationSongScreen(
                         text = song.title,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF333333)
+                        color = AdaptiveColors.adaptiveText()
                     )
                     Text(
                         text = song.category,
                         fontSize = 12.sp,
-                        color = Color.Gray
+                        color = AdaptiveColors.adaptiveTextSecondary()
                     )
                 }
 
@@ -122,7 +129,7 @@ fun MeditationSongScreen(
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(24.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
                         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
                     ) {
                         Column(
@@ -147,7 +154,7 @@ fun MeditationSongScreen(
                                 text = song.title,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFFD17F4B)
+                                color = if (isDark) Color(0xFFD88C5A) else Coral50 // Using Orange70 in dark mode
                             )
 
                             Spacer(modifier = Modifier.height(20.dp))
@@ -157,9 +164,9 @@ fun MeditationSongScreen(
                                 onValueChange = { viewModel.seekTo(it) },
                                 valueRange = 0f..state.duration,
                                 colors = SliderDefaults.colors(
-                                    thumbColor = Color(0xFFD17F4B),
-                                    activeTrackColor = Color(0xFFD17F4B),
-                                    inactiveTrackColor = Color(0xFFE8C5A9)
+                                    thumbColor = if (isDark) Color(0xFFD88C5A) else Coral50,
+                                    activeTrackColor = if (isDark) Color(0xFFD88C5A) else Coral50,
+                                    inactiveTrackColor = if (isDark) Color(0xFF2D2D3A) else SpecialWarmBeige
                                 ),
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -170,12 +177,12 @@ fun MeditationSongScreen(
                             ) {
                                 Text(
                                     formatTime(viewModel.currentPosition.toInt()),
-                                    color = Color.Gray,
+                                    color = AdaptiveColors.adaptiveTextSecondary(),
                                     fontSize = 12.sp
                                 )
                                 Text(
                                     formatTime(state.duration.toInt()),
-                                    color = Color.Gray,
+                                    color = AdaptiveColors.adaptiveTextSecondary(),
                                     fontSize = 12.sp
                                 )
                             }
@@ -190,7 +197,7 @@ fun MeditationSongScreen(
                                     Icon(
                                         imageVector = Icons.Default.FastRewind,
                                         contentDescription = "Mundur 5 detik",
-                                        tint = Color(0xFFD17F4B),
+                                        tint = if (isDark) Color(0xFFD88C5A) else Coral50,
                                         modifier = Modifier.size(40.dp)
                                     )
                                 }
@@ -202,12 +209,12 @@ fun MeditationSongScreen(
                                     modifier = Modifier
                                         .size(80.dp)
                                         .clip(RoundedCornerShape(40.dp))
-                                        .background(Color(0xFFD17F4B))
+                                        .background(if (isDark) Color(0xFFD88C5A) else Coral50)
                                 ) {
                                     Icon(
                                         imageVector = if (state.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                                         contentDescription = "Play/Pause",
-                                        tint = Color.White,
+                                        tint = Neutral100,
                                         modifier = Modifier.size(48.dp)
                                     )
                                 }
@@ -218,7 +225,7 @@ fun MeditationSongScreen(
                                     Icon(
                                         imageVector = Icons.Default.FastForward,
                                         contentDescription = "Maju 5 detik",
-                                        tint = Color(0xFFD17F4B),
+                                        tint = if (isDark) Color(0xFFD88C5A) else Coral50,
                                         modifier = Modifier.size(40.dp)
                                     )
                                 }

@@ -29,6 +29,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
+import com.hariku.core.ui.theme.Coral90
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Orange50
+import com.hariku.core.ui.theme.Yellow30
+import com.hariku.core.ui.theme.LocalThemeState
 
 @Composable
 fun ChatCard(
@@ -37,14 +42,16 @@ fun ChatCard(
     date: String,
     unreadCount: Int,
     avatarResId: Int = R.drawable.ic_launcher_foreground,
-    backgroundColor: Color = Color(0xFFF5CBA7),
+    backgroundColor: Color = Yellow30,
     onClick: () -> Unit
 ) {
+    val isDark = LocalThemeState.current.isDarkTheme
+    
     Card(
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier.fillMaxWidth().clickable{ onClick() },
         elevation = CardDefaults.cardElevation(2.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground())
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -69,21 +76,22 @@ fun ChatCard(
                 Text(
                     text = title,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp
+                    fontSize = 15.sp,
+                    color = AdaptiveColors.adaptiveText()
                 )
                 Text(
                     text = message,
                     fontSize = 13.sp,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2,
-                    color = Color(0xFFB57A4A)
+                    color = if (isDark) Color(0xFFD88C5A) else Orange50 // Using Orange70 in dark mode
                 )
             }
             Column(horizontalAlignment = Alignment.End) {
                 Text(
                     text = date,
                     fontSize = 12.sp,
-                    color = Color.Gray
+                    color = AdaptiveColors.adaptiveTextSecondary()
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 // Only show badge if unreadCount > 0
@@ -92,7 +100,7 @@ fun ChatCard(
                         modifier = Modifier
                             .size(20.dp)
                             .clip(CircleShape)
-                            .background(Color(0xFFFF8A7A)),
+                            .background(Coral90),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(

@@ -1,6 +1,7 @@
 package com.hariku.feature_chatbot.presentation.customize
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -36,6 +37,9 @@ import com.hariku.feature_chatbot.presentation.components.ThreePointSlider
 import com.hariku.feature_chatbot.presentation.components.FeedbackTypeOption
 import com.hariku.feature_chatbot.presentation.components.GoalCheckbox
 import com.hariku.core.ui.theme.HariKuTheme
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Coral20
+import com.hariku.core.ui.theme.LocalThemeState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -49,14 +53,18 @@ fun CustomizePersonalCatScreen(
     val context = LocalContext.current
 
     Scaffold(
+        containerColor = AdaptiveColors.adaptiveBackground(),
         topBar = {
             CustomizeTopBar(
                 onBackClick = { navController.popBackStack() }
             )
-        },
-        containerColor = Color(0xFFF2F2F2)
+        }
     ) { paddingValues ->
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(AdaptiveColors.adaptiveBackground())
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -118,7 +126,8 @@ fun CustomizePersonalCatScreen(
                         .fillMaxWidth()
                         .height(56.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFB88157)
+                        containerColor = Coral20,
+                        contentColor = Color.White
                     ),
                     shape = RoundedCornerShape(12.dp),
                     enabled = !uiState.isSaving
@@ -132,8 +141,7 @@ fun CustomizePersonalCatScreen(
                         Text(
                             text = "Selesai",
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color.White
+                            fontWeight = FontWeight.SemiBold
                         )
                     }
                 }
@@ -154,13 +162,17 @@ fun LanguageStyleSection(
     Text(
         text = "Gaya Bahasa",
         fontSize = 18.sp,
-        color = Color(0xFFB0B0B0),
+        color = AdaptiveColors.adaptiveText(),
+        fontWeight = FontWeight.Bold
     )
+
+    Spacer(modifier = Modifier.height(12.dp))
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        shape = RoundedCornerShape(16.dp)
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier
@@ -180,9 +192,9 @@ fun LanguageStyleSection(
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier
@@ -207,14 +219,17 @@ fun FeedbackTypeSection(
     Text(
         text = "Tipe Feedback",
         fontSize = 18.sp,
-        color = Color(0xFFB0B0B0),
+        color = AdaptiveColors.adaptiveText(),
+        fontWeight = FontWeight.Bold
     )
+
+    Spacer(modifier = Modifier.height(12.dp))
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier
@@ -269,14 +284,17 @@ fun GoalSection(
     Text(
         text = "Tujuan",
         fontSize = 18.sp,
-        color = Color(0xFFB0B0B0),
+        color = AdaptiveColors.adaptiveText(),
+        fontWeight = FontWeight.Bold
     )
+
+    Spacer(modifier = Modifier.height(12.dp))
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier
@@ -332,9 +350,9 @@ fun GoalSection(
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             modifier = Modifier
@@ -347,16 +365,18 @@ fun GoalSection(
                 placeholder = {
                     Text(
                         text = "Isi Tujuan Lainnya...",
-                        color = Color(0xFFB0B0B0),
+                        color = AdaptiveColors.adaptiveTextSecondary(),
                         fontSize = 14.sp
                     )
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color(0xFFF9F9F9),
-                    unfocusedContainerColor = Color(0xFFF9F9F9),
-                    focusedBorderColor = Color(0xFFE0E0E0),
-                    unfocusedBorderColor = Color(0xFFE0E0E0)
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedBorderColor = Coral20,
+                    unfocusedBorderColor = AdaptiveColors.adaptiveDivider(),
+                    focusedTextColor = AdaptiveColors.adaptiveText(),
+                    unfocusedTextColor = AdaptiveColors.adaptiveText()
                 ),
                 shape = RoundedCornerShape(12.dp)
             )
@@ -364,7 +384,7 @@ fun GoalSection(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun CustomizePersonalCatScreenPreview() {
     HariKuTheme {

@@ -24,6 +24,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
+import com.hariku.core.ui.theme.Coral30
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.SpecialLightBrown
 
 @Composable
 fun CompletedContent(
@@ -41,7 +44,7 @@ fun CompletedContent(
         ) {
             Canvas(modifier = Modifier.fillMaxSize()) {
                 drawArc(
-                    color = Color(0xFFedba92),
+                    color = SpecialLightBrown,
                     startAngle = -90f,
                     sweepAngle = 360f,
                     useCenter = false,
@@ -55,7 +58,7 @@ fun CompletedContent(
             
             Canvas(modifier = Modifier.fillMaxSize()) {
                 drawArc(
-                    color = Color(0xFFc97d50),
+                    color = Coral30,
                     startAngle = -90f,
                     sweepAngle = 360 * progress,
                     useCenter = false,
@@ -78,7 +81,7 @@ fun CompletedContent(
         
         Text(
             text = "Selesai!",
-            color = Color(0xFF242424),
+            color = AdaptiveColors.adaptiveText(),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
@@ -87,7 +90,7 @@ fun CompletedContent(
         
         Text(
             text = "Semoga setelah ini, Kamu merasa sedikit lebih rileks dan tidak terlalu cemas.",
-            color = Color(0xFF9F9F9F),
+            color = AdaptiveColors.adaptiveTextSecondary(),
             fontSize = 16.sp,
             textAlign = TextAlign.Justify,
             lineHeight = 22.sp

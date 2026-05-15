@@ -39,6 +39,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.feature_statistic.domain.model.ChartData
 import com.hariku.feature_statistic.domain.model.SentimentData
+import com.hariku.core.ui.theme.Blue40
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.MoodAngryAlt
+import com.hariku.core.ui.theme.MoodNeutralAlt
 
 
 @Composable
@@ -47,9 +51,9 @@ fun ChartPieCard(
 ) {
     var expanded by remember { mutableStateOf(true) }
     
-    val colorNegative = Color(0xFFF0A096)
-    val colorPositive = Color(0xFFAEE3EB)
-    val colorNeutral = Color(0xFFEBCBA6)
+    val colorNegative = MoodAngryAlt
+    val colorPositive = Blue40
+    val colorNeutral = MoodNeutralAlt
     
     val chartDataList = listOf(
         ChartData("Negatif", sentimentData.negative, colorNegative, "${sentimentData.negative.toInt()}%"),
@@ -60,7 +64,7 @@ fun ChartPieCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column {
@@ -75,19 +79,20 @@ fun ChartPieCard(
                 Text(
                     text = "Sentimen Jurnal",
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Normal
+                    fontWeight = FontWeight.Normal,
+                    color = AdaptiveColors.adaptiveText()
                 )
                 Icon(
                     imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                     contentDescription = if (expanded) "Collapse" else "Expand",
-                    tint = Color.Gray
+                    tint = AdaptiveColors.adaptiveTextSecondary()
                 )
             }
             
             HorizontalDivider(
                 modifier = Modifier.padding(horizontal = 24.dp),
                 thickness = 1.dp,
-                color = Color.LightGray.copy(alpha = 0.5f)
+                color = AdaptiveColors.adaptiveDivider()
             )
             
             AnimatedVisibility(

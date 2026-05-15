@@ -19,11 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -41,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.hariku.feature_journal.domain.model.TextElement
 import kotlin.math.roundToInt
+import com.hariku.core.ui.theme.Coral40
 
 @Composable
 fun EditableText(
@@ -52,33 +48,11 @@ fun EditableText(
     onDelete: () -> Unit = {},
     onScaleChange: (Float) -> Unit = {},
 ) {
-//    var offsetX by remember { mutableFloatStateOf(textElement.offsetX) }
-//    var offsetY by remember { mutableFloatStateOf(textElement.offsetY) }
-//    var scale by remember { mutableFloatStateOf(textElement.scale) }
-    
-//    LaunchedEffect(textElement.offsetX, textElement.offsetY, textElement.scale) {
-//        offsetX = textElement.offsetX
-//        offsetY = textElement.offsetY
-//        scale = textElement.scale
-//    }
-    
-//    val transformState = rememberTransformableState { zoomChange, offsetChange, _ ->
-//        if (isSelected) {
-//            scale = (scale * zoomChange).coerceIn(0.5f, 3f)
-//            offsetX += offsetChange.x
-//            offsetY += offsetChange.y
-//            onDrag(Offset(offsetX, offsetY))
-//            onScaleChange(scale)
-//        }
-//    }
-
     val transformState = rememberTransformableState { zoomChange, offsetChange, _ ->
         if (isSelected) {
-            // Hitung skala baru dan kirim ke ViewModel
             val newScale = (textElement.scale * zoomChange).coerceIn(0.5f, 3f)
             onScaleChange(newScale)
 
-            // Hitung posisi baru dan kirim ke ViewModel
             val newOffsetX = textElement.offsetX + offsetChange.x
             val newOffsetY = textElement.offsetY + offsetChange.y
             onDrag(Offset(newOffsetX, newOffsetY))
@@ -87,19 +61,14 @@ fun EditableText(
     
     Box(
         modifier = Modifier
-//            .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
             .offset { IntOffset(textElement.offsetX.roundToInt(), textElement.offsetY.roundToInt()) }
             .zIndex(if (isSelected) 10f else 1f)) {
-        // Delete button when selected
+        
         if (isSelected) {
-            // Text input field
             BasicTextField(
                 value = textElement.text,
                 onValueChange = onTextChange,
                 modifier = Modifier
-//                    .graphicsLayer(
-//                        scaleX = scale, scaleY = scale
-//                    )
                     .graphicsLayer(
                         scaleX = textElement.scale,
                         scaleY = textElement.scale
@@ -113,7 +82,7 @@ fun EditableText(
                     }
                     .then(
                         Modifier.border(
-                            2.dp, Color(0xFFCF6D49), RoundedCornerShape(4.dp)
+                            2.dp, Coral40, RoundedCornerShape(4.dp)
                         )
                     )
                     .padding(8.dp)
@@ -133,7 +102,7 @@ fun EditableText(
                     textDecoration = if (textElement.isUnderlined) TextDecoration.Underline
                     else TextDecoration.None
                 ),
-                cursorBrush = SolidColor(Color.White))
+                cursorBrush = SolidColor(textElement.color))
             
             IconButton(
                 onClick = onDelete,
@@ -141,7 +110,7 @@ fun EditableText(
                     .size(24.dp)
                     .align(Alignment.TopStart)
                     .offset((-8).dp, (-8).dp)
-                    .background(Color(0xFFCF6D49), CircleShape)
+                    .background(Coral40, CircleShape)
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
@@ -167,9 +136,6 @@ fun EditableText(
                 textDecoration = if (textElement.isUnderlined) TextDecoration.Underline
                 else TextDecoration.None,
                 modifier = Modifier
-//                    .graphicsLayer(
-//                        scaleX = scale, scaleY = scale
-//                    )
                     .graphicsLayer(
                         scaleX = textElement.scale,
                         scaleY = textElement.scale

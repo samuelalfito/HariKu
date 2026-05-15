@@ -23,6 +23,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
+import com.hariku.core.ui.theme.Coral30
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Neutral100
 
 @Composable
 fun MoodOverallCard(){
@@ -30,7 +33,7 @@ fun MoodOverallCard(){
         modifier = Modifier
             .fillMaxWidth()
             .clip(CardDefaults.shape),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ){
         Box{
@@ -40,7 +43,7 @@ fun MoodOverallCard(){
                 modifier = Modifier
                     .scale(3.5f)
                     .align(Alignment.Center)
-                    .absoluteOffset(x = -32.dp, y = 8.dp),
+                    .absoluteOffset(x = (-32).dp, y = 8.dp),
                 alpha = 0.2f
             )
             Column(
@@ -54,12 +57,13 @@ fun MoodOverallCard(){
                     text = "32.3% Lebih Bahagia!",
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
-                    color = Color(0xFFC97D50)
+                    color = Coral30
                 )
                 Text(
                     text = "Mood Positifmu pada bulan ini Meningkat 32.3% dibanding Bulan Lalu! Bulan ini, kamu sering merasa senang",
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center,
+                    color = AdaptiveColors.adaptiveText(),
                     modifier = Modifier.padding(horizontal = 12.dp)
                 )
                 Spacer(modifier = Modifier.height(22.dp))

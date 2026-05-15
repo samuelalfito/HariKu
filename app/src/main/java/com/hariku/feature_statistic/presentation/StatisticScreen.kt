@@ -1,5 +1,6 @@
 package com.hariku.feature_statistic.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,8 @@ import com.hariku.feature_statistic.presentation.components.StatisticsMood
 import com.hariku.feature_statistic.presentation.components.WarningCard
 import org.koin.androidx.compose.koinViewModel
 import java.util.Calendar
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Coral90
 
 @Composable
 fun StatisticScreen(
@@ -56,7 +59,7 @@ fun StatisticScreen(
     }
     
     Scaffold(
-        containerColor = Color(0xFFF9F9F9),
+        containerColor = AdaptiveColors.adaptiveBackground(),
         topBar = {
             SosTopBar(
                 title = "Statistik",
@@ -72,6 +75,7 @@ fun StatisticScreen(
                     end = paddingValues.calculateRightPadding(LayoutDirection.Rtl)
                 )
                 .fillMaxSize()
+                .background(AdaptiveColors.adaptiveBackground())
         ) {
             when (val state = statisticState) {
                 is StatisticState.Loading -> {
@@ -79,7 +83,7 @@ fun StatisticScreen(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator()
+                        CircularProgressIndicator(color = Coral90)
                     }
                 }
                 
@@ -90,7 +94,7 @@ fun StatisticScreen(
                     ) {
                         Text(
                             text = "Error: ${state.message}",
-                            color = Color.Red
+                            color = Coral90
                         )
                     }
                 }
@@ -102,7 +106,7 @@ fun StatisticScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = 16.dp),
-                        contentPadding = PaddingValues(16.dp),
+                        contentPadding = PaddingValues(bottom = 16.dp, top = 16.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         item {

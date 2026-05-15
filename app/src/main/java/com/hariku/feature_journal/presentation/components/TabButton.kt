@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hariku.core.ui.theme.Coral40
+import com.hariku.core.ui.theme.Neutral75
 
 @Composable
 fun TabButton(
@@ -30,7 +32,7 @@ fun TabButton(
             text = text,
             fontSize = 16.sp,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-            color = if (isSelected) Color(0xFFCF6D49) else Color.Gray,
+            color = if (isSelected) Coral40 else Neutral75,
             modifier = Modifier.padding(vertical = 8.dp)
         )
         if (isSelected) {
@@ -38,7 +40,7 @@ fun TabButton(
                 modifier = Modifier
                     .width(60.dp)
                     .height(3.dp)
-                    .background(Color(0xFFCF6D49))
+                    .background(Coral40)
             )
         }
     }

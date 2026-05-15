@@ -21,6 +21,8 @@ import androidx.navigation.NavController
 import com.hariku.R
 import com.hariku.core.ui.components.Routes
 import org.koin.androidx.compose.koinViewModel
+import com.hariku.core.ui.theme.Coral30
+import com.hariku.core.ui.theme.TextWhite
 
 @Composable
 fun SplashScreen(
@@ -39,12 +41,12 @@ fun SplashScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFDFCFC))
+            .background(TextWhite)
     ) {
         Text(
             text = "HariKu",
             style = TextStyle(
-                color = Color(0xFFC97D50),
+                color = Coral30,
                 fontSize = 78.sp,
                 fontWeight = FontWeight.Bold
             ),

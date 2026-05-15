@@ -43,6 +43,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.feature_journal.domain.model.TextElement
+import com.hariku.core.ui.theme.Blue100
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Coral40
+import com.hariku.core.ui.theme.Neutral0
+import com.hariku.core.ui.theme.Neutral100
+import com.hariku.core.ui.theme.Purple30
+import com.hariku.core.ui.theme.Neutral75
+import com.hariku.core.ui.theme.SpecialGreen
+import com.hariku.core.ui.theme.SpecialOrange
 
 @Composable
 fun TextTab(
@@ -69,7 +78,7 @@ fun TextTab(
                     text = "TEKS",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Gray,
+                    color = AdaptiveColors.adaptiveTextSecondary(),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 
@@ -83,7 +92,7 @@ fun TextTab(
                     Row(
                         modifier = Modifier
                             .weight(1f)
-                            .border(1.dp, Color.LightGray, RoundedCornerShape(8.dp))
+                            .border(1.dp, AdaptiveColors.adaptiveDivider(), RoundedCornerShape(8.dp))
                             .clickable {
                                 showFontPicker = !showFontPicker
                                 showColorPicker = false
@@ -94,12 +103,13 @@ fun TextTab(
                     ) {
                         Text(
                             text = selectedTextElement.fontFamily,
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            color = AdaptiveColors.adaptiveText()
                         )
                         Icon(
                             imageVector = Icons.Default.ArrowDropDown,
                             contentDescription = null,
-                            tint = Color(0xFFCF6D49)
+                            tint = Coral40
                         )
                     }
                     
@@ -117,14 +127,14 @@ fun TextTab(
                             },
                             modifier = Modifier
                                 .size(40.dp)
-                                .border(1.dp, Color(0xFFCF6D49), CircleShape)
+                                .border(1.dp, Coral40, CircleShape)
                         ) {
                             Box(
                                 modifier = Modifier
                                     .size(24.dp)
                                     .clip(CircleShape)
                                     .background(selectedTextElement.color)
-                                    .border(1.dp, Color.Black, CircleShape)
+                                    .border(1.dp, AdaptiveColors.adaptiveDivider(), CircleShape)
                             )
                         }
                         
@@ -153,7 +163,7 @@ fun TextTab(
                                     else -> Icons.Default.KeyboardArrowUp
                                 },
                                 contentDescription = "Align",
-                                tint = Color.Black
+                                tint = AdaptiveColors.adaptiveText()
                             )
                         }
                         
@@ -170,7 +180,7 @@ fun TextTab(
                             Icon(
                                 imageVector = Icons.Default.Settings,
                                 contentDescription = "Size",
-                                tint = Color.Black
+                                tint = AdaptiveColors.adaptiveText()
                             )
                         }
                         
@@ -185,8 +195,8 @@ fun TextTab(
                                 imageVector = Icons.Default.Settings,
                                 contentDescription = "Underline",
                                 tint = if (selectedTextElement.isUnderlined)
-                                    Color(0xFFCF6D49)
-                                else Color.Black
+                                    Coral40
+                                else AdaptiveColors.adaptiveText()
                             )
                         }
                     }
@@ -204,18 +214,18 @@ fun TextTab(
                             .height(80.dp)
                     ) {
                         val colors = listOf(
-                            Color.White,
-                            Color.Black,
+                            Neutral100,
+                            Neutral0,
                             Color.Red,
                             Color.Blue,
                             Color.Green,
                             Color.Yellow,
                             Color.Magenta,
                             Color.Cyan,
-                            Color(0xFFFF9800),
-                            Color(0xFF9C27B0),
-                            Color(0xFF00BCD4),
-                            Color(0xFF4CAF50)
+                            SpecialOrange,
+                            Purple30,
+                            Blue100,
+                            SpecialGreen
                         )
                         items(colors.size) { index ->
                             Box(
@@ -226,9 +236,9 @@ fun TextTab(
                                     .border(
                                         width = if (selectedTextElement.color == colors[index]) 2.dp else 1.dp,
                                         color = if (selectedTextElement.color == colors[index])
-                                            Color(0xFFCF6D49)
+                                            Coral40
                                         else
-                                            Color.Gray,
+                                            AdaptiveColors.adaptiveDivider(),
                                         shape = CircleShape
                                     )
                                     .clickable {
@@ -247,7 +257,7 @@ fun TextTab(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(120.dp)
-                            .border(1.dp, Color.LightGray, RoundedCornerShape(8.dp))
+                            .border(1.dp, AdaptiveColors.adaptiveDivider(), RoundedCornerShape(8.dp))
                             .padding(8.dp),
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
@@ -259,7 +269,7 @@ fun TextTab(
                                     .clip(RoundedCornerShape(4.dp))
                                     .background(
                                         if (selectedTextElement.fontFamily == font)
-                                            Color(0xFFCF6D49).copy(alpha = 0.2f)
+                                            Coral40.copy(alpha = 0.2f)
                                         else
                                             Color.Transparent
                                     )
@@ -273,9 +283,9 @@ fun TextTab(
                                     text = font,
                                     fontSize = 14.sp,
                                     color = if (selectedTextElement.fontFamily == font)
-                                        Color(0xFFCF6D49)
+                                        Coral40
                                     else
-                                        Color.Black
+                                        AdaptiveColors.adaptiveText()
                                 )
                             }
                         }
@@ -289,7 +299,7 @@ fun TextTab(
                     text = "BAYANGAN",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Gray,
+                    color = AdaptiveColors.adaptiveTextSecondary(),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 
@@ -299,11 +309,13 @@ fun TextTab(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     // Shadow X
-                        Text(text = "X", fontSize = 12.sp, color = Color.Gray)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(text = "X", fontSize = 12.sp, color = AdaptiveColors.adaptiveTextSecondary())
                         Text(
                             text = "${selectedTextElement.shadowX.toInt()} px",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
+                            color = AdaptiveColors.adaptiveText(),
                             modifier = Modifier
                                 .clickable {
                                     selectedTextElement.let { it ->
@@ -313,13 +325,16 @@ fun TextTab(
                                 }
                                 .padding(4.dp)
                         )
+                    }
                     
                     // Shadow Y
-                        Text(text = "Y", fontSize = 12.sp, color = Color.Gray)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(text = "Y", fontSize = 12.sp, color = AdaptiveColors.adaptiveTextSecondary())
                         Text(
                             text = "${selectedTextElement.shadowY.toInt()} px",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
+                            color = AdaptiveColors.adaptiveText(),
                             modifier = Modifier
                                 .clickable {
                                     selectedTextElement.let { it ->
@@ -329,13 +344,16 @@ fun TextTab(
                                 }
                                 .padding(4.dp)
                         )
+                    }
                     
                     // Shadow Radius
-                        Text(text = "Radius", fontSize = 12.sp, color = Color.Gray)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(text = "Radius", fontSize = 12.sp, color = AdaptiveColors.adaptiveTextSecondary())
                         Text(
                             text = "${selectedTextElement.shadowRadius.toInt()} px",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
+                            color = AdaptiveColors.adaptiveText(),
                             modifier = Modifier
                                 .clickable {
                                     selectedTextElement.let { it ->
@@ -346,6 +364,7 @@ fun TextTab(
                                 }
                                 .padding(4.dp)
                         )
+                    }
                     
                     // Shadow Color
                     Box(
@@ -353,13 +372,13 @@ fun TextTab(
                             .size(32.dp)
                             .clip(CircleShape)
                             .background(selectedTextElement.shadowColor)
-                            .border(2.dp, Color(0xFFCF6D49), CircleShape)
+                            .border(2.dp, Coral40, CircleShape)
                             .clickable {
                                 selectedTextElement.let { it ->
-                                    val newColor = if (it.shadowColor == Color.Black)
-                                        Color.White
+                                    val newColor = if (it.shadowColor == Neutral0)
+                                        Neutral100
                                     else
-                                        Color.Black
+                                        Neutral0
                                     onUpdateTextProperty { it.copy(shadowColor = newColor) }
                                 }
                             }
@@ -373,7 +392,7 @@ fun TextTab(
                     text = "GARIS LUAR",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Gray,
+                    color = AdaptiveColors.adaptiveTextSecondary(),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 
@@ -384,12 +403,13 @@ fun TextTab(
                 ) {
                     // Opacity
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "Opacity", fontSize = 14.sp, color = Color.Gray)
+                        Text(text = "Opacity", fontSize = 14.sp, color = AdaptiveColors.adaptiveTextSecondary())
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "${(selectedTextElement.shadowOpacity * 100).toInt()} %",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
+                            color = AdaptiveColors.adaptiveText(),
                             modifier = Modifier.clickable {
                                 selectedTextElement.let { it ->
                                     val newOpacity =
@@ -402,12 +422,13 @@ fun TextTab(
                     
                     // Outline Width
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "Ketebalan", fontSize = 14.sp, color = Color.Gray)
+                        Text(text = "Ketebalan", fontSize = 14.sp, color = AdaptiveColors.adaptiveTextSecondary())
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "${selectedTextElement.outlineWidth.toInt()} px",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
+                            color = AdaptiveColors.adaptiveText(),
                             modifier = Modifier.clickable {
                                 selectedTextElement.let { it ->
                                     val newWidth =
@@ -424,13 +445,13 @@ fun TextTab(
                             .size(32.dp)
                             .clip(CircleShape)
                             .background(selectedTextElement.outlineColor)
-                            .border(2.dp, Color(0xFFCF6D49), CircleShape)
+                            .border(2.dp, Coral40, CircleShape)
                             .clickable {
                                 selectedTextElement.let { it ->
-                                    val newColor = if (it.outlineColor == Color.Black)
-                                        Color.White
+                                    val newColor = if (it.outlineColor == Neutral0)
+                                        Neutral100
                                     else
-                                        Color.Black
+                                        Neutral0
                                     onUpdateTextProperty { it.copy(outlineColor = newColor) }
                                 }
                             }
@@ -447,7 +468,7 @@ fun TextTab(
                     onClick = onAddText,
                     modifier = Modifier
                         .size(64.dp)
-                        .background(Color(0xFFCF6D49), CircleShape)
+                        .background(Coral40, CircleShape)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
@@ -461,7 +482,7 @@ fun TextTab(
                     text = "Tambah/Pilih Teks",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Color(0xFFCF6D49)
+                    color = Coral40
                 )
             }
         }

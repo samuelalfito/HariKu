@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hariku.R
+import com.hariku.core.ui.theme.AdaptiveColors
 
 @Composable
 fun BottomNavBar(selectedIndex: Int = 0, onItemSelected: (Int) -> Unit) {
@@ -25,7 +26,7 @@ fun BottomNavBar(selectedIndex: Int = 0, onItemSelected: (Int) -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = Color.White,
+                color = AdaptiveColors.adaptiveCardBackground(),
                 shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
             )
             .padding(horizontal = 32.dp, vertical = 8.dp)
