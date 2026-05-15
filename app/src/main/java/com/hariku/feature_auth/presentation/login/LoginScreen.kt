@@ -50,7 +50,11 @@ import com.hariku.feature_auth.presentation.components.RegularTextField
 import com.hariku.feature_auth.presentation.components.TextLogo
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Neutral100
+import com.hariku.core.ui.theme.Orange80
+import com.hariku.core.ui.theme.Coral30
+import com.hariku.core.ui.theme.LocalThemeState
 
 @SuppressLint("ContextCastToActivity")
 @Composable
@@ -59,13 +63,13 @@ fun LoginScreen(
     viewModel: LoginScreenViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val orangeColor = Color(0xFFCD8C63)
+    val isDark = LocalThemeState.current.isDarkTheme
+    val orangeColor = Coral30
     val context = LocalContext.current as Activity
-    val googleAuthUiClient = remember(context) { //Key nya context, kalau context berubah buat ulang
+    val googleAuthUiClient = remember(context) {
         GoogleAuthUiClient(context = context)
     }
     val scope = rememberCoroutineScope()
-
 
     LaunchedEffect(key1 = uiState) {
         if (uiState.loginSuccess) {
@@ -81,21 +85,23 @@ fun LoginScreen(
     }
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(AdaptiveColors.adaptiveBackground())
     ) {
         Box(
             modifier = Modifier
                 .size(470.dp)
                 .offset(y = 77.41.dp)
                 .background(
-                    color = Color(0xFFFAF2ED),
+                    color = if (isDark) Color(0xFF2B1B18) else Color(0xFFFAF2ED), // Using BgDark and BgLightAlt10 equivalents
                     shape = CircleShape
                 )
                 .align(Alignment.BottomCenter)
         )
         Image(
             painter = painterResource(id = R.drawable.auth_cat),
-            contentDescription = "Google Icon",
+            contentDescription = "Auth Cat",
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
@@ -136,8 +142,6 @@ fun LoginScreen(
 
                 Button(
                     onClick = {
-                        /*TODO: LOGIN FEATURE
-                                PIN Verification, if have PIN go to Routes.MASUKKAN_PIN*/
                         Log.d("HariKu:LoginScreen", "Login")
                         viewModel.onLoginClicked()
                     },
@@ -151,13 +155,13 @@ fun LoginScreen(
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     if (uiState.isLoading) {
-                        CircularProgressIndicator()
+                        CircularProgressIndicator(color = Neutral100)
                     } else {
                         Text(
                             text = "Login",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Medium,
-                            color = Color.White
+                            color = Neutral100
                         )
                     }
                 }
@@ -186,7 +190,7 @@ fun LoginScreen(
                     .padding(horizontal = 32.dp)
                     .height(56.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White
+                    containerColor = AdaptiveColors.adaptiveCardBackground()
                 ),
                 shape = RoundedCornerShape(12.dp)
             ) {
@@ -200,7 +204,7 @@ fun LoginScreen(
                     text = "Masuk Dengan Google",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Color.Black
+                    color = AdaptiveColors.adaptiveText()
                 )
             }
 
@@ -215,7 +219,7 @@ fun LoginScreen(
                     text = "Pengguna baru? ",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Color.Black,
+                    color = AdaptiveColors.adaptiveText(),
                     modifier = Modifier
                         .padding(0.dp)
                 )
@@ -223,7 +227,7 @@ fun LoginScreen(
                     text = "Daftar di sini",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFFE0A071),
+                    color = Orange80,
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier
                         .padding(0.dp)
@@ -243,7 +247,7 @@ fun LoginScreen(
                     .padding(horizontal = 32.dp)
                     .height(56.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White
+                    containerColor = AdaptiveColors.adaptiveCardBackground()
                 ),
                 shape = RoundedCornerShape(12.dp)
             ) {
@@ -251,7 +255,7 @@ fun LoginScreen(
                     text = "Masuk Sebagai Tamu",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Color.Black
+                    color = AdaptiveColors.adaptiveText()
                 )
             }
         }
@@ -262,7 +266,6 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenPreview() {
     LoginScreen(
-        navController = rememberNavController(),
-        viewModel = viewModel()
+        navController = rememberNavController()
     )
 }

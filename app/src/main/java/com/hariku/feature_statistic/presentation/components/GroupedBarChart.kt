@@ -14,25 +14,32 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.rotate
+import androidx.compose.ui.graphics.toArgb
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.LocalThemeState
 
 @Composable
 fun GroupedBarChart(data: List<WeeklyData>) {
     val yAxisMax = 50f
     val yAxisSteps = 5
+    val isDark = LocalThemeState.current.isDarkTheme
     
-    val textPaint = remember {
+    val textColor = AdaptiveColors.adaptiveTextSecondary().toArgb()
+    val labelColor = AdaptiveColors.adaptiveText().toArgb()
+    val axisColor = AdaptiveColors.adaptiveDivider()
+    
+    val textPaint = remember(textColor) {
         Paint().apply {
-            color = android.graphics.Color.DKGRAY
+            color = textColor
             textSize = 32f
             textAlign = Paint.Align.RIGHT
             typeface = Typeface.DEFAULT
         }
     }
     
-    val labelPaint = remember {
+    val labelPaint = remember(labelColor) {
         Paint().apply {
-            color = android.graphics.Color.BLACK
+            color = labelColor
             textSize = 36f
             textAlign = Paint.Align.CENTER
             typeface = Typeface.DEFAULT
@@ -69,33 +76,17 @@ fun GroupedBarChart(data: List<WeeklyData>) {
         }
         
         drawLine(
-            color = Color.Gray,
+            color = axisColor,
             start = Offset(paddingLeft, 0f),
             end = Offset(paddingLeft, chartHeight),
             strokeWidth = 2f
         )
         drawLine(
-            color = Color.Gray,
+            color = axisColor,
             start = Offset(paddingLeft, chartHeight),
             end = Offset(size.width, chartHeight),
             strokeWidth = 2f
         )
-        
-        val pathY = Path().apply {
-            moveTo(paddingLeft, 0f)
-            lineTo(paddingLeft - 10f, 15f)
-            moveTo(paddingLeft, 0f)
-            lineTo(paddingLeft + 10f, 15f)
-        }
-        drawPath(pathY, Color.Gray, style = Stroke(width = 3f))
-        
-        val pathX = Path().apply {
-            moveTo(size.width, chartHeight)
-            lineTo(size.width - 15f, chartHeight - 10f)
-            moveTo(size.width, chartHeight)
-            lineTo(size.width - 15f, chartHeight + 10f)
-        }
-        drawPath(pathX, Color.Gray, style = Stroke(width = 3f))
         
         val groupWidth = chartWidth / data.size
         val barWidth = (groupWidth * 0.7f) / 3
@@ -124,19 +115,19 @@ fun GroupedBarChart(data: List<WeeklyData>) {
             val labelY = chartHeight + 40f
             
             drawIntoCanvas {
-                it.save()
-                it.rotate(45f, labelX, labelY)
+                it.nativeCanvas.save()
+                it.nativeCanvas.rotate(45f, labelX, labelY)
                 it.nativeCanvas.drawText(
                     item.dateLabel,
                     labelX,
                     labelY,
                     labelPaint
                 )
-                it.restore()
+                it.nativeCanvas.restore()
             }
             
             drawLine(
-                color = Color.Black,
+                color = axisColor,
                 start = Offset(labelX, chartHeight),
                 end = Offset(labelX, chartHeight + 10f),
                 strokeWidth = 3f

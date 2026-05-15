@@ -31,6 +31,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hariku.core.ui.theme.Blue80
+import com.hariku.core.ui.theme.Blue85
+import com.hariku.core.ui.theme.Blue90
+import com.hariku.core.ui.theme.Coral40
+import com.hariku.core.ui.theme.Green50
+import com.hariku.core.ui.theme.Green70
+import com.hariku.core.ui.theme.Neutral70
+import com.hariku.core.ui.theme.Purple50
+import com.hariku.core.ui.theme.Purple90
+import com.hariku.core.ui.theme.Rose80
+import com.hariku.core.ui.theme.Yellow50
+import com.hariku.core.ui.theme.Coral90
+import com.hariku.core.ui.theme.Purple80
 
 @Composable
 fun BackgroundTab(
@@ -38,13 +51,13 @@ fun BackgroundTab(
     onColorSelected: (Color) -> Unit
 ) {
     val colors = listOf(
-        Color(0xFFFFB3BA), Color(0xFFFFD4A3), Color(0xFFFFE5A3), Color(0xFFB8E6B8),
-        Color(0xFF9FE2BF), Color(0xFF87CEEB), Color(0xFF89CFF0), Color(0xFF6495ED),
-        Color(0xFF7B68EE), Color(0xFFDA70D6), Color(0xFFDDA0DD), Color(0xFF757575),
-        Color(0xFFFF9A76), Color(0xFFB19CD9), Color(0xFFA3E4D7),
+        Rose80, Yellow50, Yellow50, Green70,
+        Green50, Blue80, Blue85, Blue90,
+        Purple90, Purple90, Purple80, Neutral70,
+        Coral90, Purple50, Green70,
         // Patterned colors (simulated with gradients)
-        Color(0xFFFFB3BA), Color(0xFF6495ED), Color(0xFFA3E4D7), Color(0xFFB19CD9),
-        Color(0xFFFFB3C1), Color(0xFFFFD4A3)
+        Rose80, Blue90, Green70, Purple50,
+        Rose80, Yellow50
     )
     
     Column(
@@ -67,7 +80,7 @@ fun BackgroundTab(
                         .clickable { onColorSelected(colors[index]) }
                         .then(
                             if (colors[index] == selectedColor)
-                                Modifier.border(3.dp, Color(0xFFCF6D49), RoundedCornerShape(8.dp))
+                                Modifier.border(3.dp, Coral40, RoundedCornerShape(8.dp))
                             else Modifier
                         )
                 ) {
@@ -95,7 +108,7 @@ fun BackgroundTab(
                 .fillMaxWidth()
                 .height(56.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFCF6D49)
+                containerColor = Coral40
             ),
             shape = RoundedCornerShape(12.dp)
         ) {

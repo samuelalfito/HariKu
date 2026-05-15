@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.hariku.R
 import com.hariku.core.ui.theme.HariKuTheme
+import com.hariku.core.ui.theme.AdaptiveColors
 import com.hariku.feature_article.domain.model.Article
 
 @Composable
@@ -40,7 +41,7 @@ fun ArticleCard(
             .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground())
     ) {
         Column {
             if (article.imageUrl.isNotEmpty()) {
@@ -72,7 +73,7 @@ fun ArticleCard(
                 Text(
                     text = article.title,
                     fontSize = 16.sp,
-                    color = Color(0xFF333333),
+                    color = AdaptiveColors.adaptiveText(),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -81,7 +82,7 @@ fun ArticleCard(
                     text = "${article.category} • ${article.readTime}",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF9F9F9F)
+                    color = AdaptiveColors.adaptiveTextSecondary()
                 )
             }
         }

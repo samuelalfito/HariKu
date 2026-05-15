@@ -43,6 +43,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hariku.R
 import com.hariku.core.ui.theme.HariKuTheme
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Orange60
+import com.hariku.core.ui.theme.TransparentWhite
+import com.hariku.core.ui.theme.Orange50
+import com.hariku.core.ui.theme.LocalThemeState
 import com.hariku.core.ui.components.CustomizeTopBar
 import com.hariku.core.ui.components.Routes
 import org.koin.androidx.compose.koinViewModel
@@ -55,6 +60,7 @@ fun CustomizeNewCatScreen(
     viewModel: CustomizeNewCatViewModel = koinViewModel()
 ) {
     val uiState = viewModel.uiState
+    val isDark = LocalThemeState.current.isDarkTheme
 
     val avatarList = listOf(
         R.drawable.ic_customize_cat_01,
@@ -72,6 +78,7 @@ fun CustomizeNewCatScreen(
     )
 
     Scaffold(
+        containerColor = AdaptiveColors.adaptiveBackground(),
         topBar = {
             CustomizeTopBar(
                 title = "Customize",
@@ -82,7 +89,7 @@ fun CustomizeNewCatScreen(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .background(Color(0xFFF5F5F5))
+                .background(AdaptiveColors.adaptiveBackground())
                 .padding(paddingValues)
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.Start
@@ -92,7 +99,7 @@ fun CustomizeNewCatScreen(
             Text(
                 text = "Nama Karakter",
                 fontSize = 16.sp,
-                color = Color(0xFF9E9E9E),
+                color = AdaptiveColors.adaptiveText(),
             )
 
             OutlinedTextField(
@@ -102,17 +109,19 @@ fun CustomizeNewCatScreen(
                     Text(
                         text = "Masukkan nama karakter",
                         fontSize = 16.sp,
-                        color = Color(0xFFBDBDBD)
+                        color = AdaptiveColors.adaptiveTextSecondary()
                     )
                 },
                 modifier = Modifier
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedBorderColor = Color(0xFFC87C47),
-                    unfocusedBorderColor = Color.Transparent
+                    focusedContainerColor = AdaptiveColors.adaptiveCardBackground(),
+                    unfocusedContainerColor = AdaptiveColors.adaptiveCardBackground(),
+                    focusedBorderColor = Orange60,
+                    unfocusedBorderColor = AdaptiveColors.adaptiveDivider(),
+                    focusedTextColor = AdaptiveColors.adaptiveText(),
+                    unfocusedTextColor = AdaptiveColors.adaptiveText()
                 ),
                 singleLine = true
             )
@@ -122,7 +131,7 @@ fun CustomizeNewCatScreen(
             Text(
                 text = "Pilih Avatar",
                 fontSize = 16.sp,
-                color = Color(0xFF9E9E9E),
+                color = AdaptiveColors.adaptiveText(),
             )
 
             Card(
@@ -131,10 +140,10 @@ fun CustomizeNewCatScreen(
                     .wrapContentHeight(),
                 shape = RoundedCornerShape(24.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color.White
+                    containerColor = AdaptiveColors.adaptiveCardBackground()
                 ),
                 elevation = CardDefaults.cardElevation(
-                    defaultElevation = 0.dp
+                    defaultElevation = 2.dp
                 )
             ) {
                 LazyVerticalGrid(
@@ -174,15 +183,15 @@ fun CustomizeNewCatScreen(
                     .height(52.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFC87C47)
+                    containerColor = Orange60,
+                    contentColor = Color.White
                 ),
                 enabled = uiState.isValid
             ) {
                 Text(
                     text = "Lanjut",
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White
+                    fontWeight = FontWeight.SemiBold
                 )
             }
 
@@ -204,7 +213,7 @@ fun AvatarSelectionItem(
             .clip(CircleShape)
             .border(
                 width = if (isSelected) 5.dp else 0.dp,
-                color = if (isSelected) Color(0xFFB87333) else Color.Transparent,
+                color = if (isSelected) Orange50 else Color.Transparent,
                 shape = CircleShape
             )
             .clickable(onClick = onClick),
@@ -222,13 +231,13 @@ fun AvatarSelectionItem(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xCCFFFFFF), CircleShape),
+                    .background(TransparentWhite, CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_checked),
                     contentDescription = "Selected",
-                    tint = Color(0xFFC87C47),
+                    tint = Orange60,
                     modifier = Modifier.size(40.dp)
                 )
             }
@@ -243,4 +252,3 @@ fun CustomizeNewCatScreenPreview() {
         CustomizeNewCatScreen(rememberNavController())
     }
 }
-

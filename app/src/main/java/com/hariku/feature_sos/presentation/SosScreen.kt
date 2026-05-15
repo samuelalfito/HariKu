@@ -2,6 +2,7 @@ package com.hariku.feature_sos.presentation
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,16 +33,19 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.hariku.R
 import com.hariku.core.ui.components.Routes
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Rose35
 
 @Composable
 fun SosScreen(navController: NavController) {
     Scaffold(
-        containerColor = Color(0xFFFFFFFF)
+        containerColor = AdaptiveColors.adaptiveBackground()
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .background(AdaptiveColors.adaptiveBackground())
         ) {
             IconButton(
                 onClick = { navController.popBackStack() },
@@ -62,7 +66,7 @@ fun SosScreen(navController: NavController) {
                 Text(
                     text = "Apakah kamu dalam keadaan darurat?",
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Black,
+                    color = AdaptiveColors.adaptiveTextSecondary(),
                     textAlign = TextAlign.Center
                 )
                 
@@ -71,13 +75,13 @@ fun SosScreen(navController: NavController) {
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
-                    color = Color(0xFF242424)
+                    color = AdaptiveColors.adaptiveText()
                 )
                 
                 Text(
                     text = "Meminta bantuan bukan berarti kamu lemah.",
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Black,
+                    color = AdaptiveColors.adaptiveTextSecondary(),
                     textAlign = TextAlign.Center
                 )
                 
@@ -89,11 +93,11 @@ fun SosScreen(navController: NavController) {
                         .fillMaxWidth()
                         .height(56.dp),
                     shape = RoundedCornerShape(16.dp),
-                    border = BorderStroke(3.dp, Color(0xFFbb5366))
+                    border = BorderStroke(3.dp, Rose35)
                 ) {
                     Text(
                         text = "Coba Teknik 5 Panca Indra",
-                        color = Color(0xFFbb5366),
+                        color = Rose35,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     )
@@ -105,11 +109,13 @@ fun SosScreen(navController: NavController) {
                         .fillMaxWidth()
                         .height(56.dp),
                     shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFbb5366))
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Rose35,
+                        contentColor = Color.White
+                    )
                 ) {
                     Text(
                         text = "Bantuan Profesional",
-                        color = Color.White,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     )
@@ -119,7 +125,7 @@ fun SosScreen(navController: NavController) {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun SosScreenPreview() {
     MaterialTheme {

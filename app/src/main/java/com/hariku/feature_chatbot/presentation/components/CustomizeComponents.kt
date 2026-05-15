@@ -39,7 +39,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.LocalThemeState
 import kotlin.math.roundToInt
+import com.hariku.core.ui.theme.Coral20
+import com.hariku.core.ui.theme.Orange80
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,6 +58,7 @@ fun ThreePointSlider(
     val thumbSize = 24.dp
     val thumbPx = with(density) { thumbSize.toPx() }
     val trackStartPx = thumbPx / 2f
+    val isDark = LocalThemeState.current.isDarkTheme
 
     Box(
         modifier = Modifier
@@ -91,7 +96,7 @@ fun ThreePointSlider(
                         .height(24.dp)
                         .align(Alignment.Center)
                         .clip(RoundedCornerShape(6.dp))
-                        .background(Color(0xFFEFD0B8))
+                        .background(if (isDark) Color(0xFF222222) else Color(0xFFEFD0B8)) // Neutral20 / BgLightAlt9
                 )
 
                 Box(
@@ -99,8 +104,8 @@ fun ThreePointSlider(
                         .size(24.dp)
                         .align(Alignment.CenterStart)
                         .clip(CircleShape)
-                        .background(Color.White)
-                        .border(width = 2.dp, color = Color(0xFFE1A071), shape = CircleShape)
+                        .background(AdaptiveColors.adaptiveBackground())
+                        .border(width = 2.dp, color = Orange80, shape = CircleShape)
                 )
 
                 Box(
@@ -108,8 +113,8 @@ fun ThreePointSlider(
                         .size(24.dp)
                         .align(Alignment.CenterEnd)
                         .clip(CircleShape)
-                        .background(Color.White)
-                        .border(width = 2.dp, color = Color(0xFFE1A071), shape = CircleShape)
+                        .background(AdaptiveColors.adaptiveBackground())
+                        .border(width = 2.dp, color = Orange80, shape = CircleShape)
                 )
 
                 val thumbCenterPx = trackStartPx + (selectedPoint.coerceIn(0f, 1f) * trackWidthPx)
@@ -121,15 +126,15 @@ fun ThreePointSlider(
                         .offset { IntOffset(thumbOffset, 0) }
                         .size(24.dp)
                         .clip(CircleShape)
-                        .background(Color.White)
-                        .border(width = 3.dp, color = Color(0xFFB88157), shape = CircleShape)
+                        .background(AdaptiveColors.adaptiveBackground())
+                        .border(width = 3.dp, color = Coral20, shape = CircleShape)
                 ) {
                     Box(
                         modifier = Modifier
                             .size(10.dp)
                             .align(Alignment.Center)
                             .clip(CircleShape)
-                            .background(Color(0xFFB88157))
+                            .background(Coral20)
                     )
                 }
 
@@ -148,13 +153,13 @@ fun ThreePointSlider(
                 Text(
                     text = startLabel,
                     fontSize = 16.sp,
-                    color = Color(0xFF242424),
+                    color = AdaptiveColors.adaptiveText(),
                     fontWeight = FontWeight.Medium
                 )
                 Text(
                     text = endLabel,
                     fontSize = 16.sp,
-                    color = Color(0xFF242424),
+                    color = AdaptiveColors.adaptiveText(),
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -172,7 +177,8 @@ fun FeedbackTypeOption(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .clickable(onClick = onClick)
+            .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.Top
     ) {
@@ -181,8 +187,8 @@ fun FeedbackTypeOption(
             selected = isSelected,
             onClick = onClick,
             colors = RadioButtonDefaults.colors(
-                selectedColor = Color(0xFFB88157),
-                unselectedColor = Color(0xFFB0B0B0)
+                selectedColor = Coral20,
+                unselectedColor = AdaptiveColors.adaptiveDivider()
             )
         )
         Spacer(modifier = Modifier.width(8.dp))
@@ -191,11 +197,12 @@ fun FeedbackTypeOption(
                 text = title,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.SemiBold,
+                color = AdaptiveColors.adaptiveText()
             )
             Text(
                 text = description,
                 fontSize = 12.sp,
-                color = Color(0xFF7A7A7A),
+                color = AdaptiveColors.adaptiveTextSecondary(),
                 lineHeight = 16.sp
             )
         }
@@ -211,15 +218,16 @@ fun GoalCheckbox(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onCheckedChange(!isChecked) },
+            .clickable { onCheckedChange(!isChecked) }
+            .padding(vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Checkbox(
             checked = isChecked,
             onCheckedChange = onCheckedChange,
             colors = CheckboxDefaults.colors(
-                checkedColor = Color(0xFFB88157),
-                uncheckedColor = Color(0xFFB0B0B0),
+                checkedColor = Coral20,
+                uncheckedColor = AdaptiveColors.adaptiveDivider(),
                 checkmarkColor = Color.White
             )
         )
@@ -227,7 +235,7 @@ fun GoalCheckbox(
         Text(
             text = text,
             fontSize = 14.sp,
-            color = Color(0xFF242424)
+            color = AdaptiveColors.adaptiveText()
         )
     }
 }

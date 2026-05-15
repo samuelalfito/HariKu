@@ -37,12 +37,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.feature_statistic.domain.model.WeeklySentiment
+import com.hariku.core.ui.theme.Blue40
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.ChartGridLine
+import com.hariku.core.ui.theme.Neutral30
+import com.hariku.core.ui.theme.MoodAngryAlt
+import com.hariku.core.ui.theme.MoodNeutralAlt
 
-val BarColorNegative = Color(0xFFF0A096)
-val BarColorPositive = Color(0xFFAEE3EB)
-val BarColorNeutral = Color(0xFFEBCBA6)
-val ColorTextDark = Color(0xFF2D2D3A)
-val ColorGridLine = Color(0xFFE0E0E0)
+val BarColorNegative = MoodAngryAlt
+val BarColorPositive = Blue40
+val BarColorNeutral = MoodNeutralAlt
+val ColorGridLine = ChartGridLine
 
 data class WeeklyData(
     val dateLabel: String,
@@ -69,7 +74,7 @@ fun ChartBarCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column {
@@ -85,19 +90,19 @@ fun ChartBarCard(
                     text = "Sentimen Jurnal Mingguan",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Normal,
-                    color = ColorTextDark
+                    color = AdaptiveColors.adaptiveText()
                 )
                 Icon(
                     imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                     contentDescription = "Toggle",
-                    tint = Color.Gray
+                    tint = AdaptiveColors.adaptiveTextSecondary()
                 )
             }
             
             HorizontalDivider(
                 modifier = Modifier.padding(horizontal = 24.dp),
                 thickness = 1.dp,
-                color = Color.LightGray.copy(alpha = 0.5f)
+                color = AdaptiveColors.adaptiveDivider()
             )
             
             AnimatedVisibility(
@@ -111,7 +116,7 @@ fun ChartBarCard(
                         Text(
                             text = "Belum ada data sentimen mingguan",
                             fontSize = 14.sp,
-                            color = Color.Gray,
+                            color = AdaptiveColors.adaptiveTextSecondary(),
                             modifier = Modifier.padding(16.dp)
                         )
                     } else {

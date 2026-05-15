@@ -36,6 +36,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.hariku.R
 import com.hariku.feature_home.presentation.MoodViewModel
 import kotlinx.coroutines.delay
+import com.hariku.core.ui.theme.Coral90
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Green30
+import com.hariku.core.ui.theme.Neutral100
 
 @Composable
 fun MoodCard(
@@ -79,7 +83,7 @@ fun MoodCard(
             shape = RoundedCornerShape(24.dp),
             modifier = Modifier.fillMaxWidth(),
             elevation = CardDefaults.cardElevation(4.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground())
         ) {
             Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 20.dp)) {
                 Text(
@@ -92,7 +96,7 @@ fun MoodCard(
                     fontSize = 18.sp,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    color = if (uiState.todayMood != null) Color(0xFF71A77A) else Color.Black
+                    color = if (uiState.todayMood != null) Green30 else AdaptiveColors.adaptiveText()
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 if (uiState.isLoading) {
@@ -100,7 +104,7 @@ fun MoodCard(
                         modifier = Modifier.fillMaxWidth(),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator(modifier = Modifier.size(32.dp))
+                        CircularProgressIndicator(modifier = Modifier.size(32.dp), color = Green30)
                     }
                 } else {
                     val moods = listOf(
@@ -122,7 +126,7 @@ fun MoodCard(
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center,
-                            color = Color(0xFFFF8A7A)
+                            color = Coral90
                         )
                     }
                     Column(
@@ -169,7 +173,7 @@ private fun MoodItem(
         modifier = Modifier
             .alpha(if (isDisabled && !isSelected) 0.4f else 1f)
             .background(
-                color = if (isSelected) Color(0xFF71A77A) else Color.Transparent,
+                color = if (isSelected) Green30 else Color.Transparent,
                 shape = RoundedCornerShape(12.dp)
             )
             .clickable(enabled = !isDisabled && !isSaving, onClick = onClick)
@@ -186,7 +190,7 @@ private fun MoodItem(
             fontSize = 11.sp,
             textAlign = TextAlign.Center,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-            color = if (isSelected) Color.White else Color.Black
+            color = if (isSelected) Neutral100 else AdaptiveColors.adaptiveText()
         )
     }
 }

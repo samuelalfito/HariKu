@@ -19,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hariku.core.ui.theme.AdaptiveColors
 
 @Composable
 fun ActivityCard(title: String, imageRes: Int, backgroundColor: Color, onClick: () -> Unit) {
@@ -39,7 +40,7 @@ fun ActivityCard(title: String, imageRes: Int, backgroundColor: Color, onClick: 
             )
             Text(
                 text = title,
-                color = Color.White,
+                color = Color.White, // Kept white as it's usually placed on colored backgrounds defined in HomeScreen
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
                 modifier = Modifier

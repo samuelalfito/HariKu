@@ -45,6 +45,10 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Orange20
+import com.hariku.core.ui.theme.Orange60
+import com.hariku.core.ui.theme.LocalThemeState
 
 @Composable
 fun ChatbotDetailScreen(
@@ -57,6 +61,7 @@ fun ChatbotDetailScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+    val isDark = LocalThemeState.current.isDarkTheme
     
     LaunchedEffect(chatbotId) {
         viewModel.initialize(chatbotId)
@@ -78,7 +83,7 @@ fun ChatbotDetailScreen(
     }
     
     Scaffold(
-        containerColor = Color(0xFFFDE8D8),
+        containerColor = AdaptiveColors.adaptiveBackground(),
         topBar = {
             ChatDetailTopBar(
                 chatbotId = uiState.chatbot?.name ?: chatbotId,
@@ -106,11 +111,13 @@ fun ChatbotDetailScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .background(AdaptiveColors.adaptiveBackground())
         ) {
             when {
                 uiState.isLoading -> {
                     CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center)
+                        modifier = Modifier.align(Alignment.Center),
+                        color = Orange60
                     )
                 }
                 uiState.messages.isEmpty() -> {
@@ -120,7 +127,7 @@ fun ChatbotDetailScreen(
                             .align(Alignment.Center)
                             .padding(16.dp),
                         textAlign = TextAlign.Center,
-                        color = Color.Gray
+                        color = AdaptiveColors.adaptiveTextSecondary()
                     )
                 }
                 else -> {
@@ -160,7 +167,7 @@ fun ChatbotDetailScreen(
                                 ) {
                                     CircularProgressIndicator(
                                         modifier = Modifier.padding(16.dp),
-                                        color = Color(0xFFC87C47)
+                                        color = Orange60
                                     )
                                 }
                             }
@@ -174,6 +181,7 @@ fun ChatbotDetailScreen(
 
 @Composable
 fun DateSeparator(text: String) {
+    val isDark = LocalThemeState.current.isDarkTheme
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -183,7 +191,7 @@ fun DateSeparator(text: String) {
         Box(
             modifier = Modifier
                 .background(
-                    color = Color(0xFFF3D9C9),
+                    color = if (isDark) Color(0xFF222222) else Color(0xFFF3D9C9), // Using Neutral20 and BgLightAlt14 equivalents
                     shape = RoundedCornerShape(12.dp)
                 )
                 .padding(horizontal = 12.dp, vertical = 4.dp)
@@ -192,7 +200,7 @@ fun DateSeparator(text: String) {
                 text = text,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF6F4E37)
+                color = if (isDark) Color(0xFFD88C5A) else Orange20 // Using Orange70 in dark mode
             )
         }
     }
@@ -229,13 +237,6 @@ fun ChatbotDetailScreenPreview() {
     MaterialTheme {
         ChatbotDetailScreen(
             rememberNavController(), "1"
-        )
-        // Add preview for ChatDetailTopBar to ensure avatarResId is always provided
-        ChatDetailTopBar(
-            chatbotId = "PreviewBot",
-            avatarResId = R.drawable.ic_avatar_hariku,
-            onBackClick = {},
-            onSosClick = {}
         )
     }
 }

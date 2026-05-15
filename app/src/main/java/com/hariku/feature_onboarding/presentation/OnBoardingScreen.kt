@@ -33,12 +33,19 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hariku.R
 import com.hariku.core.ui.components.Routes
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Blue30
+import com.hariku.core.ui.theme.Blue70
+import com.hariku.core.ui.theme.Coral30
+import com.hariku.core.ui.theme.Neutral100
+import com.hariku.core.ui.theme.LocalThemeState
 
 @Composable
 fun OnboardingScreen(navController: NavController) {
-
-    val boxColorSelected = Color(0xFFC97D50)
-    val boxColorUnselected  = Color(0xFFDDDDDD)
+    val isDark = LocalThemeState.current.isDarkTheme
+    val boxColorSelected = Coral30
+    val boxColorUnselected  = if (isDark) Color(0xFF2D2D3A) else Color(0xFFDDDDDD) // Neutral30 and BgLightAlt12 equivalents
+    
     val onboardingImages = listOf(
         R.drawable.onboarding1,
         R.drawable.onboarding2,
@@ -60,7 +67,6 @@ fun OnboardingScreen(navController: NavController) {
         "Kenali lebih dalam kesehatan mentalmu dengan tanggapan dan rekap chat Calico!"
     )
 
-    /*ANIMATON STUFFS RRRAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHH*/
     var selectedBoxIndex by remember { mutableStateOf(1) }
 
     val transitionBox1 = updateTransition(targetState = selectedBoxIndex,label = "box1")
@@ -86,7 +92,7 @@ fun OnboardingScreen(navController: NavController) {
             else -> 6.dp
         }
     }
-    val box2Color by transitionBox1.animateColor(label = "box2Color") { state ->
+    val box2Color by transitionBox2.animateColor(label = "box2Color") { state ->
         when(state){
             2 -> boxColorSelected
             else -> boxColorUnselected
@@ -99,30 +105,30 @@ fun OnboardingScreen(navController: NavController) {
             else -> 6.dp
         }
     }
-    val box3Color by transitionBox1.animateColor(label = "box3Color") { state ->
+    val box3Color by transitionBox3.animateColor(label = "box3Color") { state ->
         when(state){
             3 -> boxColorSelected
             else -> boxColorUnselected
         }
     }
-    /*ANIMATON STUFFS RRRAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHH*/
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFFEBF5FB),
-                        Color(0xFF8FC5F6)
-                    )
+                    colors = if (isDark) {
+                        listOf(Color(0xFF2B1B18), Color(0xFF000000))
+                    } else {
+                        listOf(Blue70, Blue30)
+                    }
                 )
             ),
         contentAlignment = Alignment.TopCenter
     ) {
         Image(
             painter = painterResource(id = onboardingImages[selectedBoxIndex-1]),
-            contentDescription = "Onboarding 1",
+            contentDescription = "Onboarding Image",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = onboardingImagesPadding[selectedBoxIndex-1])
@@ -134,7 +140,7 @@ fun OnboardingScreen(navController: NavController) {
                 .fillMaxWidth()
                 .fillMaxHeight(0.55f)
                 .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-                .background(Color.White)
+                .background(AdaptiveColors.adaptiveBackground())
                 .align(Alignment.BottomCenter)
         ) {
             Column(
@@ -151,13 +157,13 @@ fun OnboardingScreen(navController: NavController) {
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
                         lineHeight = 36.sp,
-                        color = Color(0xFF1E1E1E)
+                        color = AdaptiveColors.adaptiveText()
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = texts[selectedBoxIndex-1],
                         fontSize = 18.sp,
-                        color = Color(0xFF757575),
+                        color = AdaptiveColors.adaptiveTextSecondary(),
                         textAlign = TextAlign.Center
                     )
                 }
@@ -195,7 +201,7 @@ fun OnboardingScreen(navController: NavController) {
                     Spacer(modifier = Modifier.height(64.dp))
 
                     Button(
-                        onClick = { /*TODO: Animate progress dots*/
+                        onClick = {
                             if(selectedBoxIndex == 3){
                                 navController.navigate(Routes.AuthGraph.route)
                             }else{
@@ -203,20 +209,20 @@ fun OnboardingScreen(navController: NavController) {
                                 if(selectedBoxIndex==0){selectedBoxIndex+=1}
                             }
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFC97D50)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Coral30),
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
                     ) {
-                        Text("Lanjut", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text("Lanjut", color = Neutral100, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
 
                     Text(
                         text = "Lewati",
-                        color = Color(0xFFC97D50),
+                        color = Coral30,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier

@@ -47,6 +47,13 @@ import com.hariku.core.ui.components.SosTopBar
 import com.hariku.feature_journal.presentation.components.JournalCard
 import com.hariku.feature_journal.presentation.components.SearchBar
 import org.koin.androidx.compose.koinViewModel
+import com.hariku.core.ui.theme.Coral90
+import com.hariku.core.ui.theme.Neutral0
+import com.hariku.core.ui.theme.Neutral100
+import com.hariku.core.ui.theme.Neutral75
+import com.hariku.core.ui.theme.Yellow60
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.LocalThemeState
 
 @Composable
 fun JournalScreen(
@@ -56,6 +63,7 @@ fun JournalScreen(
     var searchQuery by remember { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsState()
     val journals = uiState.journals
+    val isDark = LocalThemeState.current.isDarkTheme
     
     val filteredJournals = remember(journals, searchQuery) {
         if (searchQuery.isBlank()) {
@@ -79,6 +87,7 @@ fun JournalScreen(
                 onSosClick = { navController.navigate(Routes.SosGraph.route) }
             )
         },
+        containerColor = AdaptiveColors.adaptiveBackground(),
         floatingActionButton = {
             Column(
                 horizontalAlignment = Alignment.End
@@ -96,7 +105,7 @@ fun JournalScreen(
                                     bottomEnd = 0.dp
                                 )
                             )
-                            .background(Color(0xFFFFD3B0)),
+                            .background(Yellow60),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Box(
@@ -110,7 +119,7 @@ fun JournalScreen(
                                 .padding(8.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("Jurnal Baru", color = Color.Black)
+                            Text("Jurnal Baru", color = Neutral0)
                         }
                         HorizontalDivider()
                         Box(
@@ -124,7 +133,7 @@ fun JournalScreen(
                                 .padding(8.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("Halaman Baru", color = Color.Black)
+                            Text("Halaman Baru", color = Neutral0)
                         }
                     }
                 }
@@ -147,7 +156,7 @@ fun JournalScreen(
                     start = paddingValues.calculateLeftPadding(LayoutDirection.Ltr),
                     end = paddingValues.calculateRightPadding(LayoutDirection.Rtl)
                 )
-                .background(Color.White)
+                .background(AdaptiveColors.adaptiveBackground())
                 .padding(horizontal = 24.dp)
         ) {
             SearchBar(
@@ -166,9 +175,9 @@ fun JournalScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            CircularProgressIndicator(color = Color(0xFFFF8A7A))
+                            CircularProgressIndicator(color = Coral90)
                             Spacer(modifier = Modifier.height(16.dp))
-                            Text("Memuat jurnal...", color = Color.Gray)
+                            Text("Memuat jurnal...", color = AdaptiveColors.adaptiveTextSecondary())
                         }
                     }
                 }
@@ -188,7 +197,7 @@ fun JournalScreen(
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
                                 text = uiState.error ?: "Terjadi kesalahan",
-                                color = Color.Red,
+                                color = Coral90,
                                 fontSize = 16.sp,
                                 textAlign = TextAlign.Center
                             )
@@ -196,10 +205,10 @@ fun JournalScreen(
                             Button(
                                 onClick = { viewModel.loadJournals() },
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFFFF8A7A)
+                                    containerColor = Coral90
                                 )
                             ) {
-                                Text("Coba Lagi", color = Color.White)
+                                Text("Coba Lagi", color = AdaptiveColors.adaptiveBackground())
                             }
                         }
                     }
@@ -219,7 +228,8 @@ fun JournalScreen(
                             Text(
                                 text = if (searchQuery.isBlank()) "Belum ada jurnal" else "Tidak ditemukan",
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 20.sp
+                                fontSize = 20.sp,
+                                color = AdaptiveColors.adaptiveText()
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
@@ -228,7 +238,7 @@ fun JournalScreen(
                                 } else {
                                     "Tidak ada jurnal dengan kata kunci \"$searchQuery\""
                                 },
-                                color = Color.Gray,
+                                color = AdaptiveColors.adaptiveTextSecondary(),
                                 fontSize = 14.sp,
                                 textAlign = TextAlign.Center
                             )

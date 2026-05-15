@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.hariku.feature_statistic.domain.model.ChartData
 import kotlin.math.cos
 import kotlin.math.sin
+import com.hariku.core.ui.theme.ChartTextColor
 
 @Composable
 fun ChartPie(
@@ -27,7 +28,7 @@ fun ChartPie(
 ) {
     val textPaint = remember {
         Paint().apply {
-            color = Color(0xFF4A4A6A).toArgb()
+            color = ChartTextColor.toArgb()
             textAlign = Paint.Align.CENTER
             textSize = 42f
             typeface = Typeface.DEFAULT_BOLD

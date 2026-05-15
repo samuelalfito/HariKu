@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.hariku.R
+import com.hariku.core.ui.theme.AdaptiveColors
 
 @Composable
 fun ArticleItem(
@@ -38,7 +39,7 @@ fun ArticleItem(
             .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = AdaptiveColors.adaptiveCardBackground()
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 2.dp
@@ -91,14 +92,14 @@ fun ArticleItem(
                     text = title,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
+                    color = AdaptiveColors.adaptiveText()
                 )
 
                 Text(
                     text = "$time • $author",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Normal,
-                    color = Color.Gray
+                    color = AdaptiveColors.adaptiveTextSecondary()
                 )
             }
         }

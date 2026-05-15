@@ -1,12 +1,11 @@
 package com.hariku.feature_journal.presentation.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,22 +16,21 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import com.hariku.R
 import com.hariku.feature_journal.domain.model.StickerElement
 import com.hariku.feature_journal.domain.model.TextElement
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.LocalThemeState
 
 @Composable
 fun JournalCard(
@@ -41,11 +39,17 @@ fun JournalCard(
     stickerElements: List<StickerElement>,
     onClick: () -> Unit = {}
 ) {
+    val isDark = LocalThemeState.current.isDarkTheme
+    
     Box(
         modifier = Modifier
             .fillMaxSize()
             .shadow(8.dp, RoundedCornerShape(16.dp))
-            .clickable(onClick = {onClick()})
+            .clickable(
+                onClick = onClick,
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            )
             .height(160.dp)
     ) {
         // Spiral binding
@@ -62,7 +66,7 @@ fun JournalCard(
                     modifier = Modifier
                         .size(width = 28.dp, height = 8.dp)
                         .clip(RoundedCornerShape(8.dp))
-                        .background(Color(0xFF757575))
+                        .background(if (isDark) Color(0xFF2D2D3A) else Color(0xFF7A7A7A)) // Neutral30 or Neutral75
                 )
             }
         }
@@ -76,7 +80,7 @@ fun JournalCard(
                 .background(backgroundColor)
         ) {
             // Text elements
-            textElements.forEachIndexed { index, element ->
+            textElements.forEach { element ->
                 EditableText(
                     textElement = element,
                     isSelected = false
@@ -84,7 +88,7 @@ fun JournalCard(
             }
 
             // Sticker elements
-            stickerElements.forEachIndexed { index, element ->
+            stickerElements.forEach { element ->
                 DraggableSticker(
                     stickerElement = element,
                     isSelected = false
@@ -94,40 +98,16 @@ fun JournalCard(
     }
 }
 
-
-data class JournalPreviewData(
-    val backgroundColor: Color = Color(0xFFF5F5F5),
-    val textElements: List<TextElement> = listOf(
-        TextElement(
-            id=0,
-            text = "STRESS",
-            offsetX = 100f.toFloat(),
-            offsetY = 100f
-        ),
-        TextElement(
-            id=1,
-            text = "GAJELAS",
-            offsetX = 200f,
-            offsetY = 200f,
-            color = Color.Black
-        )
-    ),
-    val stickerElements: List<StickerElement> = listOf(StickerElement(
-        id=0,
-        emoji = "😔",
-        offsetX = 200f,
-        offsetY = 100f
-    )),
-)
-
-val journalPreviewData: JournalPreviewData = JournalPreviewData()
-
 @Preview
 @Composable
 private fun Preview() {
     JournalCard(
-        backgroundColor = journalPreviewData.backgroundColor,
-        textElements = journalPreviewData.textElements,
-        stickerElements = journalPreviewData.stickerElements
+        backgroundColor = Color(0xFFFDE8D8),
+        textElements = listOf(
+            TextElement(id = 1, text = "Jurnal Hari Ini", offsetX = 20f, offsetY = 20f, color = Color.Black)
+        ),
+        stickerElements = listOf(
+            StickerElement(id = 1, emoji = "😊", offsetX = 100f, offsetY = 50f)
+        )
     )
 }

@@ -36,6 +36,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.hariku.R
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Orange80
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,7 +77,7 @@ fun ArticleTopBar(
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(0xFFE1A071)
+            containerColor = Orange80
         ),
     )
 }
@@ -89,7 +91,7 @@ private fun SearchBar(
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
-            .background(Color.White)
+            .background(AdaptiveColors.adaptiveBackground())
             .padding(horizontal = 8.dp)
     ) {
         Row(
@@ -100,7 +102,7 @@ private fun SearchBar(
                 painter = painterResource(id = R.drawable.search_lens),
                 contentDescription = "Search Icon",
                 modifier = Modifier.size(12.dp),
-                tint = Color(0xFF9F9F9F)
+                tint = AdaptiveColors.adaptiveTextSecondary()
             )
 
             Spacer(modifier = Modifier.width(6.dp))
@@ -110,12 +112,12 @@ private fun SearchBar(
                 onValueChange = { onQueryChange(it) },
                 singleLine = true,
                 textStyle = MaterialTheme.typography.bodySmall.copy(
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = AdaptiveColors.adaptiveText()
                 ),
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
-                cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
+                cursorBrush = SolidColor(AdaptiveColors.adaptiveText()),
                 decorationBox = { innerTextField ->
                     Box(
                         modifier = Modifier.fillMaxSize(),
@@ -125,7 +127,7 @@ private fun SearchBar(
                             Text(
                                 text = "Cari Artikel",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = Color(0xFF9F9F9F)
+                                color = AdaptiveColors.adaptiveTextSecondary()
                             )
                         }
                         innerTextField()
@@ -144,7 +146,8 @@ private fun SearchBar(
                     Icon(
                         Icons.Default.Close,
                         contentDescription = "Clear",
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(18.dp),
+                        tint = AdaptiveColors.adaptiveTextSecondary()
                     )
                 }
             }

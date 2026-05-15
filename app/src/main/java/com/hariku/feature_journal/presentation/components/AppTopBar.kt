@@ -18,6 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.SpecialBrown
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,7 +28,7 @@ fun AppTopBar(title: String, onBackClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = Color.White,
+                color = AdaptiveColors.adaptiveCardBackground(),
                 shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)
             )
     ) {
@@ -35,7 +37,8 @@ fun AppTopBar(title: String, onBackClick: () -> Unit) {
                 Text(
                     text = title,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
+                    fontSize = 20.sp,
+                    color = AdaptiveColors.adaptiveText()
                 )
             },
             navigationIcon = {
@@ -43,12 +46,14 @@ fun AppTopBar(title: String, onBackClick: () -> Unit) {
                     Icon(
                         painter = painterResource(R.drawable.back_arrow),
                         contentDescription = "Kembali",
-                        tint = Color(0xffbf794e)
+                        tint = SpecialBrown
                     )
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.Transparent
+                containerColor = Color.Transparent,
+                titleContentColor = AdaptiveColors.adaptiveText(),
+                navigationIconContentColor = SpecialBrown
             ),
             scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
         )

@@ -47,6 +47,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.hariku.R
 import com.hariku.core.ui.theme.HariKuTheme
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Neutral100
+import com.hariku.core.ui.theme.Orange60
+import com.hariku.core.ui.theme.TransparentWhite
+import com.hariku.core.ui.theme.Orange50
 import com.hariku.core.ui.components.CustomizeTopBar
 import com.hariku.core.ui.components.Routes
 import org.koin.androidx.compose.koinViewModel
@@ -123,6 +128,7 @@ fun CustomizeCatScreen(
     }
 
     Scaffold(
+        containerColor = AdaptiveColors.adaptiveBackground(),
         topBar = {
             CustomizeTopBar(
                 title = "Customize",
@@ -134,7 +140,7 @@ fun CustomizeCatScreen(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .background(Color(0xFFF5F5F5))
+                .background(AdaptiveColors.adaptiveBackground())
                 .padding(paddingValues)
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -147,7 +153,7 @@ fun CustomizeCatScreen(
                     .padding(horizontal = 8.dp),
                 shape = RoundedCornerShape(24.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color.White
+                    containerColor = AdaptiveColors.adaptiveCardBackground()
                 )
             ) {
                 Column(
@@ -170,7 +176,7 @@ fun CustomizeCatScreen(
                         text = catDataList[selectedCatIndex].name,
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF2F2F30)
+                        color = AdaptiveColors.adaptiveText()
                     )
 
                     Spacer(modifier = Modifier.height(6.dp))
@@ -179,7 +185,7 @@ fun CustomizeCatScreen(
                         text = catDataList[selectedCatIndex].subtitle,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = Color(0xFFC87C47),
+                        color = Orange60,
                         letterSpacing = 1.sp
                     )
 
@@ -188,7 +194,7 @@ fun CustomizeCatScreen(
                     Text(
                         text = catDataList[selectedCatIndex].description,
                         fontSize = 13.sp,
-                        color = Color(0xFF2F2F30),
+                        color = AdaptiveColors.adaptiveTextSecondary(),
                         textAlign = TextAlign.Center,
                         lineHeight = 18.sp
                     )
@@ -270,7 +276,8 @@ fun CustomizeCatScreen(
                     .padding(horizontal = 16.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFC87C47)
+                    containerColor = Orange60,
+                    contentColor = Color.White
                 ),
                 enabled = !uiState.isLoading
             ) {
@@ -283,8 +290,7 @@ fun CustomizeCatScreen(
                     Text(
                         text = "Lanjut",
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
             }
@@ -307,7 +313,7 @@ fun CatSelectionItem(
             .clip(CircleShape)
             .border(
                 width = if (isSelected) 5.dp else 0.dp,
-                color = if (isSelected) Color(0xFFB87333) else Color.Transparent,
+                color = if (isSelected) Orange50 else Color.Transparent,
                 shape = CircleShape
             )
             .clickable(onClick = onClick),
@@ -325,13 +331,13 @@ fun CatSelectionItem(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0xCCFFFFFF), CircleShape),
+                    .background(TransparentWhite, CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_checked),
                     contentDescription = "Selected",
-                    tint = Color(0xFFC87C47),
+                    tint = Orange60,
                     modifier = Modifier.size(40.dp)
                 )
             }

@@ -57,6 +57,9 @@ import com.hariku.feature_journal.presentation.components.TabButton
 import com.hariku.feature_journal.presentation.components.TextTab
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Coral40
+import com.hariku.core.ui.theme.LocalThemeState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,6 +75,7 @@ fun CreateJournalScreen(
     
     val pagerState = rememberPagerState(initialPage = 0)
     val coroutineScope = rememberCoroutineScope()
+    val isDark = LocalThemeState.current.isDarkTheme
     
     Scaffold(
         topBar = {
@@ -82,7 +86,8 @@ fun CreateJournalScreen(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        color = AdaptiveColors.adaptiveText()
                     )
                 },
                 navigationIcon = {
@@ -90,7 +95,7 @@ fun CreateJournalScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = Color(0xFFCF6D49)
+                            tint = Coral40
                         )
                     }
                 },
@@ -102,12 +107,13 @@ fun CreateJournalScreen(
                         Icon(
                             imageVector = Icons.Default.Check,
                             contentDescription = "Save",
-                            tint = Color(0xFFCF6D49)
+                            tint = Coral40
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White
+                    containerColor = AdaptiveColors.adaptiveBackground(),
+                    titleContentColor = AdaptiveColors.adaptiveText()
                 )
             )
         }
@@ -116,7 +122,7 @@ fun CreateJournalScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .background(Color(0xFFF5F5F5))
+                .background(AdaptiveColors.adaptiveBackground())
         ) {
             // Notebook Canvas Area
             Box(
@@ -203,7 +209,7 @@ fun CreateJournalScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White)
+                    .background(AdaptiveColors.adaptiveCardBackground())
                     .padding(vertical = 8.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
@@ -243,7 +249,7 @@ fun CreateJournalScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(320.dp),
-                color = Color.White,
+                color = AdaptiveColors.adaptiveCardBackground(),
                 shadowElevation = 8.dp
             ) {
                 HorizontalPager(
@@ -261,7 +267,8 @@ fun CreateJournalScreen(
                                     id = System.currentTimeMillis(),
                                     text = "Teks",
                                     offsetX = 100f,
-                                    offsetY = 100f
+                                    offsetY = 100f,
+                                    color = if (isDark) Color.White else Color.Black
                                 )
                                 val newList = textElements + newText
                                 viewModel.setTextElements(newList)
@@ -317,6 +324,8 @@ fun NotebookCanvas(
     onTextDelete: (Int) -> Unit,
     onStickerDelete: (Int) -> Unit,
 ) {
+    val isDark = LocalThemeState.current.isDarkTheme
+    
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -336,7 +345,7 @@ fun NotebookCanvas(
                     modifier = Modifier
                         .size(width = 36.dp, height = 16.dp)
                         .clip(RoundedCornerShape(8.dp))
-                        .background(Color(0xFF757575))
+                        .background(if (isDark) Color(0xFF1E1E1E) else Color(0xFF7A7A7A))
                 )
             }
         }
@@ -390,7 +399,7 @@ fun NotebookCanvas(
     }
 }
 
-@Preview
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun CreateJournalScreenPreview() {
     CreateJournalScreen(navController = NavController(LocalContext.current))

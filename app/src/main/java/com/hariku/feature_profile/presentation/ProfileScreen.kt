@@ -28,41 +28,55 @@ import coil.compose.AsyncImage
 import com.hariku.R
 import com.hariku.core.ui.components.Routes
 import org.koin.androidx.compose.koinViewModel
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Coral30
+import com.hariku.core.ui.theme.Coral60
+import com.hariku.core.ui.theme.Neutral100
+import com.hariku.core.ui.theme.SpecialPeachText
+import com.hariku.core.ui.theme.LocalThemeController
+import com.hariku.core.ui.theme.LocalThemeState
+import com.hariku.core.ui.theme.ThemeMode
 
 @Composable
 fun ProfileScreen(
     navController: NavController,
     viewModel: ProfileScreenViewModel = koinViewModel()
 ) {
+    val themeState = LocalThemeState.current
+    val themeController = LocalThemeController.current
+
     Scaffold(
         topBar = {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(70.dp)
-                    .background(Color.White),
+                    .background(AdaptiveColors.adaptiveBackground()),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.back_icon),
-                    contentDescription = "Back Icon",
+                IconButton(
+                    onClick = {
+                        navController.popBackStack(route = Routes.Home.route, inclusive = false)
+                    },
                     modifier = Modifier
                         .align(Alignment.CenterStart)
-                        .padding(start = 16.dp)
-                        .size(28.dp)
-                        .clickable {
-                            navController.popBackStack(route = Routes.Home.route, inclusive = false)
-                        }
-                )
+                        .padding(start = 8.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.back_icon),
+                        contentDescription = "Back Icon",
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
                 Text(
                     text = "Profile",
-                    color = Color(0xFF242424),
+                    color = AdaptiveColors.adaptiveText(),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
         },
-        containerColor = Color(0xFFF2F2F2)
+        containerColor = AdaptiveColors.adaptiveBackground()
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -73,7 +87,7 @@ fun ProfileScreen(
         ) {
             Card(
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
+                colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
@@ -83,20 +97,14 @@ fun ProfileScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     AsyncImage(
-                        model = viewModel.currentUser?.photoUrl, //URI/URL foto profil
+                        model = viewModel.currentUser?.photoUrl,
                         contentDescription = "Foto Profil",
-
                         modifier = Modifier
                             .size(80.dp)
                             .clip(CircleShape),
-
                         contentScale = ContentScale.Crop,
-
-                        // placeholder warna polos
-                        placeholder = ColorPainter(Color(0xFFF3B57B)),
-
-                        // Placeholder kalo error
-                        error = ColorPainter(Color(0xFFF3B57B))
+                        placeholder = ColorPainter(SpecialPeachText),
+                        error = ColorPainter(SpecialPeachText)
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
@@ -109,7 +117,7 @@ fun ProfileScreen(
                             text = viewModel.currentUser?.name ?: "{NAME NOT SET}",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF242424)
+                            color = AdaptiveColors.adaptiveText()
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Image(
@@ -122,7 +130,7 @@ fun ProfileScreen(
                     Text(
                         text = viewModel.currentUser?.email ?: "{EMAIL NOT SET}",
                         fontSize = 14.sp,
-                        color = Color(0xFF6B4E3D)
+                        color = AdaptiveColors.adaptiveTextSecondary()
                     )
                 }
             }
@@ -137,7 +145,13 @@ fun ProfileScreen(
             ProfileMenuItem(
                 iconRes = R.drawable.dark_mode,
                 text = "Dark Mode",
-                isToggle = true
+                isToggle = true,
+                toggleChecked = themeState.isDarkTheme,
+                onToggleChange = { checked ->
+                    themeController?.setThemeMode(
+                        if (checked) ThemeMode.DARK else ThemeMode.LIGHT
+                    )
+                }
             )
 
             ProfileMenuItem(
@@ -153,7 +167,7 @@ fun ProfileScreen(
             ProfileMenuItem(
                 iconRes = R.drawable.keluar,
                 text = "Keluar",
-                textColor = Color(0xFFD98585),
+                textColor = Coral60,
                 disableRipple = true,
                 onClick = {
                     viewModel.onLogoutClicked()
@@ -173,8 +187,10 @@ fun ProfileScreen(
 fun ProfileMenuItem(
     iconRes: Int,
     text: String,
-    textColor: Color = Color(0xFF242424),
+    textColor: Color = AdaptiveColors.adaptiveText(),
     isToggle: Boolean = false,
+    toggleChecked: Boolean = false,
+    onToggleChange: (Boolean) -> Unit = {},
     disableRipple: Boolean = false,
     onClick: () -> Unit = {}
 ) {
@@ -182,7 +198,7 @@ fun ProfileMenuItem(
 
     Card(
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp)
@@ -218,14 +234,14 @@ fun ProfileMenuItem(
 
             if (isToggle) {
                 Switch(
-                    checked = false,
-                    onCheckedChange = {},
+                    checked = toggleChecked,
+                    onCheckedChange = onToggleChange,
                     modifier = Modifier.size(36.dp),
                     colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color.White,
-                        checkedTrackColor = Color(0xFFC97D50),
-                        uncheckedThumbColor = Color.White,
-                        uncheckedTrackColor = Color(0xFFE1E1E1)
+                        checkedThumbColor = Neutral100,
+                        checkedTrackColor = Coral30,
+                        uncheckedThumbColor = Neutral100,
+                        uncheckedTrackColor = AdaptiveColors.adaptiveDivider()
                     )
                 )
             }

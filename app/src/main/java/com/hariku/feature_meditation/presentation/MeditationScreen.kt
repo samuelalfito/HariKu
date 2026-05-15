@@ -1,5 +1,6 @@
 package com.hariku.feature_meditation.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.feature_meditation.presentation.components.CategorySection
 import org.koin.androidx.compose.koinViewModel
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Coral90
 
 @Composable
 fun MeditationScreen(
@@ -33,17 +36,22 @@ fun MeditationScreen(
         }
     }
     
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(AdaptiveColors.adaptiveBackground())
+    ) {
         when {
             state.isLoading -> {
                 CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center),
+                    color = Coral90
                 )
             }
             state.error != null -> {
                 Text(
                     text = state.error,
-                    color = Color.Red,
+                    color = Coral90,
                     modifier = Modifier
                         .align(Alignment.Center)
                         .padding(16.dp)
@@ -59,7 +67,7 @@ fun MeditationScreen(
                             text = "Panduan Meditasi",
                             fontSize = 22.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF242424),
+                            color = AdaptiveColors.adaptiveText(),
                             modifier = Modifier.padding(vertical = 12.dp)
                         )
                     }

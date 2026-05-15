@@ -12,6 +12,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.hariku.core.ui.theme.Neutral100
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Orange70
 
 @Composable
 fun SuccessDialog(
@@ -23,7 +26,7 @@ fun SuccessDialog(
     Dialog(onDismissRequest = onDismiss) {
         Card(
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(
@@ -34,14 +37,14 @@ fun SuccessDialog(
                     text = title,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF222222),
+                    color = AdaptiveColors.adaptiveText(),
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = description,
                     fontSize = 14.sp,
-                    color = Color(0xFF666666),
+                    color = AdaptiveColors.adaptiveTextSecondary(),
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(24.dp))
@@ -51,11 +54,11 @@ fun SuccessDialog(
                         .fillMaxWidth()
                         .height(48.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD88C5A))
+                    colors = ButtonDefaults.buttonColors(containerColor = Orange70)
                 ) {
                     Text(
                         text = buttonText,
-                        color = Color.White,
+                        color = Neutral100,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     )
@@ -77,7 +80,7 @@ fun ConfirmationDialog(
     Dialog(onDismissRequest = onDismiss) {
         Card(
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(
@@ -88,14 +91,14 @@ fun ConfirmationDialog(
                     text = title,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF222222),
+                    color = AdaptiveColors.adaptiveText(),
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = description,
                     fontSize = 14.sp,
-                    color = Color(0xFF666666),
+                    color = AdaptiveColors.adaptiveTextSecondary(),
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(24.dp))
@@ -110,7 +113,7 @@ fun ConfirmationDialog(
                             .height(48.dp),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = Color(0xFFD88C5A)
+                            contentColor = Orange70
                         )
                     ) {
                         Text(
@@ -125,11 +128,11 @@ fun ConfirmationDialog(
                             .weight(1f)
                             .height(48.dp),
                         shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD88C5A))
+                        colors = ButtonDefaults.buttonColors(containerColor = Orange70)
                     ) {
                         Text(
                             text = cancelText,
-                            color = Color.White,
+                            color = Neutral100,
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp
                         )
@@ -139,4 +142,3 @@ fun ConfirmationDialog(
         }
     }
 }
-

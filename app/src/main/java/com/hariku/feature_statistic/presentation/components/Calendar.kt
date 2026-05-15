@@ -46,13 +46,11 @@ import com.hariku.R
 import com.hariku.feature_statistic.domain.model.CalendarDay
 import java.util.Calendar
 import java.util.Locale
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.LocalThemeState
+import com.hariku.core.ui.theme.Orange50
 
 private val dayNames = listOf("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")
-
-private val dividerColor = Color.LightGray.copy(alpha = 0.5f)
-private val chevronColor = Color(0xFFBF794E)
-private val headerBgColor = Color(0xFFF5F5F5)
-private val dayNameColor = Color(0xFF9E9E9E)
 
 @Composable
 fun CalendarView(
@@ -64,6 +62,12 @@ fun CalendarView(
     var year by remember(currentYear) { mutableIntStateOf(currentYear) }
     var month by remember(currentMonth) { mutableIntStateOf(currentMonth) }
     var expanded by remember { mutableStateOf(true) }
+    val isDark = LocalThemeState.current.isDarkTheme
+
+    val dividerColor = AdaptiveColors.adaptiveDivider()
+    val chevronColor = Orange50
+    val headerBgColor = if (isDark) Color(0xFF222222) else Color(0xFFF5F5F5) // Neutral20 and BgLightAlt3
+    val dayNameColor = AdaptiveColors.adaptiveTextSecondary()
 
     fun getMoodFromString(moodType: String): Mood {
         return when (moodType) {
@@ -114,7 +118,7 @@ fun CalendarView(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column {
@@ -129,12 +133,12 @@ fun CalendarView(
                 Text(
                     text = "Suasana Hatimu",
                     fontSize = 17.sp,
-                    color = Color.Black
+                    color = AdaptiveColors.adaptiveText()
                 )
                 Icon(
                     imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                     contentDescription = "Toggle",
-                    tint = Color.Gray
+                    tint = AdaptiveColors.adaptiveTextSecondary()
                 )
             }
             HorizontalDivider(
@@ -176,7 +180,7 @@ fun CalendarView(
                             text = "$monthName $year",
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 18.sp,
-                            color = Color.Black
+                            color = AdaptiveColors.adaptiveText()
                         )
                         Icon(
                             painter = painterResource(R.drawable.ic_chevron_right),

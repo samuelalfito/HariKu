@@ -31,6 +31,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
+import com.hariku.core.ui.theme.Coral80
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Neutral100
+import com.hariku.core.ui.theme.TextWhite
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +48,7 @@ fun ChatDetailTopBar(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(bottomStart = 15.dp, bottomEnd = 15.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground())
     ) {
         TopAppBar(
             navigationIcon = {
@@ -80,7 +84,7 @@ fun ChatDetailTopBar(
                     modifier = Modifier
                         .padding(8.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFF68674)
+                        containerColor = Coral80
                     ),
                     shape = CircleShape
                 ) {
@@ -90,13 +94,13 @@ fun ChatDetailTopBar(
                             fontSize = 16.sp,
                             fontFamily = FontFamily.Default,
                             fontWeight = FontWeight(600),
-                            color = Color(0xFFFDFCFC)
+                            color = TextWhite
                         )
                     )
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.White
+                containerColor = AdaptiveColors.adaptiveCardBackground()
             )
         )
     }

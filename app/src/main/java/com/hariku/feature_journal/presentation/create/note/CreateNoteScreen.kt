@@ -41,6 +41,10 @@ import com.hariku.feature_journal.presentation.components.SuccessDialog
 import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.*
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Neutral0
+import com.hariku.core.ui.theme.Neutral100
+import com.hariku.core.ui.theme.Orange70
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,7 +81,7 @@ fun CreateNoteScreen(
         }
     }
     Scaffold(
-        containerColor = Color(0xfff2f2f2),
+        containerColor = AdaptiveColors.adaptiveBackground(),
         topBar = {
             CustomizeTopBar(
                 title = "Buat Catatan",
@@ -97,7 +101,7 @@ fun CreateNoteScreen(
                 item {
                     Card(
                         shape = RoundedCornerShape(20.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { showJournalPicker = true }
@@ -125,13 +129,13 @@ fun CreateNoteScreen(
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 20.sp,
                                     color = if (viewModel.selectedJournalTitle.isEmpty())
-                                        Color(0xFFB1B1B1)
-                                    else Color(0xFF222222)
+                                        AdaptiveColors.adaptiveTextSecondary()
+                                    else AdaptiveColors.adaptiveText()
                                 )
                                 Spacer(Modifier.height(8.dp))
                                 Card(
                                     shape = RoundedCornerShape(8.dp),
-                                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                                    colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
                                     elevation = CardDefaults.cardElevation(2.dp),
                                     onClick = {
                                         val calendar = Calendar.getInstance()
@@ -166,7 +170,7 @@ fun CreateNoteScreen(
                                             )
                                         } WIB",
                                         fontSize = 13.sp,
-                                        color = Color(0xFF222222),
+                                        color = AdaptiveColors.adaptiveText(),
                                         modifier = Modifier.padding(
                                             horizontal = 8.dp,
                                             vertical = 2.dp
@@ -181,7 +185,7 @@ fun CreateNoteScreen(
                     
                     Card(
                         shape = RoundedCornerShape(20.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
                         modifier = Modifier
                             .fillMaxWidth()
                     ) {
@@ -195,13 +199,13 @@ fun CreateNoteScreen(
                                     "Judul Catatan",
                                     fontWeight = FontWeight.SemiBold,
                                     fontSize = 16.sp,
-                                    color = Color(0xFF222222),
+                                    color = AdaptiveColors.adaptiveText(),
                                     modifier = Modifier.weight(1f)
                                 )
                                 Text(
                                     "${viewModel.title.length}/60",
                                     fontSize = 13.sp,
-                                    color = Color(0xFFB1B1B1)
+                                    color = AdaptiveColors.adaptiveTextSecondary()
                                 )
                             }
                             Spacer(Modifier.height(8.dp))
@@ -211,18 +215,20 @@ fun CreateNoteScreen(
                                 placeholder = {
                                     Text(
                                         "Isi judul catatanmu",
-                                        color = Color(0xFFB1B1B1)
+                                        color = AdaptiveColors.adaptiveTextSecondary()
                                     )
                                 },
                                 shape = RoundedCornerShape(12.dp),
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = OutlinedTextFieldDefaults.colors(
-                                    focusedBorderColor = Color(0xFFD88C5A),
-                                    unfocusedBorderColor = Color(0xFFE5E5E5)
+                                    focusedBorderColor = Orange70,
+                                    unfocusedBorderColor = AdaptiveColors.adaptiveDivider(),
+                                    focusedTextColor = AdaptiveColors.adaptiveText(),
+                                    unfocusedTextColor = AdaptiveColors.adaptiveText()
                                 )
                             )
                             
-                            Spacer(Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(16.dp))
                             
                             // Tambah Gambar
                             Row(
@@ -233,17 +239,17 @@ fun CreateNoteScreen(
                                     "Tambah Gambar",
                                     fontWeight = FontWeight.SemiBold,
                                     fontSize = 16.sp,
-                                    color = Color(0xFF222222),
+                                    color = AdaptiveColors.adaptiveText(),
                                     modifier = Modifier.weight(1f)
                                 )
                                 Text(
                                     "${viewModel.imageUris.size}/3",
                                     fontSize = 13.sp,
-                                    color = Color(0xFFB1B1B1)
+                                    color = AdaptiveColors.adaptiveTextSecondary()
                                 )
                             }
                             Spacer(Modifier.height(8.dp))
-                            HorizontalDivider(color = Color(0xFFE5E5E5), thickness = 1.dp)
+                            HorizontalDivider(color = AdaptiveColors.adaptiveDivider(), thickness = 1.dp)
                             Spacer(Modifier.height(12.dp))
                             
                             LazyRow(
@@ -256,7 +262,7 @@ fun CreateNoteScreen(
                                                 .size(90.dp, 110.dp)
                                                 .border(
                                                     1.dp,
-                                                    Color(0xFFB1B1B1),
+                                                    AdaptiveColors.adaptiveDivider(),
                                                     RoundedCornerShape(12.dp)
                                                 )
                                                 .clickable {
@@ -270,7 +276,7 @@ fun CreateNoteScreen(
                                             Icon(
                                                 painter = painterResource(id = R.drawable.ic_add),
                                                 contentDescription = "Add Image",
-                                                tint = Color(0xFFB1B1B1),
+                                                tint = AdaptiveColors.adaptiveTextSecondary(),
                                                 modifier = Modifier.align(Alignment.Center)
                                             )
                                         }
@@ -299,10 +305,10 @@ fun CreateNoteScreen(
                                             Icon(
                                                 imageVector = Icons.Default.Close,
                                                 contentDescription = "Remove",
-                                                tint = Color.White,
+                                                tint = Neutral100,
                                                 modifier = Modifier
                                                     .background(
-                                                        Color.Black.copy(alpha = 0.5f),
+                                                        Neutral0.copy(alpha = 0.5f),
                                                         RoundedCornerShape(12.dp)
                                                     )
                                                     .padding(4.dp)
@@ -323,17 +329,17 @@ fun CreateNoteScreen(
                                     "Teks",
                                     fontWeight = FontWeight.SemiBold,
                                     fontSize = 16.sp,
-                                    color = Color(0xFF222222),
+                                    color = AdaptiveColors.adaptiveText(),
                                     modifier = Modifier.weight(1f)
                                 )
                                 Text(
                                     "${viewModel.content.length}/50000",
                                     fontSize = 13.sp,
-                                    color = Color(0xFFB1B1B1)
+                                    color = AdaptiveColors.adaptiveTextSecondary()
                                 )
                             }
                             Spacer(Modifier.height(8.dp))
-                            HorizontalDivider(color = Color(0xFFE5E5E5), thickness = 1.dp)
+                            HorizontalDivider(color = AdaptiveColors.adaptiveDivider(), thickness = 1.dp)
                             Spacer(Modifier.height(12.dp))
                             OutlinedTextField(
                                 value = viewModel.content,
@@ -341,7 +347,7 @@ fun CreateNoteScreen(
                                 placeholder = {
                                     Text(
                                         "Isi catatanmu di sini",
-                                        color = Color(0xFFB1B1B1)
+                                        color = AdaptiveColors.adaptiveTextSecondary()
                                     )
                                 },
                                 shape = RoundedCornerShape(12.dp),
@@ -349,8 +355,10 @@ fun CreateNoteScreen(
                                     .fillMaxWidth()
                                     .height(150.dp),
                                 colors = OutlinedTextFieldDefaults.colors(
-                                    focusedBorderColor = Color(0xFFD88C5A),
-                                    unfocusedBorderColor = Color(0xFFE5E5E5)
+                                    focusedBorderColor = Orange70,
+                                    unfocusedBorderColor = AdaptiveColors.adaptiveDivider(),
+                                    focusedTextColor = AdaptiveColors.adaptiveText(),
+                                    unfocusedTextColor = AdaptiveColors.adaptiveText()
                                 )
                             )
                             
@@ -363,20 +371,20 @@ fun CreateNoteScreen(
                                     .height(48.dp),
                                 shape = RoundedCornerShape(16.dp),
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFFD88C5A),
-                                    disabledContainerColor = Color(0xFFE5E5E5)
+                                    containerColor = Orange70,
+                                    disabledContainerColor = AdaptiveColors.adaptiveDisabled()
                                 ),
                                 enabled = viewModel.canSave()
                             ) {
                                 if (viewModel.isSaving) {
                                     CircularProgressIndicator(
-                                        color = Color.White,
+                                        color = Neutral100,
                                         modifier = Modifier.size(24.dp)
                                     )
                                 } else {
                                     Text(
                                         "Selesai",
-                                        color = Color.White,
+                                        color = Neutral100,
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 16.sp
                                     )
@@ -443,7 +451,7 @@ fun JournalPickerDialog(
     Dialog(onDismissRequest = onDismiss) {
         Card(
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -453,7 +461,7 @@ fun JournalPickerDialog(
                     text = "Pilih Jurnal",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF222222)
+                    color = AdaptiveColors.adaptiveText()
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 
@@ -461,7 +469,7 @@ fun JournalPickerDialog(
                     Text(
                         text = "Belum ada jurnal. Buat jurnal terlebih dahulu.",
                         fontSize = 14.sp,
-                        color = Color(0xFF666666),
+                        color = AdaptiveColors.adaptiveTextSecondary(),
                         modifier = Modifier.padding(vertical = 16.dp)
                     )
                 } else {
@@ -473,7 +481,7 @@ fun JournalPickerDialog(
                             Card(
                                 shape = RoundedCornerShape(12.dp),
                                 colors = CardDefaults.cardColors(
-                                    containerColor = Color(0xFFF6F6F6)
+                                    containerColor = AdaptiveColors.adaptiveBackground()
                                 ),
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -490,12 +498,12 @@ fun JournalPickerDialog(
                                             text = journal.title,
                                             fontWeight = FontWeight.SemiBold,
                                             fontSize = 16.sp,
-                                            color = Color(0xFF222222)
+                                            color = AdaptiveColors.adaptiveText()
                                         )
                                         Text(
                                             text = journal.date,
                                             fontSize = 12.sp,
-                                            color = Color(0xFF666666)
+                                            color = AdaptiveColors.adaptiveTextSecondary()
                                         )
                                     }
                                 }
@@ -513,7 +521,7 @@ fun JournalPickerDialog(
                         .height(48.dp),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color(0xFFD88C5A)
+                        contentColor = Orange70
                     )
                 ) {
                     Text("Batal", fontWeight = FontWeight.Bold)

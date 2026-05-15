@@ -22,6 +22,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Rose35
 
 @Composable
 fun HotlineButton(
@@ -30,15 +32,15 @@ fun HotlineButton(
     hotline: String,
     onClick: () -> Unit,
 ) {
-    val hotlineColor = Color(0xFFbb5366)
-    val textHotlineColor = Color.Black
+    val hotlineColor = Rose35
+    val textHotlineColor = AdaptiveColors.adaptiveText()
     
     OutlinedButton(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(3.dp, Color(0xFFbb5366))
+        border = BorderStroke(3.dp, Rose35)
     ) {
         Column(
             modifier = Modifier
@@ -57,7 +59,7 @@ fun HotlineButton(
                 buildAnnotatedString {
                     withStyle(
                         style = SpanStyle(
-                            color = Color.Black,
+                            color = AdaptiveColors.adaptiveText(),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )

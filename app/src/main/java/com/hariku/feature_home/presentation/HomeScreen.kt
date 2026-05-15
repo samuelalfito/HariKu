@@ -44,6 +44,17 @@ import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.hariku.core.ui.theme.BgLightAlt5
+import com.hariku.core.ui.theme.Coral90
+import com.hariku.core.ui.theme.Neutral100
+import com.hariku.core.ui.theme.Yellow30
+import com.hariku.core.ui.theme.Blue20
+import com.hariku.core.ui.theme.Blue40
+import com.hariku.core.ui.theme.Blue70
+import com.hariku.core.ui.theme.Green30
+import com.hariku.core.ui.theme.Yellow40
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.LocalThemeState
 
 @Composable
 fun HomeScreen(
@@ -52,15 +63,22 @@ fun HomeScreen(
     moodViewModel: MoodViewModel = koinViewModel(),
     homeViewModel: HomeViewModel = koinViewModel()
 ) {
+    val isDark = LocalThemeState.current.isDarkTheme
+
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
+            .background(AdaptiveColors.adaptiveBackground())
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.home_bg_lightmode),
-            contentDescription = null,
-            modifier = Modifier.fillMaxWidth(),
-            contentScale = ContentScale.FillWidth
-        )
+        if (!isDark) {
+            Image(
+                painter = painterResource(id = R.drawable.home_bg_lightmode),
+                contentDescription = null,
+                modifier = Modifier.fillMaxWidth(),
+                contentScale = ContentScale.FillWidth
+            )
+        }
+        
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
         ) {
@@ -73,7 +91,10 @@ fun HomeScreen(
                     Row(
                         modifier = Modifier
                             .weight(1f)
-                            .background(Color.White, RoundedCornerShape(16.dp))
+                            .background(
+                                AdaptiveColors.adaptiveCardBackground(), 
+                                RoundedCornerShape(16.dp)
+                            )
                             .padding(8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -93,6 +114,7 @@ fun HomeScreen(
                             text = "Izora Talia",
                             fontWeight = FontWeight.Medium,
                             fontSize = 16.sp,
+                            color = AdaptiveColors.adaptiveText(),
                             modifier = Modifier
                                 .weight(1f)
                         )
@@ -102,18 +124,20 @@ fun HomeScreen(
                         onClick = {
                             navController.navigate(Routes.SosGraph.route)
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF8A7A)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Coral90),
                         shape = RoundedCornerShape(16.dp)
                     ) {
-                        Text("SOS", color = Color.White, fontWeight = FontWeight.Bold)
+                        Text("SOS", color = Neutral100, fontWeight = FontWeight.Bold)
                     }
                 }
-                Spacer(modifier = Modifier.height(150.dp))
+                
+                Spacer(modifier = Modifier.height(if (isDark) 24.dp else 150.dp))
+                
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(
-                            Color.White,
+                            AdaptiveColors.adaptiveBackground(),
                             RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
                         ),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -122,7 +146,7 @@ fun HomeScreen(
                     MoodCard(viewModel = moodViewModel)
                     Card(
                         shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color(0xFF71a77a)),
+                        colors = CardDefaults.cardColors(containerColor = Green30),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 24.dp)
@@ -154,7 +178,7 @@ fun HomeScreen(
                             ) {
                                 Text(
                                     text = "Mulai menulis jurnal harian dan temukan kekuatan dalam refleksi!",
-                                    color = Color.White,
+                                    color = Neutral100,
                                     fontWeight = FontWeight.Medium,
                                     fontSize = 15.sp
                                 )
@@ -168,6 +192,7 @@ fun HomeScreen(
                                 text = "Chat Terakhir",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp,
+                                color = AdaptiveColors.adaptiveText(),
                                 modifier = Modifier.padding(bottom = 8.dp)
                             )
                             // Display max 2 chatbots
@@ -178,7 +203,7 @@ fun HomeScreen(
                                     date = formatTimestamp(chatbotWithHistory.lastMessageTime),
                                     unreadCount = chatbotWithHistory.unreadCount,
                                     avatarResId = if (chatbotWithHistory.chatbot.avatarResId != 0) chatbotWithHistory.chatbot.avatarResId else R.drawable.ic_launcher_foreground,
-                                    backgroundColor = if (index == 0) Color(0xFFF5CBA7) else Color(0xFFE6D4C3),
+                                    backgroundColor = if (index == 0) Yellow30 else (if (isDark) AdaptiveColors.adaptiveCardBackground() else BgLightAlt5),
                                     onClick = {
                                         navController.navigate(Routes.DetailChatbot.createRoute(chatbotWithHistory.chatbot.id))
                                     }
@@ -194,6 +219,7 @@ fun HomeScreen(
                             text = "Panduan Aktivitas",
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
+                            color = AdaptiveColors.adaptiveText(),
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                     }
@@ -204,7 +230,7 @@ fun HomeScreen(
                             ActivityCard(
                                 "Panduan Meditasi",
                                 R.drawable.img_home_meditation,
-                                backgroundColor = Color(0xFFa0cfe7),
+                                backgroundColor = Blue40,
                                 onClick = {
                                     navController.navigate(Routes.Meditation.route)
                                 }
@@ -213,7 +239,7 @@ fun HomeScreen(
                             ActivityCard(
                                 "Latihan 5 Panca Indra",
                                 R.drawable.img_home_senses,
-                                backgroundColor = Color(0xFFfff0e5),
+                                backgroundColor = Yellow40,
                                 onClick = {
                                     navController.navigate(Routes.Senses.route)
                                 }
@@ -222,7 +248,7 @@ fun HomeScreen(
                             ActivityCard(
                                 "Artikel Pilihan",
                                 R.drawable.img_home_article,
-                                backgroundColor = Color(0xFFcbe1fc),
+                                backgroundColor = if (isDark) Blue20 else Blue70,
                                 onClick = {
                                     navController.navigate(Routes.Article.route)
                                 }

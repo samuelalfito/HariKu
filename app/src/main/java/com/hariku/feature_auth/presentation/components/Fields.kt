@@ -31,13 +31,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Orange80
 
 @Composable
 fun RegularTextField(text: String, onValueChange: (String) -> Unit, isPassword: Boolean = false, placeholder: String) {
     var passwordVisible by remember { mutableStateOf(false) }
 
-    val orangeColor = Color(0xFFE0A071)
-    val lightOrangeColor = Color(0xFFE0A071)
+    val orangeColor = Orange80
+    val lightOrangeColor = Orange80
 
     val keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Email
     val visualTransformation = if (isPassword && !passwordVisible) {
@@ -53,20 +55,23 @@ fun RegularTextField(text: String, onValueChange: (String) -> Unit, isPassword: 
         placeholder = {
             Text(
                 text = placeholder,
-                style = TextStyle(fontSize = 16.sp, color = Color(0xFF9F9F9F))
+                style = TextStyle(fontSize = 16.sp, color = AdaptiveColors.adaptiveTextSecondary().copy(alpha = 0.6f))
             )
         },
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = orangeColor,
             unfocusedBorderColor = orangeColor.copy(alpha = 0.5f),
             focusedContainerColor = lightOrangeColor.copy(alpha = 0.1f),
-            unfocusedContainerColor = lightOrangeColor.copy(alpha = 0.1f)
+            unfocusedContainerColor = lightOrangeColor.copy(alpha = 0.1f),
+            cursorColor = orangeColor,
+            focusedTextColor = AdaptiveColors.adaptiveText(),
+            unfocusedTextColor = AdaptiveColors.adaptiveText()
         ),
         shape = RoundedCornerShape(12.dp),
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         singleLine = true,
         visualTransformation = visualTransformation,
-        textStyle = TextStyle(fontSize = 18.sp, color = Color(0xFF333333)),
+        textStyle = TextStyle(fontSize = 18.sp, color = AdaptiveColors.adaptiveText()),
         trailingIcon = if (isPassword) {
             {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
@@ -99,19 +104,20 @@ fun AuthDivider() {
     ) {
         HorizontalDivider(
             thickness = 2.dp,
-            color = Color.Black,
+            color = AdaptiveColors.adaptiveDivider(),
             modifier = Modifier.weight(1f)
         )
         Text(
             text = "ATAU",
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
+            color = AdaptiveColors.adaptiveTextSecondary(),
             modifier = Modifier
                 .padding(horizontal = 16.dp)
         )
         HorizontalDivider(
             thickness = 2.dp,
-            color = Color.Black,
+            color = AdaptiveColors.adaptiveDivider(),
             modifier = Modifier.weight(1f)
         )
     }

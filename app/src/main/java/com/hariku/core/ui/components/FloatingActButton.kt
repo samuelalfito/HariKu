@@ -11,10 +11,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.hariku.R
+import com.hariku.core.ui.theme.Coral70
+import com.hariku.core.ui.theme.Neutral100
 
 @Composable
 fun FloatingActButton(
@@ -24,7 +25,7 @@ fun FloatingActButton(
     FloatingActionButton(
         onClick = { onClick() },
         shape = RoundedCornerShape(50.dp),
-        containerColor = Color(0xFFD9A188),
+        containerColor = Coral70,
         modifier = Modifier.size(72.dp)
     ) {
         Box(
@@ -38,7 +39,7 @@ fun FloatingActButton(
             Icon(
                 imageVector = Icons.Rounded.Add,
                 contentDescription = label,
-                tint = Color.White,
+                tint = Neutral100,
                 modifier = Modifier.size(60.dp)
             )
         }

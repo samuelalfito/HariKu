@@ -34,6 +34,11 @@ import androidx.navigation.NavController
 import com.hariku.R
 import com.hariku.feature_sense.presentation.components.CompletedContent
 import com.hariku.feature_sense.presentation.components.StepContent
+import com.hariku.core.ui.theme.BgLightAlt4
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Coral30
+import com.hariku.core.ui.theme.Neutral100
+import com.hariku.core.ui.theme.Neutral25
 
 @Composable
 fun SensesScreen(
@@ -66,7 +71,7 @@ fun SensesScreen(
                         { viewModel.nextStep() }
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFC97D50)
+                        containerColor = Coral30
                     ),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp),
                     modifier = Modifier
@@ -76,7 +81,7 @@ fun SensesScreen(
                 ) {
                     Text(
                         text = if (!viewModel.isCompleted) "Lanjut" else "Kembali",
-                        color = Color.White,
+                        color = Neutral100,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -87,13 +92,13 @@ fun SensesScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFF2F2F2))
+                .background(AdaptiveColors.adaptiveBackground())
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(70.dp)
-                    .background(Color.White),
+                    .background(AdaptiveColors.adaptiveBackground()),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
@@ -108,7 +113,7 @@ fun SensesScreen(
                 
                 Text(
                     text = "Latihan 5 Panca Indra",
-                    color = Color(0xFF242424),
+                    color = AdaptiveColors.adaptiveText(),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )

@@ -42,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.feature_statistic.domain.model.MoodStatItem
+import com.hariku.core.ui.theme.AdaptiveColors
 
 @Composable
 fun StatisticsMood(
@@ -73,7 +74,7 @@ fun StatisticsMood(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
@@ -90,20 +91,21 @@ fun StatisticsMood(
                 Text(
                     text = "Statistik",
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = AdaptiveColors.adaptiveText()
                 )
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowDown,
                     contentDescription = "Expand/Collapse",
                     modifier = Modifier.rotate(rotationState),
-                    tint = Color.Gray
+                    tint = AdaptiveColors.adaptiveTextSecondary()
                 )
             }
             
             HorizontalDivider(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 thickness = 1.dp,
-                color = Color.LightGray.copy(alpha = 0.5f)
+                color = AdaptiveColors.adaptiveDivider()
             )
             
             AnimatedVisibility(
@@ -121,7 +123,7 @@ fun StatisticsMood(
                         Text(
                             text = "Belum ada data mood",
                             fontSize = 14.sp,
-                            color = Color.Gray,
+                            color = AdaptiveColors.adaptiveTextSecondary(),
                             modifier = Modifier.padding(16.dp)
                         )
                     } else {
@@ -174,11 +176,13 @@ fun StatisticRowItem(
                 Text(
                     text = label,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    color = Color.White // Keeping white text for better contrast on mood colors
                 )
                 Text(
                     text = "$count kali",
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    color = Color.White.copy(alpha = 0.8f)
                 )
             }
             
@@ -188,7 +192,8 @@ fun StatisticRowItem(
                 Text(
                     text = percentage,
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
                 )
             }
         }

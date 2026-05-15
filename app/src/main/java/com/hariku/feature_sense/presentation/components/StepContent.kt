@@ -25,7 +25,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
+import com.hariku.core.ui.theme.Coral30
 import com.hariku.feature_sense.domain.model.SenseStep
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.SpecialLightBrown
 
 @Composable
 fun StepContent(
@@ -52,7 +55,7 @@ fun StepContent(
         ) {
             Canvas(modifier = Modifier.fillMaxSize()) {
                 drawArc(
-                    color = Color(0xFFedba92),
+                    color = SpecialLightBrown,
                     startAngle = -90f,
                     sweepAngle = 360f,
                     useCenter = false,
@@ -66,7 +69,7 @@ fun StepContent(
             
             Canvas(modifier = Modifier.fillMaxSize()) {
                 drawArc(
-                    color = Color(0xFFc97d50),
+                    color = Coral30,
                     startAngle = -90f,
                     sweepAngle = 360 * progress,
                     useCenter = false,
@@ -87,7 +90,7 @@ fun StepContent(
             Text(
                 text = progressText,
                 fontSize = 16.sp,
-                color = Color(0xFF9F9F9F),
+                color = AdaptiveColors.adaptiveTextSecondary(),
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 24.dp)
@@ -98,7 +101,7 @@ fun StepContent(
         
         Text(
             text = step.title,
-            color = Color(0xFF242424),
+            color = AdaptiveColors.adaptiveText(),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
@@ -107,7 +110,7 @@ fun StepContent(
         
         Text(
             text = step.description,
-            color = Color(0xFF9F9F9F),
+            color = AdaptiveColors.adaptiveTextSecondary(),
             fontSize = 16.sp,
             textAlign = TextAlign.Justify,
             lineHeight = 22.sp

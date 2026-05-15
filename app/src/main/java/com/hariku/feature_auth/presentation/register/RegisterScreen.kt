@@ -49,6 +49,11 @@ import com.hariku.feature_auth.presentation.components.TextLogo
 import com.hariku.R
 import com.hariku.core.ui.components.Routes
 import com.hariku.core.ui.theme.HariKuTheme
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Neutral100
+import com.hariku.core.ui.theme.Orange80
+import com.hariku.core.ui.theme.Coral30
+import com.hariku.core.ui.theme.LocalThemeState
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -57,8 +62,9 @@ fun RegisterScreen(
     viewModel: RegisterScreenViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val isDark = LocalThemeState.current.isDarkTheme
     var errorMessage by remember { mutableStateOf("") }
-    val orangeColor = Color(0xFFCD8C63)
+    val orangeColor = Coral30
 
     if(uiState.error != null && uiState.error != ""){ errorMessage = uiState.error!! }
 
@@ -76,21 +82,23 @@ fun RegisterScreen(
     }
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(AdaptiveColors.adaptiveBackground())
     ) {
         Box(
             modifier = Modifier
                 .size(470.dp)
                 .offset(y = 77.41.dp)
                 .background(
-                    color = Color(0xFFFAF2ED),
+                    color = if (isDark) Color(0xFF2B1B18) else Color(0xFFFAF2ED),
                     shape = CircleShape
                 )
                 .align(Alignment.BottomCenter)
         )
         Image(
             painter = painterResource(id = R.drawable.auth_cat),
-            contentDescription = "Google Icon",
+            contentDescription = "Auth Cat",
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
@@ -141,15 +149,17 @@ fun RegisterScreen(
                     placeholder = "Konfirmasi Kata Sandi"
                 )
 
-                Text(
-                    text = errorMessage,
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        color = Color.Red,
-                        textAlign = TextAlign.Center,
-                    ),
-                    modifier = Modifier.padding(horizontal = 40.dp)
-                )
+                if (errorMessage.isNotEmpty()) {
+                    Text(
+                        text = errorMessage,
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            color = Coral30,
+                            textAlign = TextAlign.Center,
+                        ),
+                        modifier = Modifier.padding(horizontal = 40.dp)
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -167,13 +177,13 @@ fun RegisterScreen(
                     )
                 ) {
                     if (uiState.isLoading) {
-                        CircularProgressIndicator()
+                        CircularProgressIndicator(color = Neutral100)
                     } else {
                         Text(
                             text = "Daftar",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Medium,
-                            color = Color.White
+                            color = Neutral100
                         )
                     }
                 }
@@ -185,39 +195,6 @@ fun RegisterScreen(
                 onTermsClick = { },
                 onPrivacyClick = { }
             )
-
-//            Spacer(modifier = Modifier.height(16.dp))
-//
-//            AuthDivider()
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-//            Button(
-//                onClick = {
-//
-//                },
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(horizontal = 32.dp)
-//                    .height(56.dp),
-//                colors = ButtonDefaults.buttonColors(
-//                    containerColor = Color.White
-//                ),
-//                shape = RoundedCornerShape(12.dp)
-//            ) {
-//                Image(
-//                    painter = painterResource(id = R.drawable.google),
-//                    contentDescription = "Google Icon",
-//                    modifier = Modifier.size(20.dp)
-//                )
-//                Spacer(modifier = Modifier.width(8.dp))
-//                Text(
-//                    text = "Masuk Dengan Google",
-//                    fontSize = 18.sp,
-//                    fontWeight = FontWeight.Medium,
-//                    color = Color.Black
-//                )
-//            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -243,7 +220,7 @@ fun TermsAndPrivacyText(
             style = SpanStyle(
                 fontWeight = FontWeight.Bold,
                 textDecoration = TextDecoration.Underline,
-                color = Color(0xFFE0A071)
+                color = Orange80
             )
         ) {
             append("Ketentuan Layanan")
@@ -257,7 +234,7 @@ fun TermsAndPrivacyText(
             style = SpanStyle(
                 fontWeight = FontWeight.Bold,
                 textDecoration = TextDecoration.Underline,
-                color = Color(0xFFE0A071)
+                color = Orange80
             )
         ) {
             append("Kebijakan Privasi")
@@ -269,7 +246,7 @@ fun TermsAndPrivacyText(
         text = annotatedText,
         style = TextStyle(
             fontSize = 14.sp,
-            color = Color.Black,
+            color = AdaptiveColors.adaptiveText(),
             textAlign = TextAlign.Center
         ),
         modifier = Modifier.fillMaxWidth(),
@@ -296,7 +273,7 @@ fun AlreadyHaveAccount(
             style = SpanStyle(
                 fontWeight = FontWeight.Bold,
                 textDecoration = TextDecoration.Underline,
-                color = Color(0xFFE0A071)
+                color = Orange80
             )
         ) { append("Masuk") }
         pop()
@@ -306,7 +283,7 @@ fun AlreadyHaveAccount(
         text = loginText,
         style = TextStyle(
             fontSize = 16.sp,
-            color = Color.Black,
+            color = AdaptiveColors.adaptiveText(),
             textAlign = TextAlign.Center
         ),
         modifier = Modifier.fillMaxWidth(),

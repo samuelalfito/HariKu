@@ -23,6 +23,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.hariku.R
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Coral70
+import com.hariku.core.ui.theme.LocalThemeState
 
 @Composable
 fun ChatTextFieldBar(
@@ -31,10 +34,15 @@ fun ChatTextFieldBar(
     onSendClick: () -> Unit = {},
     enabled: Boolean = true
 ) {
+    val isDark = LocalThemeState.current.isDarkTheme
+    
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White, RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+            .background(
+                AdaptiveColors.adaptiveCardBackground(), 
+                RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+            )
     ) {
         Row(
             modifier = Modifier
@@ -46,15 +54,22 @@ fun ChatTextFieldBar(
                 value = text,
                 onValueChange = onTextChanged,
                 modifier = Modifier.weight(1f),
-                placeholder = { Text("Ketik Pesan Anda") },
+                placeholder = { 
+                    Text(
+                        "Ketik Pesan Anda", 
+                        color = AdaptiveColors.adaptiveTextSecondary()
+                    ) 
+                },
                 shape = RoundedCornerShape(24.dp),
                 enabled = enabled,
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent,
-                    focusedContainerColor = Color(0xFFFDE8D8),
-                    unfocusedContainerColor = Color(0xFFFDE8D8)
+                    focusedContainerColor = if (isDark) Color(0xFF222222) else Color(0xFFFDE8D8), // Neutral20 / BgLightAlt6
+                    unfocusedContainerColor = if (isDark) Color(0xFF222222) else Color(0xFFFDE8D8),
+                    focusedTextColor = AdaptiveColors.adaptiveText(),
+                    unfocusedTextColor = AdaptiveColors.adaptiveText()
                 )
             )
             
@@ -65,7 +80,7 @@ fun ChatTextFieldBar(
                 modifier = Modifier
                     .size(48.dp)
                     .background(
-                        color = if (enabled && text.isNotBlank()) Color(0xFFD9A188) else Color.Gray,
+                        color = if (enabled && text.isNotBlank()) Coral70 else AdaptiveColors.adaptiveDisabled(),
                         shape = CircleShape
                     ),
                 enabled = enabled && text.isNotBlank()

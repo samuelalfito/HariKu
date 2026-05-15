@@ -17,11 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -34,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.hariku.feature_journal.domain.model.StickerElement
 import kotlin.math.roundToInt
+import com.hariku.core.ui.theme.Coral40
 
 @Composable
 fun DraggableSticker(
@@ -45,33 +41,22 @@ fun DraggableSticker(
     onScaleChange: (Float) -> Unit = {},
     onRotationChange: (Float) -> Unit = {}
 ) {
-    var offsetX by remember { mutableFloatStateOf(stickerElement.offsetX) }
-    var offsetY by remember { mutableFloatStateOf(stickerElement.offsetY) }
-    var scale by remember { mutableFloatStateOf(stickerElement.scale) }
-    var rotation by remember { mutableFloatStateOf(stickerElement.rotation) }
-    
-    LaunchedEffect(stickerElement.offsetX, stickerElement.offsetY, stickerElement.scale, stickerElement.rotation) {
-        offsetX = stickerElement.offsetX
-        offsetY = stickerElement.offsetY
-        scale = stickerElement.scale
-        rotation = stickerElement.rotation
-    }
-    
-    val transformState = rememberTransformableState { zoomChange, offsetChange, rotationChange ->
+    val transformState = rememberTransformableState { zoomChange, offsetChange, rotChange ->
         if (isSelected) {
-            scale = (scale * zoomChange).coerceIn(0.5f, 3f)
-            rotation += rotationChange
-            offsetX += offsetChange.x
-            offsetY += offsetChange.y
-            onDrag(Offset(offsetX, offsetY))
-            onScaleChange(scale)
-            onRotationChange(rotation)
+            val newScale = (stickerElement.scale * zoomChange).coerceIn(0.5f, 3f)
+            val newRotation = stickerElement.rotation + rotChange
+            val newOffsetX = stickerElement.offsetX + offsetChange.x
+            val newOffsetY = stickerElement.offsetY + offsetChange.y
+            
+            onDrag(Offset(newOffsetX, newOffsetY))
+            onScaleChange(newScale)
+            onRotationChange(newRotation)
         }
     }
     
     Box(
         modifier = Modifier
-            .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
+            .offset { IntOffset(stickerElement.offsetX.roundToInt(), stickerElement.offsetY.roundToInt()) }
             .size(80.dp)
             .zIndex(if (isSelected) 10f else 1f)
     ) {
@@ -80,9 +65,9 @@ fun DraggableSticker(
             modifier = Modifier
                 .fillMaxSize()
                 .graphicsLayer(
-                    scaleX = scale,
-                    scaleY = scale,
-                    rotationZ = rotation
+                    scaleX = stickerElement.scale,
+                    scaleY = stickerElement.scale,
+                    rotationZ = stickerElement.rotation
                 )
                 .then(
                     if (isSelected) {
@@ -99,7 +84,7 @@ fun DraggableSticker(
                 .then(
                     if (isSelected) Modifier.border(
                         2.dp,
-                        Color(0xFFCF6D49),
+                        Coral40,
                         RoundedCornerShape(8.dp)
                     ) else Modifier
                 ),
@@ -119,7 +104,7 @@ fun DraggableSticker(
                     .size(24.dp)
                     .align(Alignment.TopStart)
                     .offset((-8).dp, (-8).dp)
-                    .background(Color(0xFFCF6D49), CircleShape)
+                    .background(Coral40, CircleShape)
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,

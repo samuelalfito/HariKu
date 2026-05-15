@@ -41,6 +41,12 @@ import com.hariku.feature_article.presentation.ArticleUiState
 import com.hariku.feature_article.presentation.ArticleViewModel
 import com.hariku.feature_article.presentation.components.ArticleCard
 import com.hariku.feature_article.presentation.components.CategoryCard
+import com.hariku.core.ui.theme.Neutral100
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Neutral50
+import com.hariku.core.ui.theme.Neutral85
+import com.hariku.core.ui.theme.Orange80
+import com.hariku.core.ui.theme.TextGrayAlt2
 
 @Composable
 fun SearchEmpty(
@@ -78,12 +84,12 @@ fun SearchEmpty(
                     text = "Artikel Pilihan",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF333333)
+                    color = AdaptiveColors.adaptiveText()
                 )
                 Text(
                     text = "Pahami topik kesehatan mental dengan lebih baik.",
                     fontSize = 12.sp,
-                    color = Color(0xFF9F9F9F)
+                    color = AdaptiveColors.adaptiveTextSecondary()
                 )
                 Spacer(modifier = Modifier.height(6.dp))
             }
@@ -109,7 +115,7 @@ fun SearchEmpty(
                     text = "Kategori",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF333333)
+                    color = AdaptiveColors.adaptiveText()
                 )
                 Spacer(modifier = Modifier.height(12.dp))
             }
@@ -184,27 +190,27 @@ fun SearchResult(
                                 imageVector = Icons.Default.Search,
                                 contentDescription = null,
                                 modifier = Modifier.size(64.dp),
-                                tint = Color(0xFFBDBDBD)
+                                tint = AdaptiveColors.adaptiveTextSecondary()
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
                                 text = "Artikel tidak ditemukan",
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF333333)
+                                color = AdaptiveColors.adaptiveText()
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text = "Coba kata kunci lain atau bersihkan pencarian.",
                                 fontSize = 16.sp,
-                                color = Color(0xFF9F9F9F)
+                                color = AdaptiveColors.adaptiveTextSecondary()
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Button(
                                 onClick = { viewModel.onSearchQueryChange("") },
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFFE1A071),
-                                    contentColor = Color.White
+                                    containerColor = Orange80,
+                                    contentColor = Neutral100
                                 ),
                                 shape = RoundedCornerShape(8.dp)
                             ) {
@@ -221,7 +227,7 @@ fun SearchResult(
                             text = "Kategori",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF333333)
+                            color = AdaptiveColors.adaptiveText()
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                     }
@@ -254,7 +260,7 @@ fun SearchResult(
                             text = "Artikel",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF333333)
+                            color = AdaptiveColors.adaptiveText()
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                     }

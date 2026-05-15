@@ -3,7 +3,6 @@ package com.hariku.core.ui.components
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,6 +18,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hariku.core.ui.theme.Coral80
+import com.hariku.core.ui.theme.AdaptiveColors
+import com.hariku.core.ui.theme.Neutral100
+import com.hariku.core.ui.theme.TextWhite
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,7 +31,8 @@ fun SosTopBar(title: String, onSosClick: () -> Unit) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = AdaptiveColors.adaptiveText()
             )
         },
         actions = {
@@ -37,7 +41,8 @@ fun SosTopBar(title: String, onSosClick: () -> Unit) {
                 modifier = Modifier
                     .padding(8.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFF68674)
+                    containerColor = Coral80,
+                    contentColor = Color.White
                 ),
                 shape = CircleShape
             ) {
@@ -46,14 +51,15 @@ fun SosTopBar(title: String, onSosClick: () -> Unit) {
                     style = TextStyle(
                         fontSize = 16.sp,
                         fontFamily = FontFamily.Default,
-                        fontWeight = FontWeight(600),
-                        color = Color(0xFFFDFCFC)
+                        fontWeight = FontWeight(600)
                     )
                 )
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.White
+            containerColor = AdaptiveColors.adaptiveBackground(),
+            titleContentColor = AdaptiveColors.adaptiveText(),
+            actionIconContentColor = AdaptiveColors.adaptiveText()
         ),
         windowInsets = WindowInsets(0.dp)
     )

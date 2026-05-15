@@ -22,12 +22,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hariku.core.ui.theme.Orange30
+import com.hariku.core.ui.theme.Yellow40
 
 @Composable
 fun StickerPack(
     title: String,
     stickers: List<String>,
-    backgroundColor: Color = Color(0xFFFFF8E1),
+    backgroundColor: Color = Yellow40,
     onStickerClick: (String) -> Unit
 ) {
     Row(
@@ -84,7 +86,7 @@ fun StickerPack(
             text = title,
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color(0xFF8B5E3C)
+            color = Orange30
         )
     }
 }

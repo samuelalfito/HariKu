@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hariku.core.ui.theme.AdaptiveColors
 
 @Composable
 fun CalendarDayCell(day: Int, mood: Mood) {
@@ -62,7 +63,8 @@ fun CalendarDayCell(day: Int, mood: Mood) {
             fontSize = 11.sp,
             textAlign = TextAlign.Center,
             lineHeight = 11.sp,
-            modifier = Modifier.fillMaxWidth().background(Color.White),
+            color = AdaptiveColors.adaptiveText(),
+            modifier = Modifier.fillMaxWidth().background(AdaptiveColors.adaptiveBackground()),
             maxLines = 1
         )
     }

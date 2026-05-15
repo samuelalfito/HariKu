@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.R
+import com.hariku.core.ui.theme.AdaptiveColors
 
 @Composable
 fun MeditationCard(
@@ -36,7 +37,7 @@ fun MeditationCard(
     
     Card(
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = Modifier
             .width(120.dp)
@@ -61,7 +62,7 @@ fun MeditationCard(
                 text = song.title,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color(0xFF242424)
+                color = AdaptiveColors.adaptiveText()
             )
         }
     }

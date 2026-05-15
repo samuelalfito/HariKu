@@ -17,14 +17,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hariku.feature_journal.domain.model.JournalData
+import com.hariku.core.ui.theme.AdaptiveColors
 
 @Composable
 fun JournalListCard(data : JournalData, showDesc : Boolean = false) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        colors = CardDefaults.cardColors(containerColor = AdaptiveColors.adaptiveCardBackground()),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column {
             Row(
@@ -38,19 +39,20 @@ fun JournalListCard(data : JournalData, showDesc : Boolean = false) {
                     text = data.title,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 14.sp,
-                    color = Color.Black
+                    color = AdaptiveColors.adaptiveText()
                 )
                 Text(
                     text = data.date,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 14.sp,
-                    color = Color.Black
+                    color = AdaptiveColors.adaptiveText()
                 )
             }
             if (showDesc) {
                 data.desc?.let {
                     Text(
                         text = it,
+                        color = AdaptiveColors.adaptiveTextSecondary(),
                         modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                     )
                 }

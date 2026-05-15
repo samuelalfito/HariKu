@@ -30,6 +30,7 @@ import com.hariku.core.ui.components.Routes
 import com.hariku.core.ui.components.SosTopBar
 import com.hariku.feature_chatbot.presentation.components.ChatItem
 import org.koin.androidx.compose.koinViewModel
+import com.hariku.core.ui.theme.AdaptiveColors
 
 @Composable
 fun ChatbotScreen(
@@ -47,7 +48,7 @@ fun ChatbotScreen(
     }
 
     Scaffold(
-        containerColor = Color(0xFFF9F9F9),
+        containerColor = AdaptiveColors.adaptiveBackground(),
         topBar = {
             SosTopBar(
                 title = "Obrolan",
@@ -69,7 +70,7 @@ fun ChatbotScreen(
                     start = paddingValues.calculateLeftPadding(LayoutDirection.Ltr),
                     end = paddingValues.calculateRightPadding(LayoutDirection.Rtl)
                 )
-                .background(Color.White)
+                .background(AdaptiveColors.adaptiveBackground())
                 .fillMaxSize()
         ) {
             when {
@@ -85,7 +86,7 @@ fun ChatbotScreen(
                             .align(Alignment.Center)
                             .padding(16.dp),
                         textAlign = TextAlign.Center,
-                        color = Color.Gray
+                        color = AdaptiveColors.adaptiveTextSecondary()
                     )
                 }
                 else -> {
@@ -102,7 +103,7 @@ fun ChatbotScreen(
                                 chatbotWithHistory = chatbotWithHistory
                             )
                             HorizontalDivider(
-                                color = Color.LightGray.copy(alpha = 0.5f),
+                                color = AdaptiveColors.adaptiveDivider(),
                                 thickness = 1.dp,
                                 modifier = Modifier.padding(horizontal = 16.dp)
                             )

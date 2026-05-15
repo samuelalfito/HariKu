@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.hariku.R
+import com.hariku.core.ui.theme.AdaptiveColors
 
 @Composable
 fun SearchBar(value: String, onValueChange: (String) -> Unit, placeholder: String) {
@@ -20,12 +21,17 @@ fun SearchBar(value: String, onValueChange: (String) -> Unit, placeholder: Strin
         value = value,
         singleLine = true,
         onValueChange = { onValueChange(it) },
-        placeholder = { Text(placeholder, color = Color(0xFFBDBDBD)) },
+        placeholder = { 
+            Text(
+                placeholder, 
+                color = AdaptiveColors.adaptiveTextSecondary()
+            ) 
+        },
         leadingIcon = {
             Icon(
                 painter = painterResource(id = R.drawable.ic_search),
                 contentDescription = null,
-                tint = Color(0xFFBDBDBD)
+                tint = AdaptiveColors.adaptiveTextSecondary()
             )
         },
         modifier = Modifier
@@ -33,10 +39,12 @@ fun SearchBar(value: String, onValueChange: (String) -> Unit, placeholder: Strin
             .height(56.dp),
         shape = RoundedCornerShape(8.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            unfocusedContainerColor = Color(0xFFf2f2f2),
-            focusedContainerColor = Color(0xFFfaf3ee),
+            unfocusedContainerColor = AdaptiveColors.adaptiveDivider(),
+            focusedContainerColor = AdaptiveColors.adaptiveDivider(),
             unfocusedBorderColor = Color.Transparent,
-            focusedBorderColor = Color.Transparent
+            focusedBorderColor = Color.Transparent,
+            focusedTextColor = AdaptiveColors.adaptiveText(),
+            unfocusedTextColor = AdaptiveColors.adaptiveText()
         )
     )
 }

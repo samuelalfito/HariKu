@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.sp
 import com.hariku.R
 import com.hariku.feature_article.presentation.components.ArticleItem
 import org.koin.androidx.compose.koinViewModel
+import com.hariku.core.ui.theme.Coral30
+import com.hariku.core.ui.theme.AdaptiveColors
 
 @Composable
 fun ArticleListScreen(
@@ -46,7 +48,7 @@ fun ArticleListScreen(
     val categoryImageRes = getCategoryImageResForList(category)
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().background(AdaptiveColors.adaptiveBackground())
     ) {
         Box(
             modifier = Modifier.fillMaxWidth()
@@ -71,7 +73,8 @@ fun ArticleListScreen(
                     contentDescription = "Back",
                     modifier = Modifier
                         .size(90.dp)
-                        .scale(1.5f)
+                        .scale(1.5f),
+                    tint = Color.White // Keep arrow white against the image
                 )
             }
         }
@@ -81,7 +84,7 @@ fun ArticleListScreen(
                 .fillMaxSize()
                 .offset(y = (-24).dp)
                 .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                .background(Color.White)
+                .background(AdaptiveColors.adaptiveBackground())
         ) {
             when (uiState) {
                 is ArticleUiState.Loading -> {
@@ -89,7 +92,7 @@ fun ArticleListScreen(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator(color = Color(0xFFC97D50))
+                        CircularProgressIndicator(color = Coral30)
                     }
                 }
                 is ArticleUiState.Error -> {
@@ -99,7 +102,7 @@ fun ArticleListScreen(
                     ) {
                         Text(
                             text = (uiState as ArticleUiState.Error).message,
-                            color = Color.Red
+                            color = Coral30
                         )
                     }
                 }
@@ -112,7 +115,7 @@ fun ArticleListScreen(
                             Text(
                                 text = "Tidak ada artikel di kategori $category",
                                 fontSize = 16.sp,
-                                color = Color(0xFF9F9F9F)
+                                color = AdaptiveColors.adaptiveTextSecondary()
                             )
                         }
                     } else {
@@ -127,7 +130,7 @@ fun ArticleListScreen(
                                 text = category,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF333333),
+                                color = AdaptiveColors.adaptiveText(),
                                 modifier = Modifier.padding(bottom = 8.dp)
                             )
                             

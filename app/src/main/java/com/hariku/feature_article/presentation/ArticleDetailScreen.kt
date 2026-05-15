@@ -34,6 +34,8 @@ import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.hariku.core.ui.theme.Coral30
+import com.hariku.core.ui.theme.AdaptiveColors
 
 @Composable
 fun ArticleDetailScreen(
@@ -50,7 +52,7 @@ fun ArticleDetailScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(AdaptiveColors.adaptiveBackground())
             .statusBarsPadding()
             .padding(horizontal = 26.dp)
     ) {
@@ -62,7 +64,7 @@ fun ArticleDetailScreen(
                     .size(48.dp)
                     .offset(x = (-24).dp)
                     .clickable { onBackClick() },
-                tint = Color(0xFFC97D50)
+                tint = Coral30
             )
         }
 
@@ -74,7 +76,7 @@ fun ArticleDetailScreen(
                         .padding(vertical = 100.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = Color(0xFFC97D50))
+                    CircularProgressIndicator(color = Coral30)
                 }
             }
         } else {
@@ -83,6 +85,7 @@ fun ArticleDetailScreen(
                     text = article?.title ?: "",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.SemiBold,
+                    color = AdaptiveColors.adaptiveText(),
                     modifier = Modifier.padding(top = 8.dp)
                 )
             }
@@ -95,7 +98,7 @@ fun ArticleDetailScreen(
                 Text(
                     text = "${article?.readTime} • $uploadDate • oleh ${article?.author}",
                     fontSize = 12.sp,
-                    color = Color(0xFF9F9F9F),
+                    color = AdaptiveColors.adaptiveTextSecondary(),
                 )
             }
 
@@ -129,7 +132,7 @@ fun ArticleDetailScreen(
                     text = article?.content ?: "",
                     fontSize = 16.sp,
                     lineHeight = 24.sp,
-                    color = Color(0xFF333333),
+                    color = AdaptiveColors.adaptiveTextSecondary(),
                     modifier = Modifier.padding(bottom = 32.dp)
                 )
             }
