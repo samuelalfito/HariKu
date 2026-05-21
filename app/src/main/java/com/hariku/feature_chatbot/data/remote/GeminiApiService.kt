@@ -2,14 +2,11 @@ package com.hariku.feature_chatbot.data.remote
 
 import com.google.ai.client.generativeai.GenerativeModel
 import com.hariku.feature_chatbot.domain.model.Chatbot
+import com.hariku.BuildConfig
 
 class GeminiApiService(
     private val apiKey: String
 ) {
-    companion object {
-        private const val MODEL_NAME = "gemini-2.0-flash-lite"
-    }
-    
     suspend fun generateResponse(
         chatbot: Chatbot,
         userMessage: String,
@@ -29,7 +26,7 @@ class GeminiApiService(
         
         return try {
             val model = GenerativeModel(
-                modelName = MODEL_NAME,
+                modelName = BuildConfig.GEMINI_MODEL_NAME,
                 apiKey = apiKey
             )
             

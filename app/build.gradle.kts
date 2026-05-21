@@ -36,6 +36,11 @@ android {
             "GEMINI_API_KEY",
             "\"${properties.getProperty("gemini.api.key", "")}\""
         )
+        buildConfigField(
+            "String",
+            "GEMINI_MODEL_NAME",
+            "\"${properties.getProperty("gemini.model", "gemini-2.0-flash-lite")}\""
+        )
     }
     
     buildTypes {

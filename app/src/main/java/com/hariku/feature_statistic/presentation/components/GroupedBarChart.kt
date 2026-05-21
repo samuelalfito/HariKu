@@ -5,45 +5,34 @@ import android.graphics.Typeface
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import com.hariku.core.ui.theme.AdaptiveColors
-import com.hariku.core.ui.theme.LocalThemeState
 
 @Composable
 fun GroupedBarChart(data: List<WeeklyData>) {
     val yAxisMax = 50f
     val yAxisSteps = 5
-    val isDark = LocalThemeState.current.isDarkTheme
     
     val textColor = AdaptiveColors.adaptiveTextSecondary().toArgb()
-    val labelColor = AdaptiveColors.adaptiveText().toArgb()
     val axisColor = AdaptiveColors.adaptiveDivider()
-    
-    val textPaint = remember(textColor) {
-        Paint().apply {
-            color = textColor
-            textSize = 32f
-            textAlign = Paint.Align.RIGHT
-            typeface = Typeface.DEFAULT
-        }
+
+    val textPaint = Paint().apply {
+        color = textColor
+        textSize = 32f
+        typeface = Typeface.DEFAULT
     }
     
-    val labelPaint = remember(labelColor) {
-        Paint().apply {
-            color = labelColor
-            textSize = 36f
-            textAlign = Paint.Align.CENTER
-            typeface = Typeface.DEFAULT
-        }
+    val labelPaint = Paint().apply {
+        color = android.graphics.Color.BLACK
+        textSize = 36f
+        textAlign = Paint.Align.CENTER
+        typeface = Typeface.DEFAULT
     }
     
     Canvas(modifier = Modifier.fillMaxSize()) {
@@ -68,7 +57,7 @@ fun GroupedBarChart(data: List<WeeklyData>) {
             drawIntoCanvas {
                 it.nativeCanvas.drawText(
                     value.toString(),
-                    paddingLeft - 15f,
+                    50f,
                     y + 10f,
                     textPaint
                 )

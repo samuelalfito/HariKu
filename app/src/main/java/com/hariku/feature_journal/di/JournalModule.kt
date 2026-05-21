@@ -103,7 +103,7 @@ val journalModule = module {
     
     single {
         GenerativeModel(
-            modelName = "gemini-2.0-flash-lite",
+            modelName = com.hariku.BuildConfig.GEMINI_MODEL_NAME,
             apiKey = com.hariku.BuildConfig.GEMINI_API_KEY
         )
     }
